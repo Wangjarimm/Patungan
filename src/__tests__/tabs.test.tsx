@@ -5,6 +5,8 @@ import HomeScreen from '@/app/(tabs)/index';
 import ProfileScreen from '@/app/(tabs)/profil';
 import HistoryScreen from '@/app/(tabs)/riwayat';
 import { useBillsStore } from '@/stores/bills';
+import { useSettingsStore } from '@/stores/settings';
+import { darkColors, lightColors } from '@/theme/colors';
 
 jest.mock(
   'react-native-safe-area-context',
@@ -116,9 +118,27 @@ describe('Riwayat filters (F-10)', () => {
   });
 });
 
-describe('Profil', () => {
-  it('renders the placeholder heading', async () => {
+describe('Profil tema (F-11)', () => {
+  beforeEach(() => useSettingsStore.setState({ themePreference: 'system' }));
+
+  it('defaults to following the system', async () => {
     await render(<ProfileScreen />);
     expect(screen.getByRole('header', { name: 'Profil' })).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: 'Ikuti sistem' })).toBeChecked();
+  });
+
+  it('switches the whole screen to the chosen theme and remembers it', async () => {
+    await render(<ProfileScreen />);
+    await fireEvent.press(screen.getByRole('radio', { name: 'Gelap' }));
+    expect(useSettingsStore.getState().themePreference).toBe('dark');
+    expect(screen.getByRole('header', { name: 'Profil' })).toHaveStyle({ color: darkColors.text });
+
+    await fireEvent.press(screen.getByRole('radio', { name: 'Terang' }));
+    expect(screen.getByRole('header', { name: 'Profil' })).toHaveStyle({ color: lightColors.text });
+  });
+
+  it('links to the source code with the app version', async () => {
+    await render(<ProfileScreen />);
+    expect(screen.getByRole('link', { name: /^Kode sumber di GitHub, versi / })).toBeOnTheScreen();
   });
 });

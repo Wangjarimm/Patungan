@@ -3,9 +3,13 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Appearance } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
-import { useBillsHydrated } from '@/stores/bills';
+import { useBillsStore } from '@/stores/bills';
+import { useGroupsStore } from '@/stores/groups';
+import { usePersistHydrated } from '@/stores/hydration';
+import { useSettingsStore } from '@/stores/settings';
 import { fontAssets, useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -13,9 +17,17 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(fontAssets);
   const { scheme, colors } = useTheme();
-  const hydrated = useBillsHydrated();
+  const billsReady = usePersistHydrated(useBillsStore);
+  const groupsReady = usePersistHydrated(useGroupsStore);
+  const settingsReady = usePersistHydrated(useSettingsStore);
+  const themePreference = useSettingsStore((state) => state.themePreference);
   const reduceMotion = useReducedMotion();
-  const ready = (fontsLoaded || fontError !== null) && hydrated;
+  const ready = (fontsLoaded || fontError !== null) && billsReady && groupsReady && settingsReady;
+
+  // Also theme native pieces (date picker, alerts). Android 10+ only; useTheme covers the rest.
+  useEffect(() => {
+    Appearance.setColorScheme(themePreference === 'system' ? 'unspecified' : themePreference);
+  }, [themePreference]);
 
   useEffect(() => {
     if (ready) {

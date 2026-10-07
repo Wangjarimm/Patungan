@@ -122,3 +122,11 @@ export function SettingsIcon({ color, size = 24 }: IconProps) {
     </Svg>
   );
 }
+
+export function ExternalLinkIcon({ color, size = 24 }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path d="M7 17 17 7M8 7h9v9" stroke={color} {...strokeProps} />
+    </Svg>
+  );
+}
