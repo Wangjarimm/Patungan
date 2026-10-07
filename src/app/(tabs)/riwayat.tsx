@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +6,7 @@ import { useTabBarInset } from '@/components/AnimatedTabBar';
 import { BillRow } from '@/components/BillRow';
 import { ChoiceChips } from '@/components/ChoiceChips';
 import { buildHistory, type HistoryFilter } from '@/lib/history';
+import { useOpenBill } from '@/services/navigation';
 import { useBillsStore } from '@/stores/bills';
 import { fonts, fontSizes, lineHeights, spacing, useTheme } from '@/theme';
 
@@ -24,7 +24,7 @@ export default function HistoryScreen() {
   const [filter, setFilter] = useState<HistoryFilter>('all');
   const { sections, counts } = useMemo(() => buildHistory(bills, filter), [bills, filter]);
 
-  const open = (id: string) => router.push({ pathname: '/tagihan/[id]', params: { id } });
+  const open = useOpenBill();
 
   return (
     <SafeAreaView

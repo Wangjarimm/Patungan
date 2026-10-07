@@ -18,6 +18,7 @@ jest.mock(
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: jest.fn(() => true) },
   useLocalSearchParams: jest.fn(() => ({})),
+  useNavigationContainerRef: () => ({ getRootState: () => undefined }),
 }));
 jest.mock('@react-native-community/datetimepicker', () => ({
   __esModule: true,

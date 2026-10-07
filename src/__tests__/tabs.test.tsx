@@ -13,9 +13,14 @@ jest.mock(
   () =>
     jest.requireActual<{ default: unknown }>('react-native-safe-area-context/jest/mock').default,
 );
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
-}));
+const mockRootState = jest.fn((): unknown => undefined);
+jest.mock('expo-router', () => {
+  const navigationRef = { getRootState: () => mockRootState() };
+  return {
+    router: { push: jest.fn(), replace: jest.fn(), back: jest.fn(), dismissTo: jest.fn() },
+    useNavigationContainerRef: () => navigationRef,
+  };
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -57,6 +62,23 @@ describe('Beranda', () => {
     expect(screen.getByText('Menunggu Rp28.000')).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole('button', { name: /Kedai Mie Kenari/ }));
     expect(router.push).toHaveBeenCalledWith({ pathname: '/tagihan/[id]', params: { id } });
+  });
+
+  it('goes back to a bill already in the stack instead of pushing a second copy', async () => {
+    const id = seedKenari();
+    mockRootState.mockReturnValue({
+      index: 2,
+      routes: [
+        { key: 'tabs', name: '(tabs)' },
+        { key: 'bill', name: 'tagihan/[id]/index', params: { id } },
+        { key: 'menu', name: 'tagihan/[id]/menu', params: { id } },
+      ],
+    });
+    await render(<HomeScreen />);
+    await fireEvent.press(screen.getByRole('button', { name: /Kedai Mie Kenari/ }));
+    expect(router.push).not.toHaveBeenCalled();
+    expect(router.dismissTo).toHaveBeenCalledWith({ pathname: '/tagihan/[id]', params: { id } });
+    mockRootState.mockReturnValue(undefined);
   });
 });
 

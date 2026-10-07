@@ -13,6 +13,7 @@ import { Appearance } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { ErrorScreen } from '@/components/ErrorScreen';
+import { trackScreenTransitions } from '@/services/navigation';
 import { useAccountSync } from '@/services/supabase/use-account-sync';
 import { useSyncEngine } from '@/services/supabase/use-sync';
 import { useAccountStore } from '@/stores/account';
@@ -81,6 +82,7 @@ export default function RootLayout() {
     <ThemeProvider value={navigationTheme}>
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <Stack
+        screenListeners={trackScreenTransitions}
         screenOptions={{
           headerShown: false,
           animation: reduceMotion ? 'none' : 'default',

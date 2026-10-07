@@ -12,6 +12,7 @@ import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { sortBillsByRecent } from '@/lib/history';
 import { summarizeBill, summarizeOutstanding } from '@/lib/summary';
+import { useOpenBill } from '@/services/navigation';
 import { useBillsStore } from '@/stores/bills';
 import { sortGroups, useGroupsStore } from '@/stores/groups';
 import { fonts, fontSizes, lineHeights, spacing, useTheme } from '@/theme';
@@ -21,6 +22,7 @@ const RECENT_LIMIT = 5;
 export default function HomeScreen() {
   const { colors } = useTheme();
   const tabBarInset = useTabBarInset();
+  const openBill = useOpenBill();
   const bills = useBillsStore((state) => state.bills);
   const groupsById = useGroupsStore((state) => state.groups);
   const groups = useMemo(() => sortGroups(groupsById), [groupsById]);
@@ -106,7 +108,7 @@ export default function HomeScreen() {
               <BillRow
                 key={bill.id}
                 summary={summarizeBill(bill)}
-                onPress={() => router.push({ pathname: '/tagihan/[id]', params: { id: bill.id } })}
+                onPress={() => openBill(bill.id)}
               />
             ))
           )}
