@@ -168,7 +168,7 @@ export default function BillScreen() {
               onPress={openSettings}
               accessibilityRole="button"
               accessibilityHint="Buka pengaturan pajak, service, dan diskon"
-              hitSlop={{ top: 12, bottom: 12 }}>
+              hitSlop={{ top: 14, bottom: 14, left: 8, right: 8 }}>
               <Text style={[styles.totalNote, { color: colors.textMuted }]}>
                 {charges ? `termasuk ${charges}` : 'belum ada service dan pajak'}
                 <Text style={[styles.totalLink, { color: colors.text }]}> · Atur</Text>
