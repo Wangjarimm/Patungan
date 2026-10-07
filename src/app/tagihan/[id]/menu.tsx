@@ -12,11 +12,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Amount } from '@/components/Amount';
-import { IconButton } from '@/components/IconButton';
-import { MinusIcon, PlusIcon } from '@/components/icons';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { Stepper } from '@/components/Stepper';
 import { TextField } from '@/components/TextField';
 import { lineTotal } from '@/lib/calc';
 import { formatNumber } from '@/lib/format';
@@ -116,28 +115,7 @@ export default function MenuItemScreen() {
 
             <View style={styles.qtyRow}>
               <Text style={[styles.label, { color: colors.text }]}>Jumlah</Text>
-              <View style={styles.stepper}>
-                <IconButton
-                  accessibilityLabel="Kurangi jumlah"
-                  bordered
-                  disabled={qty <= 1}
-                  icon={(color) => <MinusIcon color={color} size={20} />}
-                  onPress={() => setQty((q) => Math.max(1, q - 1))}
-                />
-                <Text
-                  accessibilityLabel={`Jumlah ${qty}`}
-                  accessibilityLiveRegion="polite"
-                  style={[styles.qty, { color: colors.text }]}>
-                  {qty}
-                </Text>
-                <IconButton
-                  accessibilityLabel="Tambah jumlah"
-                  bordered
-                  disabled={qty >= MAX_QTY}
-                  icon={(color) => <PlusIcon color={color} size={20} />}
-                  onPress={() => setQty((q) => Math.min(MAX_QTY, q + 1))}
-                />
-              </View>
+              <Stepper label="jumlah" value={qty} onChange={setQty} min={1} max={MAX_QTY} />
             </View>
 
             <ReceiptCard.Divider />
@@ -188,17 +166,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: fonts.bodyStrong,
     fontSize: fontSizes.body,
-  },
-  stepper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  qty: {
-    fontFamily: fonts.monoStrong,
-    fontSize: fontSizes.title,
-    minWidth: 40,
-    textAlign: 'center',
   },
   previewRow: {
     flexDirection: 'row',

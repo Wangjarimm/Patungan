@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Amount } from '@/components/Amount';
 import { Avatar } from '@/components/Avatar';
-import { PlusIcon } from '@/components/icons';
+import { IconButton } from '@/components/IconButton';
+import { PlusIcon, SettingsIcon } from '@/components/icons';
 import { ItemRow } from '@/components/ItemRow';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
@@ -41,13 +42,27 @@ export default function BillScreen() {
   }
 
   const charges = describeCharges(bill.settings);
+  const openSettings = () =>
+    router.push({ pathname: '/tagihan/[id]/pengaturan', params: { id: bill.id } });
   const unassignedCount = result.unassignedItemIds.length;
 
   return (
     <SafeAreaView
       edges={['top', 'left', 'right']}
       style={[styles.screen, { backgroundColor: colors.background }]}>
-      <ScreenHeader title={bill.title} subtitle={formatDateShort(bill.date)} onBack={goHome} />
+      <ScreenHeader
+        title={bill.title}
+        subtitle={formatDateShort(bill.date)}
+        onBack={goHome}
+        right={
+          <IconButton
+            accessibilityLabel="Pajak, service, diskon, dan pembayar"
+            bordered
+            icon={(color) => <SettingsIcon color={color} size={20} />}
+            onPress={openSettings}
+          />
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.content}>
         <ScrollView
@@ -149,9 +164,16 @@ export default function BillScreen() {
         <View style={styles.totalRow}>
           <View style={styles.totalText}>
             <Amount value={result.totals.exact} size="title" strong />
-            <Text style={[styles.totalNote, { color: colors.textMuted }]}>
-              {charges ? `termasuk ${charges}` : 'belum ada service dan pajak'}
-            </Text>
+            <Pressable
+              onPress={openSettings}
+              accessibilityRole="button"
+              accessibilityHint="Buka pengaturan pajak, service, dan diskon"
+              hitSlop={{ top: 12, bottom: 12 }}>
+              <Text style={[styles.totalNote, { color: colors.textMuted }]}>
+                {charges ? `termasuk ${charges}` : 'belum ada service dan pajak'}
+                <Text style={[styles.totalLink, { color: colors.text }]}> · Atur</Text>
+              </Text>
+            </Pressable>
           </View>
         </View>
       </SafeAreaView>
@@ -264,5 +286,9 @@ const styles = StyleSheet.create({
   totalNote: {
     fontFamily: fonts.body,
     fontSize: fontSizes.caption,
+  },
+  totalLink: {
+    fontFamily: fonts.bodyStrong,
+    textDecorationLine: 'underline',
   },
 });
