@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { useReducedMotion, withSpring } from 'react-native-reanimated';
 
 import { AnimatedTabBar, SLIDE_SPRING, type TabBarProps } from './AnimatedTabBar';
@@ -16,7 +16,6 @@ jest.mock('react-native-reanimated', () => {
   return {
     ...mock,
     withSpring: jest.fn(mock.withSpring),
-    withSequence: jest.fn(mock.withSequence),
     useReducedMotion: jest.fn(() => false),
   };
 });
@@ -51,11 +50,9 @@ function makeProps(index: number, defaultPrevented = false) {
   return { props, navigation };
 }
 
-async function layout() {
-  await fireEvent(screen.getByTestId('tab-bar'), 'layout', {
-    nativeEvent: { layout: { width: 330, height: 64, x: 0, y: 0 } },
-  });
-}
+const tab = (name: string) => screen.getByRole('tab', { name });
+const nextFrame = () =>
+  act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -63,24 +60,31 @@ beforeEach(() => {
 });
 
 describe('AnimatedTabBar', () => {
-  it('slides in about 460 ms', () => {
+  it('slides in about 460 ms with a smooth, barely bouncing spring', () => {
     // Reanimated's spring duration is perceptual; the real animation is ~1.5x longer.
     expect(SLIDE_SPRING.duration * 1.5).toBeGreaterThanOrEqual(440);
     expect(SLIDE_SPRING.duration * 1.5).toBeLessThanOrEqual(480);
+    expect(SLIDE_SPRING.dampingRatio).toBeGreaterThanOrEqual(0.85);
+    expect(SLIDE_SPRING.dampingRatio).toBeLessThan(1);
   });
 
   it('exposes a tab list with the active tab selected', async () => {
     const { props } = makeProps(1);
     await render(<AnimatedTabBar {...props} />);
     expect(screen.getAllByRole('tab')).toHaveLength(3);
-    expect(screen.getByRole('tab', { name: 'Riwayat' })).toBeSelected();
-    expect(screen.getByRole('tab', { name: 'Beranda' })).not.toBeSelected();
+    expect(tab('Riwayat')).toBeSelected();
+    expect(tab('Beranda')).not.toBeSelected();
   });
 
-  it('navigates when an inactive tab is pressed', async () => {
+  it('starts the slide on press-in, before navigating', async () => {
     const { props, navigation } = makeProps(0);
     await render(<AnimatedTabBar {...props} />);
-    await fireEvent.press(screen.getByRole('tab', { name: 'Profil' }));
+
+    await fireEvent(tab('Profil'), 'pressIn');
+    expect(mockedSpring).toHaveBeenCalledWith(2, SLIDE_SPRING);
+    expect(navigation.navigate).not.toHaveBeenCalled();
+
+    await fireEvent.press(tab('Profil'));
     expect(navigation.emit).toHaveBeenCalledWith({
       type: 'tabPress',
       target: 'profil-1',
@@ -89,47 +93,76 @@ describe('AnimatedTabBar', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('profil', undefined);
   });
 
-  it('does not navigate for the active tab or a prevented press', async () => {
-    const { props, navigation } = makeProps(0, true);
+  it('sends the pill back when a press is cancelled', async () => {
+    const { props, navigation } = makeProps(0);
     await render(<AnimatedTabBar {...props} />);
-    await fireEvent.press(screen.getByRole('tab', { name: 'Beranda' }));
-    await fireEvent.press(screen.getByRole('tab', { name: 'Riwayat' }));
+
+    await fireEvent(tab('Riwayat'), 'pressIn');
+    await fireEvent(tab('Riwayat'), 'pressOut');
+    await nextFrame();
+
+    expect(mockedSpring).toHaveBeenLastCalledWith(0, SLIDE_SPRING);
     expect(navigation.navigate).not.toHaveBeenCalled();
   });
 
-  it('emits a long press event', async () => {
-    const { props, navigation } = makeProps(0);
+  it('sends the pill back when navigation is prevented', async () => {
+    const { props, navigation } = makeProps(0, true);
     await render(<AnimatedTabBar {...props} />);
-    await fireEvent(screen.getByRole('tab', { name: 'Riwayat' }), 'longPress');
-    expect(navigation.emit).toHaveBeenCalledWith({ type: 'tabLongPress', target: 'riwayat-1' });
+    await fireEvent(tab('Riwayat'), 'pressIn');
+    await fireEvent.press(tab('Riwayat'));
+    expect(navigation.navigate).not.toHaveBeenCalled();
+    expect(mockedSpring).toHaveBeenLastCalledWith(0, SLIDE_SPRING);
   });
 
-  it('springs the pill and bounces the icon when the tab changes', async () => {
+  it('does nothing for the active tab', async () => {
+    const { props, navigation } = makeProps(0);
+    await render(<AnimatedTabBar {...props} />);
+    await fireEvent(tab('Beranda'), 'pressIn');
+    await fireEvent.press(tab('Beranda'));
+    expect(mockedSpring).not.toHaveBeenCalled();
+    expect(navigation.navigate).not.toHaveBeenCalled();
+  });
+
+  it('retargets on quick alternating taps', async () => {
+    const { props } = makeProps(0);
+    await render(<AnimatedTabBar {...props} />);
+    await fireEvent(tab('Profil'), 'pressIn');
+    await fireEvent.press(tab('Profil'));
+    await fireEvent(tab('Riwayat'), 'pressIn');
+    await fireEvent.press(tab('Riwayat'));
+    // Each tap retargets the same spring from wherever the pill is.
+    expect(mockedSpring.mock.calls.map(([to]) => to)).toEqual([2, 1]);
+  });
+
+  it('follows navigation that did not come from a tap', async () => {
     const { props } = makeProps(0);
     const view = await render(<AnimatedTabBar {...props} />);
-    await layout();
-    mockedSpring.mockClear();
-
     await view.rerender(<AnimatedTabBar {...makeProps(2).props} />);
-    expect(mockedSpring).toHaveBeenCalledWith(220, SLIDE_SPRING);
-    expect(screen.getByTestId('tab-pill')).toBeTruthy();
+    expect(mockedSpring).toHaveBeenCalledWith(2, SLIDE_SPRING);
   });
 
   it('turns every animation off with reduce motion', async () => {
     mockedReducedMotion.mockReturnValue(true);
-    const { props } = makeProps(0);
+    const { props, navigation } = makeProps(0);
     const view = await render(<AnimatedTabBar {...props} />);
-    await layout();
-    await view.rerender(<AnimatedTabBar {...makeProps(2).props} />);
+    await fireEvent(tab('Profil'), 'pressIn');
+    await fireEvent.press(tab('Profil'));
+    await view.rerender(<AnimatedTabBar {...makeProps(1).props} />);
     expect(mockedSpring).not.toHaveBeenCalled();
+    expect(navigation.navigate).toHaveBeenCalledWith('profil', undefined);
   });
 
-  it('shows the active label', async () => {
+  it('emits a long press event without navigating', async () => {
+    const { props, navigation } = makeProps(0);
+    await render(<AnimatedTabBar {...props} />);
+    await fireEvent(tab('Riwayat'), 'longPress');
+    expect(navigation.emit).toHaveBeenCalledWith({ type: 'tabLongPress', target: 'riwayat-1' });
+    expect(navigation.navigate).not.toHaveBeenCalled();
+  });
+
+  it('renders each label once, without a hidden measuring copy', async () => {
     const { props } = makeProps(1);
     await render(<AnimatedTabBar {...props} />);
-    // One visible label plus the hidden copy used for measuring.
-    expect(screen.getAllByText('Riwayat', { includeHiddenElements: true }).length).toBeGreaterThan(
-      0,
-    );
+    expect(screen.getAllByText('Riwayat', { includeHiddenElements: true })).toHaveLength(1);
   });
 });

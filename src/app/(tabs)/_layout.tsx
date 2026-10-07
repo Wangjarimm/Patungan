@@ -6,7 +6,10 @@ import { HistoryIcon, HomeIcon, ProfileIcon } from '@/components/icons';
 // Floating animated capsule tab bar (PRD section 6).
 export default function TabsLayout() {
   return (
-    <Tabs tabBar={(props) => <AnimatedTabBar {...props} />} screenOptions={{ headerShown: false }}>
+    <Tabs
+      tabBar={(props) => <AnimatedTabBar {...props} />}
+      // Mount all tabs up front so a first visit does not render a screen mid-animation.
+      screenOptions={{ headerShown: false, lazy: false }}>
       <Tabs.Screen
         name="index"
         options={{
