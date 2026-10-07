@@ -1,6 +1,7 @@
 import type { Bill } from '@/types/bill';
 
-import { billTotal, summarizeOutstanding } from './summary';
+import { calculateBill } from './calc';
+import { billProgress, billTotal, summarizeOutstanding } from './summary';
 
 function makeBill(overrides: Partial<Bill> = {}): Bill {
   return {
@@ -54,5 +55,25 @@ describe('summarizeOutstanding', () => {
 
   it('is zero without bills', () => {
     expect(summarizeOutstanding([])).toEqual({ amount: 0, people: 0 });
+  });
+});
+
+describe('billProgress', () => {
+  it('counts the payer and zero shares as settled', () => {
+    const bill = makeBill();
+    expect(billProgress(bill, calculateBill(bill))).toEqual({
+      settled: 2,
+      total: 3,
+      remaining: 27500,
+      statuses: { raka: 'cashier', dinda: 'pending', bima: 'none' },
+    });
+  });
+
+  it('treats everyone as pending when there is no payer', () => {
+    const bill = makeBill({ payerId: null });
+    const progress = billProgress(bill, calculateBill(bill));
+    expect(progress.statuses.raka).toBe('pending');
+    expect(progress.remaining).toBe(60500);
+    expect(progress.settled).toBe(1);
   });
 });

@@ -1,9 +1,9 @@
-// Cross-bill summaries for the home screen. Payment status is not tracked yet (phase 2),
+// Bill summaries for the home and result screens. Payment status is not tracked yet (phase 2),
 // so every participant other than the payer is still waiting to transfer.
 
 import type { Bill } from '@/types/bill';
 
-import { calculateBill } from './calc';
+import { calculateBill, type BillResult } from './calc';
 
 export type Outstanding = {
   // Sum of rounded shares still owed to payers.
@@ -28,4 +28,31 @@ export function summarizeOutstanding(bills: Bill[]): Outstanding {
     }
   }
   return { amount, people };
+}
+
+// 'cashier': the payer, already paid at the till. 'none': nothing to pay.
+export type ShareStatus = 'cashier' | 'pending' | 'none';
+
+export type Progress = {
+  settled: number;
+  total: number;
+  // Rounded amount still to be transferred to the payer.
+  remaining: number;
+  statuses: Record<string, ShareStatus>;
+};
+
+export function billProgress(bill: Bill, result: BillResult): Progress {
+  const statuses: Record<string, ShareStatus> = {};
+  let settled = 0;
+  let remaining = 0;
+  for (const share of result.people) {
+    let status: ShareStatus;
+    if (share.participantId === bill.payerId) status = 'cashier';
+    else if (share.rounded === 0) status = 'none';
+    else status = 'pending';
+    statuses[share.participantId] = status;
+    if (status === 'pending') remaining += share.rounded;
+    else settled += 1;
+  }
+  return { settled, total: result.people.length, remaining, statuses };
 }
