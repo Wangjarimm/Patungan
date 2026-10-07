@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { avatarColors } from '@/theme/colors';
 
-import { sortBillsByRecent, useBillsStore } from './bills';
+import { migrateBillsState, useBillsStore } from './bills';
 
 let mockNextId = 0;
 jest.mock('@/lib/id', () => ({ createId: () => `id-${++mockNextId}` }));
@@ -188,18 +188,66 @@ describe('persistence (F-08)', () => {
   });
 });
 
-describe('sortBillsByRecent', () => {
-  it('orders by date, then creation time, newest first', () => {
-    const a = ok(store().createBill({ title: 'A', date: '2026-10-01', payerName: 'X' }));
-    ok(store().createBill({ title: 'B', date: '2026-10-05', payerName: 'X' }));
-    const c = ok(store().createBill({ title: 'C', date: '2026-10-01', payerName: 'X' }));
-    useBillsStore.setState((s) => ({
-      bills: {
-        ...s.bills,
-        [a]: { ...bill(a), createdAt: 1 },
-        [c]: { ...bill(c), createdAt: 2 },
-      },
-    }));
-    expect(sortBillsByRecent(store().bills).map((x) => x.title)).toEqual(['B', 'C', 'A']);
+describe('manual payment status', () => {
+  it('marks and unmarks a participant as paid', () => {
+    const id = createKenari();
+    const dinda = ok(store().addParticipant(id, 'Dinda'));
+    expect(bill(id).participants[1]?.paidAt).toBeNull();
+
+    store().markPaid(id, dinda);
+    const paidAt = bill(id).participants[1]?.paidAt;
+    expect(typeof paidAt).toBe('number');
+
+    // Marking again keeps the original time.
+    store().markPaid(id, dinda);
+    expect(bill(id).participants[1]?.paidAt).toBe(paidAt);
+
+    store().unmarkPaid(id, dinda);
+    expect(bill(id).participants[1]?.paidAt).toBeNull();
+  });
+
+  it('never marks the payer', () => {
+    const id = createKenari();
+    store().markPaid(id, bill(id).payerId ?? '');
+    expect(bill(id).participants[0]?.paidAt).toBeNull();
+  });
+});
+
+describe('migrateBillsState', () => {
+  const v1Bill = {
+    id: 'b1',
+    title: 'Kedai',
+    date: '2026-10-03',
+    payerId: 'p1',
+    createdAt: 0,
+    participants: [{ id: 'p1', name: 'Raka', color: 'c' }],
+    items: [],
+    settings: {},
+  };
+
+  it('adds paidAt: null to v1 participants', () => {
+    const migrated = migrateBillsState({ bills: { b1: v1Bill } }, 1);
+    expect(migrated.bills.b1?.participants[0]).toEqual({
+      id: 'p1',
+      name: 'Raka',
+      color: 'c',
+      paidAt: null,
+    });
+    expect(migrated.bills.b1?.title).toBe('Kedai');
+  });
+
+  it('leaves current data untouched and handles empty state', () => {
+    const current = { bills: { b1: { ...v1Bill, participants: [] } } };
+    expect(migrateBillsState(current, 2)).toEqual(current);
+    expect(migrateBillsState(undefined, 1)).toEqual({ bills: {} });
+  });
+
+  it('restores v1 data saved by app 0.1.0', async () => {
+    await AsyncStorage.setItem(
+      'patungan-bills',
+      JSON.stringify({ state: { bills: { b1: v1Bill } }, version: 1 }),
+    );
+    await useBillsStore.persist.rehydrate();
+    expect(bill('b1').participants[0]?.paidAt).toBeNull();
   });
 });

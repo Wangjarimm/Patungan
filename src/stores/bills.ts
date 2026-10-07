@@ -15,7 +15,30 @@ import {
   validateParticipantName,
   type Parsed,
 } from '@/lib/validation';
-import type { Bill, BillSettings, Item } from '@/types/bill';
+import type { Bill, BillSettings, Item, Participant } from '@/types/bill';
+
+export const BILLS_STORE_VERSION = 2;
+
+// v1 (app 0.1.0) participants had no payment status.
+export function migrateBillsState(
+  persisted: unknown,
+  version: number,
+): { bills: Record<string, Bill> } {
+  const state = (persisted ?? {}) as { bills?: Record<string, Bill> };
+  const bills = state.bills ?? {};
+  if (version >= 2) return { bills };
+  const migrated: Record<string, Bill> = {};
+  for (const [id, bill] of Object.entries(bills)) {
+    migrated[id] = {
+      ...bill,
+      participants: bill.participants.map((p): Participant => ({
+        ...p,
+        paidAt: (p as Partial<Participant>).paidAt ?? null,
+      })),
+    };
+  }
+  return { bills: migrated };
+}
 
 export const DEFAULT_SETTINGS: BillSettings = {
   servicePct: 0,
@@ -43,6 +66,9 @@ type BillsState = {
   renameParticipant: (billId: string, participantId: string, name: string) => Parsed<string>;
   removeParticipant: (billId: string, participantId: string) => void;
   setPayer: (billId: string, participantId: string) => void;
+  // Manual payment status; the payer paid at the till and cannot be marked.
+  markPaid: (billId: string, participantId: string) => void;
+  unmarkPaid: (billId: string, participantId: string) => void;
   addItem: (billId: string, input: ItemInput) => Parsed<string>;
   updateItem: (billId: string, itemId: string, input: ItemInput) => Parsed<string>;
   removeItem: (billId: string, itemId: string) => void;
@@ -103,7 +129,12 @@ export const useBillsStore = create<BillsState>()(
           const validPayer = validateParticipantName(payerName, []);
           if (!validPayer.ok) return validPayer;
 
-          const payer = { id: createId(), name: validPayer.value, color: pickAvatarColor([]) };
+          const payer = {
+            id: createId(),
+            name: validPayer.value,
+            color: pickAvatarColor([]),
+            paidAt: null,
+          };
           const bill: Bill = {
             id: createId(),
             title: validTitle.value,
@@ -127,6 +158,7 @@ export const useBillsStore = create<BillsState>()(
             id: createId(),
             name: valid.value,
             color: pickAvatarColor(bill.participants.map((p) => p.color)),
+            paidAt: null,
           };
           updateBill(billId, (b) => ({ ...b, participants: [...b.participants, participant] }));
           return { ok: true, value: participant.id };
@@ -159,6 +191,26 @@ export const useBillsStore = create<BillsState>()(
               })),
             };
           });
+        },
+
+        markPaid: (billId, participantId) => {
+          updateBill(billId, (b) => ({
+            ...b,
+            participants: b.participants.map((p) =>
+              p.id === participantId && p.id !== b.payerId && p.paidAt === null
+                ? { ...p, paidAt: Date.now() }
+                : p,
+            ),
+          }));
+        },
+
+        unmarkPaid: (billId, participantId) => {
+          updateBill(billId, (b) => ({
+            ...b,
+            participants: b.participants.map((p) =>
+              p.id === participantId ? { ...p, paidAt: null } : p,
+            ),
+          }));
         },
 
         setPayer: (billId, participantId) => {
@@ -232,19 +284,13 @@ export const useBillsStore = create<BillsState>()(
     },
     {
       name: 'patungan-bills',
-      version: 1,
+      version: BILLS_STORE_VERSION,
+      migrate: migrateBillsState,
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({ bills: state.bills }),
     },
   ),
 );
-
-// Newest first: by bill date, then by creation time.
-export function sortBillsByRecent(bills: Record<string, Bill>): Bill[] {
-  return Object.values(bills).sort(
-    (a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt,
-  );
-}
 
 // True once persisted bills have been loaded from AsyncStorage.
 export function useBillsHydrated(): boolean {
