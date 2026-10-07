@@ -22,6 +22,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { TextField } from '@/components/TextField';
 import { formatDateLong, parseIsoDate, todayIsoDate, toIsoDate } from '@/lib/format';
 import { validateBillTitle, validateParticipantName } from '@/lib/validation';
+import { useAccountStore } from '@/stores/account';
 import { useBillsStore } from '@/stores/bills';
 import { sortGroups, useGroupsStore } from '@/stores/groups';
 import { fonts, fontSizes, minTouchTarget, spacing, useTheme } from '@/theme';
@@ -41,7 +42,7 @@ export default function NewBillScreen() {
 
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(todayIsoDate());
-  const [payerName, setPayerName] = useState('');
+  const [payerName, setPayerName] = useState(() => useAccountStore.getState().displayName ?? '');
   const [titleError, setTitleError] = useState<string | null>(null);
   const [payerError, setPayerError] = useState<string | null>(null);
   const [showIosPicker, setShowIosPicker] = useState(false);

@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { Appearance } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
+import { useAccountSync } from '@/services/supabase/use-account-sync';
+import { useAccountStore } from '@/stores/account';
 import { useBillsStore } from '@/stores/bills';
 import { useGroupsStore } from '@/stores/groups';
 import { usePersistHydrated } from '@/stores/hydration';
@@ -20,9 +22,18 @@ export default function RootLayout() {
   const billsReady = usePersistHydrated(useBillsStore);
   const groupsReady = usePersistHydrated(useGroupsStore);
   const settingsReady = usePersistHydrated(useSettingsStore);
+  const accountReady = usePersistHydrated(useAccountStore);
   const themePreference = useSettingsStore((state) => state.themePreference);
+  const hasName = useAccountStore((state) => state.displayName !== null);
   const reduceMotion = useReducedMotion();
-  const ready = (fontsLoaded || fontError !== null) && billsReady && groupsReady && settingsReady;
+  const ready =
+    (fontsLoaded || fontError !== null) &&
+    billsReady &&
+    groupsReady &&
+    settingsReady &&
+    accountReady;
+
+  useAccountSync();
 
   // Also theme native pieces (date picker, alerts). Android 10+ only; useTheme covers the rest.
   useEffect(() => {
@@ -61,10 +72,16 @@ export default function RootLayout() {
           animation: reduceMotion ? 'none' : 'default',
           contentStyle: { backgroundColor: colors.background },
         }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="tagihan/[id]/peserta" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="tagihan/[id]/menu" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="grup/baru" options={{ presentation: 'modal' }} />
+        {/* First launch asks for a name before anything else (F-12). */}
+        <Stack.Protected guard={!hasName}>
+          <Stack.Screen name="selamat-datang" />
+        </Stack.Protected>
+        <Stack.Protected guard={hasName}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="tagihan/[id]/peserta" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="tagihan/[id]/menu" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="grup/baru" options={{ presentation: 'modal' }} />
+        </Stack.Protected>
       </Stack>
     </ThemeProvider>
   );
