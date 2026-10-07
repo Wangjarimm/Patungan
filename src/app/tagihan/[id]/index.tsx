@@ -8,12 +8,15 @@ import { Avatar } from '@/components/Avatar';
 import { IconButton } from '@/components/IconButton';
 import { PlusIcon, SettingsIcon } from '@/components/icons';
 import { ItemRow } from '@/components/ItemRow';
+import { JoinCodeChip } from '@/components/JoinCodeChip';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { SyncNotice } from '@/components/SyncNotice';
 import { calculateBill } from '@/lib/calc';
 import { formatDateShort } from '@/lib/format';
 import { describeCharges } from '@/lib/share-text';
+import { useBillRealtime } from '@/services/supabase/use-sync';
 import { useBillsStore } from '@/stores/bills';
 import { fonts, fontSizes, lineHeights, minTouchTarget, spacing, useTheme } from '@/theme';
 
@@ -29,6 +32,7 @@ export default function BillScreen() {
   const toggleEater = useBillsStore((state) => state.toggleEater);
   const toggleAllEaters = useBillsStore((state) => state.toggleAllEaters);
   const result = useMemo(() => (bill ? calculateBill(bill) : null), [bill]);
+  useBillRealtime(id);
 
   if (!bill || !result) {
     return (
@@ -41,6 +45,12 @@ export default function BillScreen() {
     );
   }
 
+  // Bills joined with a code are read-only apart from your own eater choices (RLS agrees).
+  const isOwner = bill.role === 'owner';
+  const me = bill.participants.find((p) => p.id === bill.myParticipantId);
+  const subtitle = isOwner
+    ? formatDateShort(bill.date)
+    : `${formatDateShort(bill.date)} · kamu sebagai ${me?.name ?? '-'}`;
   const charges = describeCharges(bill.settings);
   const openSettings = () =>
     router.push({ pathname: '/tagihan/[id]/pengaturan', params: { id: bill.id } });
@@ -52,19 +62,24 @@ export default function BillScreen() {
       style={[styles.screen, { backgroundColor: colors.background }]}>
       <ScreenHeader
         title={bill.title}
-        subtitle={formatDateShort(bill.date)}
+        subtitle={subtitle}
         onBack={goHome}
         right={
-          <IconButton
-            accessibilityLabel="Pajak, service, diskon, dan pembayar"
-            bordered
-            icon={(color) => <SettingsIcon color={color} size={20} />}
-            onPress={openSettings}
-          />
+          isOwner ? (
+            <IconButton
+              accessibilityLabel="Pajak, service, diskon, dan pembayar"
+              bordered
+              icon={(color) => <SettingsIcon color={color} size={20} />}
+              onPress={openSettings}
+            />
+          ) : undefined
         }
       />
 
       <ScrollView contentContainerStyle={styles.content}>
+        <SyncNotice />
+        {isOwner && bill.ownerId !== null ? <JoinCodeChip code={bill.joinCode} /> : null}
+
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -74,15 +89,16 @@ export default function BillScreen() {
             return (
               <Pressable
                 key={p.id}
+                disabled={!isOwner}
                 onPress={() =>
                   router.push({
                     pathname: '/tagihan/[id]/peserta',
                     params: { id: bill.id, participantId: p.id },
                   })
                 }
-                accessibilityRole="button"
+                accessibilityRole={isOwner ? 'button' : 'text'}
                 accessibilityLabel={isPayer ? `${p.name}, yang bayar ke kasir` : p.name}
-                accessibilityHint="Ketuk untuk mengubah nama atau menghapus"
+                accessibilityHint={isOwner ? 'Ketuk untuk mengubah nama atau menghapus' : undefined}
                 style={styles.person}>
                 <View style={[styles.ring, { borderColor: isPayer ? p.color : 'transparent' }]}>
                   <Avatar name={p.name} color={p.color} size="lg" />
@@ -96,21 +112,23 @@ export default function BillScreen() {
               </Pressable>
             );
           })}
-          <Pressable
-            onPress={() =>
-              router.push({ pathname: '/tagihan/[id]/peserta', params: { id: bill.id } })
-            }
-            accessibilityRole="button"
-            accessibilityLabel="Tambah peserta"
-            style={styles.person}>
-            <View style={[styles.addCircle, { borderColor: colors.outline }]}>
-              <PlusIcon color={colors.text} size={20} />
-            </View>
-            <Text style={[styles.personName, { color: colors.textMuted }]}>Tambah</Text>
-          </Pressable>
+          {isOwner ? (
+            <Pressable
+              onPress={() =>
+                router.push({ pathname: '/tagihan/[id]/peserta', params: { id: bill.id } })
+              }
+              accessibilityRole="button"
+              accessibilityLabel="Tambah peserta"
+              style={styles.person}>
+              <View style={[styles.addCircle, { borderColor: colors.outline }]}>
+                <PlusIcon color={colors.text} size={20} />
+              </View>
+              <Text style={[styles.personName, { color: colors.textMuted }]}>Tambah</Text>
+            </Pressable>
+          ) : null}
         </ScrollView>
 
-        {bill.participants.length > 1 ? (
+        {isOwner && bill.participants.length > 1 ? (
           <Pressable
             onPress={() => router.push({ pathname: '/grup/baru', params: { billId: bill.id } })}
             accessibilityRole="button"
@@ -128,13 +146,17 @@ export default function BillScreen() {
               Pesanan
             </Text>
             <Text style={[styles.cardHint, { color: colors.textMutedPaper }]}>
-              Ketuk inisial siapa yang makan
+              {isOwner
+                ? 'Ketuk inisial siapa yang makan'
+                : 'Ketuk inisialmu di menu yang kamu makan'}
             </Text>
           </View>
 
           {bill.items.length === 0 ? (
             <Text style={[styles.emptyItems, { color: colors.textMutedPaper }]}>
-              Belum ada menu. Tekan Tambah menu untuk mulai mencatat pesanan.
+              {isOwner
+                ? 'Belum ada menu. Tekan Tambah menu untuk mulai mencatat pesanan.'
+                : 'Belum ada menu. Tunggu pembuat tagihan mengisinya.'}
             </Text>
           ) : (
             bill.items.map((item, index) => (
@@ -143,14 +165,18 @@ export default function BillScreen() {
                 <ItemRow
                   item={item}
                   participants={bill.participants}
-                  onEdit={() =>
-                    router.push({
-                      pathname: '/tagihan/[id]/menu',
-                      params: { id: bill.id, itemId: item.id },
-                    })
+                  onEdit={
+                    isOwner
+                      ? () =>
+                          router.push({
+                            pathname: '/tagihan/[id]/menu',
+                            params: { id: bill.id, itemId: item.id },
+                          })
+                      : undefined
                   }
                   onToggleEater={(participantId) => toggleEater(bill.id, item.id, participantId)}
-                  onToggleAll={() => toggleAllEaters(bill.id, item.id)}
+                  onToggleAll={isOwner ? () => toggleAllEaters(bill.id, item.id) : undefined}
+                  canToggle={(participantId) => isOwner || participantId === bill.myParticipantId}
                 />
               </Fragment>
             ))
@@ -168,24 +194,32 @@ export default function BillScreen() {
             {unassignedCount} menu belum ada yang makan dan belum dihitung.
           </Text>
         ) : null}
-        <PillButton
-          label="Tambah menu"
-          icon={(color) => <PlusIcon color={color} size={18} />}
-          onPress={() => router.push({ pathname: '/tagihan/[id]/menu', params: { id: bill.id } })}
-        />
+        {isOwner ? (
+          <PillButton
+            label="Tambah menu"
+            icon={(color) => <PlusIcon color={color} size={18} />}
+            onPress={() => router.push({ pathname: '/tagihan/[id]/menu', params: { id: bill.id } })}
+          />
+        ) : null}
         <View style={styles.totalRow}>
           <View style={styles.totalText}>
             <Amount value={result.totals.exact} size="title" strong />
-            <Pressable
-              onPress={openSettings}
-              accessibilityRole="button"
-              accessibilityHint="Buka pengaturan pajak, service, dan diskon"
-              hitSlop={{ top: 14, bottom: 14, left: 8, right: 8 }}>
+            {isOwner ? (
+              <Pressable
+                onPress={openSettings}
+                accessibilityRole="button"
+                accessibilityHint="Buka pengaturan pajak, service, dan diskon"
+                hitSlop={{ top: 14, bottom: 14, left: 8, right: 8 }}>
+                <Text style={[styles.totalNote, { color: colors.textMuted }]}>
+                  {charges ? `termasuk ${charges}` : 'belum ada service dan pajak'}
+                  <Text style={[styles.totalLink, { color: colors.text }]}> · Atur</Text>
+                </Text>
+              </Pressable>
+            ) : (
               <Text style={[styles.totalNote, { color: colors.textMuted }]}>
                 {charges ? `termasuk ${charges}` : 'belum ada service dan pajak'}
-                <Text style={[styles.totalLink, { color: colors.text }]}> · Atur</Text>
               </Text>
-            </Pressable>
+            )}
           </View>
           <PillButton
             variant="primary"

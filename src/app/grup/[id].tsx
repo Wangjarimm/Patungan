@@ -1,9 +1,10 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/Avatar';
+import { confirmDestructive } from '@/components/confirm';
 import { IconButton } from '@/components/IconButton';
 import { PlusIcon, TrashIcon } from '@/components/icons';
 import { PillButton } from '@/components/PillButton';
@@ -58,27 +59,23 @@ export default function GroupScreen() {
   };
 
   const confirmRemoveMember = (memberId: string, memberName: string) => {
-    Alert.alert(`Hapus ${memberName} dari grup?`, 'Tagihan yang sudah dibuat tidak berubah.', [
-      { text: 'Batal', style: 'cancel' },
-      { text: 'Hapus', style: 'destructive', onPress: () => removeMember(group.id, memberId) },
-    ]);
+    confirmDestructive(
+      `Hapus ${memberName} dari grup?`,
+      'Tagihan yang sudah dibuat tidak berubah.',
+      'Hapus',
+      () => removeMember(group.id, memberId),
+    );
   };
 
   const confirmDelete = () => {
-    Alert.alert(
+    confirmDestructive(
       `Hapus grup ${group.name}?`,
       'Tagihan yang sudah dibuat dengan grup ini tetap ada.',
-      [
-        { text: 'Batal', style: 'cancel' },
-        {
-          text: 'Hapus grup',
-          style: 'destructive',
-          onPress: () => {
-            deleteGroup(group.id);
-            goBack();
-          },
-        },
-      ],
+      'Hapus grup',
+      () => {
+        deleteGroup(group.id);
+        goBack();
+      },
     );
   };
 

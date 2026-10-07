@@ -8,23 +8,32 @@ type PersonToggleProps = {
   color: string;
   selected: boolean;
   onToggle: () => void;
+  // Read-only, e.g. someone else's choice in a bill you joined.
+  disabled?: boolean;
 };
 
 const CIRCLE = 34;
 
 // Tappable initial for marking who ate an item. Selected: filled avatar color with a ring;
 // unselected: neutral fill, so the state is not conveyed by hue alone.
-export function PersonToggle({ name, color, selected, onToggle }: PersonToggleProps) {
+export function PersonToggle({
+  name,
+  color,
+  selected,
+  onToggle,
+  disabled = false,
+}: PersonToggleProps) {
   const { colors } = useTheme();
 
   return (
     <Pressable
       onPress={onToggle}
+      disabled={disabled}
       accessibilityRole="checkbox"
-      accessibilityState={{ checked: selected }}
+      accessibilityState={{ checked: selected, disabled }}
       accessibilityLabel={name}
       hitSlop={0}
-      style={styles.target}>
+      style={[styles.target, disabled && !selected && styles.disabled]}>
       <View
         style={[
           styles.circle,
@@ -43,6 +52,9 @@ export function PersonToggle({ name, color, selected, onToggle }: PersonTogglePr
 }
 
 const styles = StyleSheet.create({
+  disabled: {
+    opacity: 0.6,
+  },
   target: {
     width: minTouchTarget,
     height: minTouchTarget,

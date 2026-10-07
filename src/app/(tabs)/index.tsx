@@ -66,6 +66,7 @@ export default function HomeScreen() {
           icon={(color) => <PlusIcon color={color} size={20} />}
           onPress={() => router.push('/tagihan/baru')}
         />
+        <PillButton label="Gabung pakai kode" onPress={() => router.push('/gabung')} />
 
         <View style={styles.section}>
           <Text accessibilityRole="header" style={[styles.sectionTitle, { color: colors.text }]}>

@@ -11,9 +11,12 @@ import { PersonToggle } from './PersonToggle';
 type ItemRowProps = {
   item: Item;
   participants: Participant[];
-  onEdit: () => void;
+  // Omitted in bills you joined: only the owner edits the menu.
+  onEdit?: () => void;
   onToggleEater: (participantId: string) => void;
-  onToggleAll: () => void;
+  onToggleAll?: () => void;
+  // Which initials can be tapped; defaults to all.
+  canToggle?: (participantId: string) => boolean;
 };
 
 function eaterLabel(item: Item, participants: Participant[]): string | null {
@@ -23,7 +26,14 @@ function eaterLabel(item: Item, participants: Participant[]): string | null {
   return count === 1 ? 'sendiri' : `dibagi ${count}`;
 }
 
-export function ItemRow({ item, participants, onEdit, onToggleEater, onToggleAll }: ItemRowProps) {
+export function ItemRow({
+  item,
+  participants,
+  onEdit,
+  onToggleEater,
+  onToggleAll,
+  canToggle = () => true,
+}: ItemRowProps) {
   const { colors } = useTheme();
   const label = eaterLabel(item, participants);
   const unassigned = item.eaterIds.length === 0 && lineTotal(item) > 0;
@@ -34,9 +44,10 @@ export function ItemRow({ item, participants, onEdit, onToggleEater, onToggleAll
     <View style={styles.container}>
       <Pressable
         onPress={onEdit}
-        accessibilityRole="button"
+        disabled={!onEdit}
+        accessibilityRole={onEdit ? 'button' : 'text'}
         accessibilityLabel={`${item.name}, ${item.qty} kali ${formatNumber(item.unitPrice)} rupiah`}
-        accessibilityHint="Ketuk untuk mengubah atau menghapus menu"
+        accessibilityHint={onEdit ? 'Ketuk untuk mengubah atau menghapus menu' : undefined}
         style={styles.header}>
         <View style={styles.titles}>
           <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
@@ -55,9 +66,10 @@ export function ItemRow({ item, participants, onEdit, onToggleEater, onToggleAll
             color={p.color}
             selected={item.eaterIds.includes(p.id)}
             onToggle={() => onToggleEater(p.id)}
+            disabled={!canToggle(p.id)}
           />
         ))}
-        {participants.length > 1 ? (
+        {onToggleAll && participants.length > 1 ? (
           <Pressable
             onPress={onToggleAll}
             accessibilityRole="button"

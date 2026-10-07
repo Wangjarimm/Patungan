@@ -7,6 +7,7 @@ import { Appearance } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
 import { useAccountSync } from '@/services/supabase/use-account-sync';
+import { useSyncEngine } from '@/services/supabase/use-sync';
 import { useAccountStore } from '@/stores/account';
 import { useBillsStore } from '@/stores/bills';
 import { useGroupsStore } from '@/stores/groups';
@@ -34,10 +35,11 @@ export default function RootLayout() {
     accountReady;
 
   useAccountSync();
+  useSyncEngine();
 
   // Also theme native pieces (date picker, alerts). Android 10+ only; useTheme covers the rest.
   useEffect(() => {
-    Appearance.setColorScheme(themePreference === 'system' ? 'unspecified' : themePreference);
+    Appearance.setColorScheme?.(themePreference === 'system' ? 'unspecified' : themePreference);
   }, [themePreference]);
 
   useEffect(() => {
@@ -81,6 +83,7 @@ export default function RootLayout() {
           <Stack.Screen name="tagihan/[id]/peserta" options={{ presentation: 'modal' }} />
           <Stack.Screen name="tagihan/[id]/menu" options={{ presentation: 'modal' }} />
           <Stack.Screen name="grup/baru" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="gabung" />
         </Stack.Protected>
       </Stack>
     </ThemeProvider>

@@ -20,8 +20,8 @@ type PersonShareCardProps = {
   settings: BillSettings;
   expanded: boolean;
   onToggle: () => void;
-  // Manual payment status; shown for people who owe something.
-  onTogglePaid: () => void;
+  // Manual payment status, owner only; shown for people who owe something.
+  onTogglePaid?: () => void;
 };
 
 function Line({ label, value, note }: { label: string; value: number; note?: string }) {
@@ -116,7 +116,7 @@ export function PersonShareCard({
         <Amount value={share.rounded} showCurrency={false} size="title" strong underline />
       </View>
 
-      {status === 'pending' ? (
+      {onTogglePaid && status === 'pending' ? (
         <PillButton
           label="Tandai lunas"
           accessibilityHint={`Tandai ${participant.name} sudah transfer`}
@@ -124,7 +124,7 @@ export function PersonShareCard({
           onPress={onTogglePaid}
           style={styles.paidButton}
         />
-      ) : status === 'paid' ? (
+      ) : onTogglePaid && status === 'paid' ? (
         <PillButton
           label="Batalkan lunas"
           accessibilityHint={`Kembalikan ${participant.name} ke belum transfer`}

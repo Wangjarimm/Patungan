@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
-  Alert,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Amount } from '@/components/Amount';
+import { confirmDestructive } from '@/components/confirm';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -62,17 +62,10 @@ export default function MenuItemScreen() {
 
   const confirmRemove = () => {
     if (!editing) return;
-    Alert.alert(`Hapus ${item.name}?`, 'Menu ini dihapus dari tagihan.', [
-      { text: 'Batal', style: 'cancel' },
-      {
-        text: 'Hapus',
-        style: 'destructive',
-        onPress: () => {
-          removeItem(bill.id, item.id);
-          router.back();
-        },
-      },
-    ]);
+    confirmDestructive(`Hapus ${item.name}?`, 'Menu ini dihapus dari tagihan.', 'Hapus', () => {
+      removeItem(bill.id, item.id);
+      router.back();
+    });
   };
 
   return (

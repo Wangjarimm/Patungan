@@ -15,6 +15,7 @@ import { calculateBill } from '@/lib/calc';
 import { formatRupiah } from '@/lib/format';
 import { buildShareText } from '@/lib/share-text';
 import { billProgress } from '@/lib/summary';
+import { useBillRealtime } from '@/services/supabase/use-sync';
 import { useBillsStore } from '@/stores/bills';
 import { fonts, fontSizes, lineHeights, radius, spacing, useTheme } from '@/theme';
 
@@ -39,6 +40,7 @@ export default function ResultScreen() {
     return new Set(first ? [first.participantId] : []);
   });
   const [copied, setCopied] = useState(false);
+  useBillRealtime(id);
 
   useEffect(() => {
     if (!copied) return;
@@ -61,18 +63,19 @@ export default function ResultScreen() {
       return next;
     });
 
-  const share = async () => {
-    try {
-      await Share.share({ message: text, title: bill.title });
-    } catch {
-      // The user can still copy the text; nothing to recover here.
-    }
-  };
-
   const copy = async () => {
     await Clipboard.setStringAsync(text);
     setCopied(true);
     AccessibilityInfo.announceForAccessibility('Rincian disalin');
+  };
+
+  // The web may have no share sheet; copying is the fallback there.
+  const share = async () => {
+    try {
+      await Share.share({ message: text, title: bill.title });
+    } catch {
+      await copy();
+    }
   };
 
   return (
@@ -134,10 +137,13 @@ export default function ResultScreen() {
               settings={bill.settings}
               expanded={expanded.has(participant.id)}
               onToggle={() => toggle(participant.id)}
-              onTogglePaid={() =>
-                participant.paidAt === null
-                  ? markPaid(bill.id, participant.id)
-                  : unmarkPaid(bill.id, participant.id)
+              onTogglePaid={
+                bill.role === 'owner'
+                  ? () =>
+                      participant.paidAt === null
+                        ? markPaid(bill.id, participant.id)
+                        : unmarkPaid(bill.id, participant.id)
+                  : undefined
               }
             />
           );

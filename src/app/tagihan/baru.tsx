@@ -79,9 +79,18 @@ export default function NewBillScreen() {
       if (!validTitle.ok || !validPayer.ok) return;
     }
 
+    // With an account the bill goes online (gets a join code); without one it stays local.
+    const { userId, displayName } = useAccountStore.getState();
+    const owner = userId && displayName ? { userId, displayName } : null;
     const created = group
-      ? createBill({ title, date, payerName: payerMember?.name ?? '', members: group.members })
-      : createBill({ title, date, payerName });
+      ? createBill({
+          title,
+          date,
+          payerName: payerMember?.name ?? '',
+          members: group.members,
+          owner,
+        })
+      : createBill({ title, date, payerName, owner });
     if (created.ok) {
       router.replace({ pathname: '/tagihan/[id]', params: { id: created.value } });
     }
@@ -112,6 +121,7 @@ export default function NewBillScreen() {
               <Text style={[styles.label, { color: colors.text }]}>Tanggal</Text>
               <Pressable
                 onPress={pickDate}
+                disabled={Platform.OS === 'web'}
                 accessibilityRole="button"
                 accessibilityLabel={`Tanggal, ${formatDateLong(date)}`}
                 accessibilityHint="Ketuk untuk mengganti tanggal"
@@ -119,7 +129,9 @@ export default function NewBillScreen() {
                 <Text style={[styles.dateText, { color: colors.text }]}>
                   {formatDateLong(date)}
                 </Text>
-                <Text style={[styles.dateAction, { color: colors.textMutedPaper }]}>Ganti</Text>
+                {Platform.OS === 'web' ? null : (
+                  <Text style={[styles.dateAction, { color: colors.textMutedPaper }]}>Ganti</Text>
+                )}
               </Pressable>
               {showIosPicker ? (
                 <DateTimePicker

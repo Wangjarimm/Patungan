@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef, useState } from 'react';
 import {
-  Alert,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -12,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Avatar } from '@/components/Avatar';
+import { confirmDestructive } from '@/components/confirm';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -59,22 +59,16 @@ export default function ParticipantScreen() {
   const confirmRemove = () => {
     if (!editing) return;
     const isPayer = participant.id === bill.payerId;
-    Alert.alert(
+    confirmDestructive(
       `Hapus ${participant.name}?`,
       isPayer
         ? `${participant.name} juga dilepas dari semua menu. Pembayar pindah ke peserta lain.`
         : `${participant.name} juga dilepas dari semua menu.`,
-      [
-        { text: 'Batal', style: 'cancel' },
-        {
-          text: 'Hapus',
-          style: 'destructive',
-          onPress: () => {
-            removeParticipant(bill.id, participant.id);
-            router.back();
-          },
-        },
-      ],
+      'Hapus',
+      () => {
+        removeParticipant(bill.id, participant.id);
+        router.back();
+      },
     );
   };
 
