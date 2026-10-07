@@ -4,7 +4,6 @@ import { useAccountStore } from '@/stores/account';
 import { useBillsStore } from '@/stores/bills';
 import { makeBill, person } from '@/test-utils/bill';
 
-import type { PatunganClient } from './client';
 import { activeBillChannels, REFRESH_DEBOUNCE_MS } from './realtime-manager';
 import { refreshBill } from './sync-engine';
 import { useBillRealtime } from './use-sync';
