@@ -1,11 +1,18 @@
 import { useFonts } from 'expo-font';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Stack,
+  ThemeProvider,
+  type ErrorBoundaryProps,
+} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { Appearance } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 
+import { ErrorScreen } from '@/components/ErrorScreen';
 import { useAccountSync } from '@/services/supabase/use-account-sync';
 import { useSyncEngine } from '@/services/supabase/use-sync';
 import { useAccountStore } from '@/stores/account';
@@ -16,6 +23,11 @@ import { useSettingsStore } from '@/stores/settings';
 import { fontAssets, useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
+
+// Any error thrown while rendering shows "Ada yang salah" with a retry, never a blank screen.
+export function ErrorBoundary(props: ErrorBoundaryProps) {
+  return <ErrorScreen {...props} />;
+}
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(fontAssets);
