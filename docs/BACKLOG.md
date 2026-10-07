@@ -1,0 +1,11 @@
+# Backlog
+
+Temuan kecil yang ditunda ke fase berikutnya. Kerjakan bersama fase yang disebut.
+
+## Fase 2
+
+- [ ] **Logo splash terlalu kecil.** Ditemukan saat uji APK v0.1.0 di HP. Splash memakai
+      `imageWidth: 76` dari template lama, padahal logo di `assets/images/splash-icon.png` hanya
+      mengisi sekitar 60% gambar. Naikkan `imageWidth` di plugin `expo-splash-screen` (`app.json`),
+      misalnya ke 200, lalu cek di mode terang dan gelap. Perubahan ini butuh build ulang, jadi
+      ikutkan di build rilis v0.2.
