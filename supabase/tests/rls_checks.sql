@@ -74,6 +74,28 @@ begin
     insert into rls_results (check_name, passed, detail) values ('Owner cannot link another account to a name', sqlerrm = 'CANNOT_LINK_OTHER_ACCOUNT', sqlerrm);
   end;
 
+  -- The app syncs with upserts; run each twice (insert, then update) as the owner.
+  begin
+    for i in 1..2 loop
+      insert into public.bills (id, title, service_pct)
+      values (bill, 'Kedai Uji RLS', 5)
+      on conflict (id) do update set title = excluded.title, service_pct = excluded.service_pct
+      returning join_code into code;
+      insert into public.participants (id, bill_id, display_name, color, profile_id, position)
+      values (pa, bill, 'Raka', '#B4471B', a, 0)
+      on conflict (id) do update set display_name = excluded.display_name, position = excluded.position;
+      insert into public.items (id, bill_id, name, unit_price, qty, position)
+      values (item, bill, 'Mie', 30000, 1, 0)
+      on conflict (id) do update set unit_price = excluded.unit_price;
+      insert into public.item_shares (bill_id, item_id, participant_id)
+      values (bill, item, pa)
+      on conflict (item_id, participant_id) do nothing;
+    end loop;
+    insert into rls_results (check_name, passed, detail) values ('Owner sync upserts work twice in a row', true, code);
+  exception when others then
+    insert into rls_results (check_name, passed, detail) values ('Owner sync upserts work twice in a row', false, sqlerrm);
+  end;
+
   -- ---- As B (before joining) ----------------------------------------------
   reset role;
   perform set_config('request.jwt.claims', json_build_object('sub', b, 'role', 'authenticated')::text, true);
@@ -130,6 +152,22 @@ begin
   -- Own eater choices only.
   insert into public.item_shares (bill_id, item_id, participant_id) values (bill, item, pb);
   insert into rls_results (check_name, passed, detail) values ('B can mark themselves as an eater', true, null);
+  begin
+    insert into public.item_shares (bill_id, item_id, participant_id)
+    values (bill, item, pb)
+    on conflict (item_id, participant_id) do nothing;
+    insert into rls_results (check_name, passed, detail) values ('B can re-send their eater choice (upsert)', true, null);
+  exception when others then
+    insert into rls_results (check_name, passed, detail) values ('B can re-send their eater choice (upsert)', false, sqlerrm);
+  end;
+  begin
+    insert into public.items (id, bill_id, name, unit_price, qty)
+    values (item, bill, 'Mie', 1, 1)
+    on conflict (id) do update set unit_price = excluded.unit_price;
+    insert into rls_results (check_name, passed, detail) values ('B cannot change a price through an upsert', false, 'upsert allowed');
+  exception when others then
+    insert into rls_results (check_name, passed, detail) values ('B cannot change a price through an upsert', true, sqlerrm);
+  end;
   begin
     delete from public.item_shares where item_id = item and participant_id = pa;
     get diagnostics n = row_count;
