@@ -256,7 +256,7 @@ patungan/
 | bills | id, owner_id, title, bill_date, join_code (unik), payer_participant_id, service_pct, tax_pct, tax_after_service, discount_type, discount_value, extra_fee, rounding_step, created_at | milik profiles |
 | participants | id, bill_id, display_name, color, profile_id (terisi setelah klaim), paid_at, paid_marked_by | milik bills |
 | items | id, bill_id, name, unit_price, qty, position | milik bills |
-| item_shares | item_id, participant_id (kunci gabungan) | menghubungkan items dan participants |
+| item_shares | item_id, participant_id (kunci gabungan), bill_id | menghubungkan items dan participants; bill_id dipakai untuk filter real-time dan menjamin menu serta pemakan berasal dari tagihan yang sama |
 | reminders | id, bill_id, participant_id, sent_at | untuk batas 12 jam |
 
 **Keamanan data (Row Level Security).**
@@ -267,7 +267,9 @@ patungan/
 - payment_methods hanya terbaca oleh pemiliknya dan orang yang berada di tagihan yang sama.
 - Hanya pemilik tagihan yang bisa mengubah menu, pengaturan, dan menghapus tagihan; peserta hanya bisa mengubah pilihan pemakan miliknya dan status bayarnya sendiri.
 
-**Real-time.** Layar tagihan berlangganan perubahan tabel items, item_shares, dan participants yang difilter berdasarkan bill_id. Perhitungan selalu diulang di perangkat dari data mentah, jadi server tidak menyimpan total.
+**Grup dan tema.** Tabel groups, group_members, dan kolom profiles.theme sudah dibuat sejak fase 3, tetapi data grup dan pilihan tema tetap disimpan lokal di perangkat sampai fase 6 (login Google).
+
+**Real-time.** Layar tagihan berlangganan perubahan tabel bills, items, item_shares, dan participants yang difilter berdasarkan bill_id. Perhitungan selalu diulang di perangkat dari data mentah, jadi server tidak menyimpan total.
 
 ## 8. Kebutuhan non-fungsional
 
@@ -311,5 +313,5 @@ Keberhasilan diukur dari apakah aplikasi benar-benar dipakai teman dan apakah re
 
 - [ ] Apakah tagihan perlu bisa diarsipkan atau dihapus otomatis setelah semua lunas?
 - [x] Apakah peserta boleh menambah menu sendiri, atau hanya pembayar?
-- [x] Berapa lama kode gabung berlaku (misalnya 30 hari)?
+- [x] Berapa lama kode gabung berlaku (misalnya 30 hari)? Keputusan v0.3: selama tagihan ada, tanpa kedaluwarsa. Kode unik di antara semua tagihan dan tidak bisa diganti.
 - [x] Perlukah ekspor riwayat ke CSV untuk patungan kos bulanan?

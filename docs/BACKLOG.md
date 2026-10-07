@@ -10,3 +10,9 @@ Temuan kecil yang ditunda ke fase berikutnya. Kerjakan bersama fase yang disebut
       misalnya ke 200, lalu cek di mode terang dan gelap. Perubahan ini butuh build ulang, jadi
       ikutkan di build rilis v0.2.
       Selesai: `imageWidth` jadi 200 (Fase 2, Tahap 3).
+
+## Fase 6
+
+- [ ] **Batasi percobaan `join_bill`.** Kode gabung berlaku tanpa kedaluwarsa (keputusan v0.3),
+      jadi batasi jumlah percobaan kode per akun (misalnya 10 per menit) untuk mencegah tebakan kode.
+      Bisa lewat tabel log percobaan di dalam fungsi `join_bill` atau Edge Function di depannya.
