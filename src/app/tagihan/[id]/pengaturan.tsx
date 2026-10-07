@@ -15,13 +15,13 @@ import { Amount } from '@/components/Amount';
 import { Avatar } from '@/components/Avatar';
 import { ChoiceChips } from '@/components/ChoiceChips';
 import { CheckIcon, ChevronRightIcon } from '@/components/icons';
+import { PercentStepper } from '@/components/PercentStepper';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
-import { Stepper } from '@/components/Stepper';
 import { TextField } from '@/components/TextField';
 import { calculateBill } from '@/lib/calc';
-import { formatNumber, formatPercent } from '@/lib/format';
+import { formatDecimal, formatNumber } from '@/lib/format';
 import { parsePercentInput, parseRupiahInput } from '@/lib/validation';
 import { useBillsStore } from '@/stores/bills';
 import { fonts, fontSizes, lineHeights, minTouchTarget, spacing, useTheme } from '@/theme';
@@ -48,14 +48,14 @@ export default function BillSettingsScreen() {
   const setPayer = useBillsStore((state) => state.setPayer);
 
   const initial = bill?.settings;
-  const [servicePct, setServicePct] = useState(initial?.servicePct ?? 0);
-  const [taxPct, setTaxPct] = useState(initial?.taxPct ?? 0);
+  const [serviceText, setServiceText] = useState(formatDecimal(initial?.servicePct ?? 0));
+  const [taxText, setTaxText] = useState(formatDecimal(initial?.taxPct ?? 0));
   const [taxAfterService, setTaxAfterService] = useState(initial?.taxAfterService ?? true);
   const [discountType, setDiscountType] = useState<DiscountType>(initial?.discountType ?? 'amount');
   const [discountText, setDiscountText] = useState(() => {
     if (!initial || initial.discountValue === 0) return '';
     return initial.discountType === 'percent'
-      ? String(initial.discountValue).replace('.', ',')
+      ? formatDecimal(initial.discountValue)
       : formatNumber(initial.discountValue);
   });
   const [feeText, setFeeText] = useState(amountText(initial?.extraFee ?? 0));
@@ -68,6 +68,11 @@ export default function BillSettingsScreen() {
       ? parsePercentInput(discountText, { allowEmpty: true, label: 'Diskon' })
       : parseRupiahInput(discountText, { allowEmpty: true, label: 'Diskon' });
   const fee = parseRupiahInput(feeText, { allowEmpty: true, label: 'Ongkir' });
+  const service = parsePercentInput(serviceText, { allowEmpty: true, label: 'Service' });
+  const tax = parsePercentInput(taxText, { allowEmpty: true, label: 'Pajak' });
+
+  const servicePct = service.ok ? service.value : 0;
+  const taxPct = tax.ok ? tax.value : 0;
 
   const discountValue = discount.ok ? discount.value : 0;
   const extraFee = fee.ok ? fee.value : 0;
@@ -94,7 +99,9 @@ export default function BillSettingsScreen() {
   }
 
   const payer = bill.participants.find((p) => p.id === payerId);
-  const valid = discount.ok && fee.ok;
+  const valid = discount.ok && fee.ok && service.ok && tax.ok;
+  const step = (value: number, delta: number) =>
+    formatDecimal(Math.min(100, Math.max(0, value + delta)));
 
   const save = () => {
     if (!valid) return;
@@ -111,27 +118,51 @@ export default function BillSettingsScreen() {
         <ScreenHeader title="Pajak, service, diskon" subtitle={bill.title} />
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <ReceiptCard contentStyle={styles.card}>
-            <View style={styles.settingRow}>
-              <Text style={[styles.label, { color: colors.text }]}>Service charge</Text>
-              <Stepper
-                label="service"
-                value={servicePct}
-                onChange={setServicePct}
-                min={0}
-                max={100}
-                format={formatPercent}
-              />
+            <View style={styles.block}>
+              <View style={styles.settingRow}>
+                <Text style={[styles.label, styles.flex, { color: colors.text }]}>
+                  Service charge
+                </Text>
+                <PercentStepper
+                  label="service"
+                  text={serviceText}
+                  onChangeText={setServiceText}
+                  onStep={(delta) => setServiceText(step(servicePct, delta))}
+                  canDecrease={servicePct > 0}
+                  canIncrease={servicePct < 100}
+                  invalid={!service.ok}
+                />
+              </View>
+              {service.ok ? null : (
+                <Text
+                  accessibilityLiveRegion="polite"
+                  style={[styles.note, { color: colors.warning }]}>
+                  {service.error}
+                </Text>
+              )}
             </View>
-            <View style={styles.settingRow}>
-              <Text style={[styles.label, { color: colors.text }]}>Pajak restoran</Text>
-              <Stepper
-                label="pajak"
-                value={taxPct}
-                onChange={setTaxPct}
-                min={0}
-                max={100}
-                format={formatPercent}
-              />
+            <View style={styles.block}>
+              <View style={styles.settingRow}>
+                <Text style={[styles.label, styles.flex, { color: colors.text }]}>
+                  Pajak restoran
+                </Text>
+                <PercentStepper
+                  label="pajak"
+                  text={taxText}
+                  onChangeText={setTaxText}
+                  onStep={(delta) => setTaxText(step(taxPct, delta))}
+                  canDecrease={taxPct > 0}
+                  canIncrease={taxPct < 100}
+                  invalid={!tax.ok}
+                />
+              </View>
+              {tax.ok ? null : (
+                <Text
+                  accessibilityLiveRegion="polite"
+                  style={[styles.note, { color: colors.warning }]}>
+                  {tax.error}
+                </Text>
+              )}
             </View>
 
             <ReceiptCard.Divider />
