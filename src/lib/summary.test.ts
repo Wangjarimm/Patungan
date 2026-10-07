@@ -1,7 +1,7 @@
 import type { Bill } from '@/types/bill';
 
 import { calculateBill } from './calc';
-import { billProgress, billTotal, summarizeOutstanding } from './summary';
+import { billProgress, billTotal, summarizeBill, summarizeOutstanding } from './summary';
 
 function makeBill(overrides: Partial<Bill> = {}): Bill {
   return {
@@ -11,9 +11,9 @@ function makeBill(overrides: Partial<Bill> = {}): Bill {
     payerId: 'raka',
     createdAt: 0,
     participants: [
-      { id: 'raka', name: 'Raka', color: 'c' },
-      { id: 'dinda', name: 'Dinda', color: 'c' },
-      { id: 'bima', name: 'Bima', color: 'c' },
+      { id: 'raka', name: 'Raka', color: 'c', paidAt: null },
+      { id: 'dinda', name: 'Dinda', color: 'c', paidAt: null },
+      { id: 'bima', name: 'Bima', color: 'c', paidAt: null },
     ],
     items: [
       { id: 'i1', name: 'Mie', unitPrice: 30000, qty: 1, eaterIds: ['raka'] },
@@ -75,5 +75,61 @@ describe('billProgress', () => {
     expect(progress.statuses.raka).toBe('pending');
     expect(progress.remaining).toBe(60500);
     expect(progress.settled).toBe(1);
+  });
+});
+
+function paid(bill: Bill, id: string): Bill {
+  return {
+    ...bill,
+    participants: bill.participants.map((p) => (p.id === id ? { ...p, paidAt: 1 } : p)),
+  };
+}
+
+describe('manual payment status', () => {
+  it('marks a paid person as settled and drops them from the remaining amount', () => {
+    const bill = paid(makeBill(), 'dinda');
+    const progress = billProgress(bill, calculateBill(bill));
+    expect(progress.statuses.dinda).toBe('paid');
+    expect(progress.settled).toBe(3);
+    expect(progress.remaining).toBe(0);
+  });
+
+  it('excludes paid people from the outstanding balance', () => {
+    expect(summarizeOutstanding([paid(makeBill(), 'dinda')])).toEqual({ amount: 0, people: 0 });
+  });
+
+  it('ignores paidAt on the payer and on people with nothing to pay', () => {
+    const bill = paid(paid(makeBill(), 'raka'), 'bima');
+    const progress = billProgress(bill, calculateBill(bill));
+    expect(progress.statuses.raka).toBe('cashier');
+    expect(progress.statuses.bima).toBe('none');
+  });
+});
+
+describe('summarizeBill', () => {
+  it('is unpaid while someone still owes', () => {
+    expect(summarizeBill(makeBill())).toMatchObject({
+      status: 'unpaid',
+      total: 60500,
+      remaining: 27500,
+      pendingPeople: 1,
+    });
+  });
+
+  it('is settled once everyone who owes has paid', () => {
+    expect(summarizeBill(paid(makeBill(), 'dinda'))).toMatchObject({
+      status: 'settled',
+      remaining: 0,
+      pendingPeople: 0,
+    });
+  });
+
+  it('is a draft when nobody owes anything', () => {
+    expect(summarizeBill(makeBill({ items: [] })).status).toBe('draft');
+    // Only the payer ate.
+    const payerOnly = makeBill({
+      items: [{ id: 'i1', name: 'Mie', unitPrice: 30000, qty: 1, eaterIds: ['raka'] }],
+    });
+    expect(summarizeBill(payerOnly).status).toBe('draft');
   });
 });

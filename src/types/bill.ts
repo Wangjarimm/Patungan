@@ -6,6 +6,8 @@ export type Participant = {
   id: string;
   name: string;
   color: string;
+  // When the payer marked this person as paid; null while still owing.
+  paidAt: number | null;
 };
 
 export type Item = {

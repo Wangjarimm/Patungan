@@ -15,6 +15,7 @@ const kenari: Bill = {
     id,
     name: id.charAt(0).toUpperCase() + id.slice(1),
     color: 'avatar',
+    paidAt: null,
   })),
   items: [
     { id: 'i1', name: 'Mie goreng spesial', unitPrice: 32000, qty: 2, eaterIds: ['raka', 'bima'] },
