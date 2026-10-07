@@ -113,7 +113,7 @@ export function PersonShareCard({
             ? 'Bagian'
             : `Tepat ${formatRupiah(share.exact)}, dibulatkan`}
         </Text>
-        <Amount value={share.rounded} showCurrency={false} size="title" strong highlight />
+        <Amount value={share.rounded} showCurrency={false} size="title" strong underline />
       </View>
 
       {status === 'pending' ? (

@@ -21,3 +21,11 @@ export const minTouchTarget = 44;
 
 // Stroke width for line icons.
 export const iconStroke = 2;
+
+// Accent underline under important amounts; identical in light and dark, only the color differs.
+export const amountUnderline = {
+  thickness: 3,
+  // Space between the text box and the line.
+  gap: 2,
+  radius: 1.5,
+} as const;

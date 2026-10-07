@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import { avatarColors } from '@/theme/colors';
+import { amountUnderline } from '@/theme/spacing';
 import { getTheme, useTheme } from '@/theme/use-theme';
 
 import { Amount } from './Amount';
@@ -131,17 +132,24 @@ describe('Amount', () => {
     expect(screen.getByText('64.000')).toBeOnTheScreen();
   });
 
-  it('uses a highlighter mark in light mode', async () => {
-    await render(<Amount value={146800} highlight />);
-    expect(screen.getByTestId('amount-highlight')).toBeTruthy();
-    expect(screen.queryByTestId('amount-underline')).toBeNull();
-  });
+  it.each(['light', 'dark'] as const)(
+    'draws the same accent underline in %s mode, only the color changes',
+    async (scheme) => {
+      mockedUseTheme.mockImplementation(() => getTheme(scheme));
+      await render(<Amount value={146800} underline />);
+      expect(screen.getByTestId('amount-underline')).toHaveStyle({
+        height: amountUnderline.thickness,
+        marginTop: amountUnderline.gap,
+        borderRadius: amountUnderline.radius,
+        backgroundColor: getTheme(scheme).colors.accent,
+      });
+      expect(screen.queryByTestId('amount-highlight')).toBeNull();
+    },
+  );
 
-  it('uses a thick underline in dark mode', async () => {
-    mockedUseTheme.mockImplementation(() => getTheme('dark'));
-    await render(<Amount value={146800} highlight />);
-    expect(screen.getByTestId('amount-underline')).toBeTruthy();
-    expect(screen.queryByTestId('amount-highlight')).toBeNull();
+  it('has no underline unless asked', async () => {
+    await render(<Amount value={146800} />);
+    expect(screen.queryByTestId('amount-underline')).toBeNull();
   });
 });
 

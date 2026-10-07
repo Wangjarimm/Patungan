@@ -43,7 +43,7 @@ export default function HomeScreen() {
             Masih ditunggu dari teman
           </Text>
           <View style={styles.balanceRow}>
-            <Amount value={outstanding.amount} size="display" strong highlight />
+            <Amount value={outstanding.amount} size="display" strong underline />
             {outstanding.people > 0 ? (
               <Text style={[styles.cardMeta, { color: colors.textMutedPaper }]}>
                 {outstanding.people} orang

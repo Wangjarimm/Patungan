@@ -167,7 +167,7 @@ Konsep visualnya "struk di atas meja": informasi penting berada di kartu kertas 
 
 Warna avatar peserta tetap di kedua tema, dengan inisial putih: #B4471B, #2367A0, #6A4AB8, #237A4F, #A93A6B, lalu lima warna tambahan dengan kontras teks putih minimal 4,5:1.
 
-**Tipografi.** Bricolage Grotesque untuk semua teks (judul 800, isi 400 dan 600). IBM Plex Mono khusus nominal Rupiah dan kode gabung, agar angka sejajar dan terasa seperti cetakan struk. Di mode terang, nominal penting diberi sorotan stabilo aksen; di mode gelap sorotan berubah menjadi garis bawah tebal.
+**Tipografi.** Bricolage Grotesque untuk semua teks (judul 800, isi 400 dan 600). IBM Plex Mono khusus nominal Rupiah dan kode gabung, agar angka sejajar dan terasa seperti cetakan struk. Nominal penting diberi garis bawah tebal berwarna aksen dengan bentuk yang sama di mode terang dan gelap: tebal 3 dp, berjarak 2 dp di bawah angka, ujung membulat (radius 1,5 dp); hanya warnanya yang mengikuti token `accent` tiap tema.
 
 **Aturan komponen.**
 
