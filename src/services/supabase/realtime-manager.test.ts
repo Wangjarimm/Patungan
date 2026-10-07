@@ -4,7 +4,11 @@ import { useAccountStore } from '@/stores/account';
 import { useBillsStore } from '@/stores/bills';
 import { makeBill, person } from '@/test-utils/bill';
 
-import { activeBillChannels, REFRESH_DEBOUNCE_MS } from './realtime-manager';
+import {
+  activeBillChannels,
+  REFRESH_DEBOUNCE_MS,
+  resetBillChannelsForTests,
+} from './realtime-manager';
 import { refreshBill } from './sync-engine';
 import { useBillRealtime } from './use-sync';
 
@@ -50,6 +54,9 @@ class FakeRealtime {
     this.created.push(channel);
     return channel;
   }
+  getChannels() {
+    return this.channels;
+  }
   removeChannel = jest.fn(async (channel: FakeChannel) => {
     this.pending.push(channel);
     return 'ok';
@@ -87,6 +94,7 @@ beforeEach(() => {
   jest.useFakeTimers();
   jest.clearAllMocks();
   mockRealtime = new FakeRealtime();
+  resetBillChannelsForTests();
   useAccountStore.setState({ status: 'online', userId: 'me' });
   useBillsStore.setState({ bills: { a: bill('a'), b: bill('b') } });
 });
@@ -233,5 +241,53 @@ describe('useBillRealtime with the shared channel manager', () => {
     await act(async () => useBillsStore.getState().markSynced('c', 'MEK482'));
     expect(mockRealtime.created).toHaveLength(1);
     await screen.unmount();
+  });
+
+  it('skips topics left over from before a JS reload instead of reusing them', async () => {
+    // As after Fast Refresh: the client still holds subscribed channels, the counter restarts.
+    const holder = globalThis as typeof globalThis & {
+      __patunganRealtime?: { generation: number };
+    };
+    holder.__patunganRealtime!.generation = 0;
+    for (const n of [1, 2, 3]) mockRealtime.channel(`bill:a:${n}`).subscribe();
+
+    const screen = await renderHook(() => useBillRealtime('a'));
+    expect(activeBillChannels()[0]?.topic).toBe('realtime:bill:a:4');
+    await screen.unmount();
+  });
+
+  it('never crashes when a channel cannot be created, and still reloads the bill', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+    jest.spyOn(mockRealtime, 'channel').mockImplementation(() => {
+      throw new Error(
+        'cannot add `postgres_changes` callbacks for realtime:bill:a after `subscribe()`.',
+      );
+    });
+
+    const screen = await renderHook(() => useBillRealtime('a'));
+    await act(async () => jest.advanceTimersByTime(REFRESH_DEBOUNCE_MS));
+
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('falling back to reloads'),
+      expect.any(Error),
+    );
+    expect(mockedRefresh).toHaveBeenCalledWith(mockRealtime, 'a');
+    expect(activeBillChannels()).toEqual([{ billId: 'a', users: 1, topic: null }]);
+    await screen.unmount();
+    expect(activeBillChannels()).toEqual([]);
+    warn.mockRestore();
+  });
+
+  it('only logs when removing a channel fails', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+    mockRealtime.removeChannel.mockRejectedValueOnce(new Error('socket closed'));
+    const screen = await renderHook(() => useBillRealtime('a'));
+    await screen.unmount();
+    await act(async () => undefined);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('could not remove the channel'),
+      expect.any(Error),
+    );
+    warn.mockRestore();
   });
 });
