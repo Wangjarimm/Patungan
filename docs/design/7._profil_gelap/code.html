@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Profil - Patungan</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#131D17',
+            surface: '#22332A',
+            surfaceNav: '#1C2A22',
+            brandOrange: '#FF7A52',
+            avatarBg: '#BF481F',
+            subtext: '#98AB9E',
+            borderSep: '#2B3F34',
+            lightCream: '#E6EFEA',
+            lightCreamHover: '#DCE7E1',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    /* Remove tap highlight */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    /* Custom dashed border */
+    .border-dashed-custom {
+      border-bottom: 1px dashed #34483D;
+    }
+    .border-divider-custom {
+      border-bottom: 1px solid #283A30;
+    }
+  </style>
+</head>
+<body class="bg-appBg text-white font-sans antialiased flex justify-center min-h-screen">
+<!-- Mobile Viewport Container -->
+<div class="w-full max-w-[420px] min-h-screen flex flex-col justify-between px-5 pt-12 pb-8 relative">
+<div class="flex flex-col space-y-6">
+<!-- BEGIN: UserProfileHeader -->
+<header class="flex items-center justify-between pt-2 pb-1" data-purpose="user-profile-header">
+<div class="flex items-center space-x-4">
+<!-- User Avatar Initial -->
+<div class="w-16 h-16 rounded-full bg-avatarBg flex items-center justify-center text-white text-2xl font-bold tracking-tight shadow-sm">
+            R
+          </div>
+<!-- User Info -->
+<div class="flex flex-col justify-center">
+<h1 class="text-[26px] font-bold tracking-tight leading-tight text-white">Raka Pratama</h1>
+<p class="text-[14px] text-subtext leading-snug mt-0.5">Akun tamu di HP ini</p>
+</div>
+</div>
+<!-- Edit Profile Button -->
+<button aria-label="Edit Profil" class="w-11 h-11 rounded-full border border-[#3A4E42] flex items-center justify-center text-white hover:bg-surface active:scale-95 transition-all">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 20h9"></path>
+<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+</svg>
+</button>
+</header>
+<!-- END: UserProfileHeader -->
+<!-- BEGIN: CloudSyncCard -->
+<section class="bg-surface rounded-2xl p-5 shadow-sm" data-purpose="cloud-sync-banner">
+<h2 class="text-[17px] font-bold text-white tracking-tight">Riwayatmu hanya tersimpan di HP ini</h2>
+<p class="text-[14px] text-subtext leading-relaxed mt-2.5">
+          Hubungkan akun Google supaya tagihan tidak hilang saat ganti HP.
+        </p>
+<div class="mt-5">
+<button class="bg-lightCream hover:bg-lightCreamHover active:scale-[0.98] transition-all text-[#131D17] font-bold text-[15px] px-6 py-3 rounded-full">
+            Hubungkan akun Google
+          </button>
+</div>
+</section>
+<!-- END: CloudSyncCard -->
+<!-- BEGIN: PaymentAccountsSection -->
+<section data-purpose="payment-methods-card">
+<!-- Section Title and Subtitle -->
+<div class="flex items-start justify-between mb-3 px-0.5">
+<h2 class="text-[18px] font-bold text-white leading-tight w-1/2">Rekening dan e-wallet</h2>
+<span class="text-[13px] text-subtext text-left w-1/2 pl-3 leading-snug">Terlihat oleh teman satu tagihan</span>
+</div>
+<!-- Card Container -->
+<div class="bg-surface rounded-2xl overflow-hidden shadow-sm">
+<!-- BCA Item -->
+<div class="px-5 py-4 border-dashed-custom flex items-center justify-between cursor-pointer active:bg-[#283C32] transition-colors">
+<div class="space-y-1">
+<span class="text-[13px] text-subtext block font-medium">BCA, a.n. Raka Pratama</span>
+<span class="text-[18px] font-bold tracking-wider text-white">8830 1122 4567</span>
+</div>
+<div class="flex items-center space-x-3">
+<span class="bg-brandOrange text-white text-[12px] font-semibold px-3 py-1 rounded-full">Utama</span>
+<svg class="w-4 h-4 text-[#8C9F92]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M9 18l6-6-6-6"></path>
+</svg>
+</div>
+</div>
+<!-- GoPay & DANA Item -->
+<div class="px-5 py-4 border-dashed-custom flex items-center justify-between cursor-pointer active:bg-[#283C32] transition-colors">
+<div class="space-y-1">
+<span class="text-[13px] text-subtext block font-medium">GoPay dan DANA</span>
+<span class="text-[18px] font-bold tracking-wider text-white">0812 3456 7890</span>
+</div>
+<svg class="w-4 h-4 text-[#8C9F92]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M9 18l6-6-6-6"></path>
+</svg>
+</div>
+<!-- Add Account Action -->
+<button class="w-full px-5 py-4 flex items-center text-left text-white font-bold text-[15px] hover:bg-[#283C32] active:bg-[#283C32] transition-colors">
+<svg class="w-4 h-4 mr-3 stroke-[2.5]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<line x1="12" x2="12" y1="5" y2="19"></line>
+<line x1="5" x2="19" y1="12" y2="12"></line>
+</svg>
+<span>Tambah rekening atau e-wallet</span>
+</button>
+</div>
+</section>
+<!-- END: PaymentAccountsSection -->
+<!-- BEGIN: SettingsListSection -->
+<section class="pt-1" data-purpose="general-settings">
+<!-- Setting Item: Pengaturan bawaan tagihan -->
+<div class="py-3.5 border-divider-custom flex items-center justify-between cursor-pointer active:opacity-75 transition-opacity">
+<div>
+<h3 class="text-[16px] font-bold text-white">Pengaturan bawaan tagihan</h3>
+<p class="text-[13.5px] text-subtext mt-0.5">Service 5%, pajak 10%, bulatkan ke Rp100</p>
+</div>
+<svg class="w-4 h-4 text-[#8C9F92] flex-shrink-0 ml-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M9 18l6-6-6-6"></path>
+</svg>
+</div>
+<!-- Setting Item: Kode sumber di GitHub -->
+<div class="py-3.5 flex items-center justify-between cursor-pointer active:opacity-75 transition-opacity">
+<div>
+<h3 class="text-[16px] font-bold text-white">Kode sumber di GitHub</h3>
+<p class="text-[13.5px] text-subtext mt-0.5">Versi 0.4.0</p>
+</div>
+<svg class="w-4 h-4 text-[#8C9F92] flex-shrink-0 ml-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<line x1="7" x2="17" y1="17" y2="7"></line>
+<polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+</div>
+</section>
+<!-- END: SettingsListSection -->
+</div>
+<!-- BEGIN: FloatingBottomNavigation -->
+<nav class="sticky bottom-2 mt-6 mx-auto w-full" data-purpose="floating-navbar">
+<div class="bg-surfaceNav border border-[#2C3E33]/70 rounded-full h-[68px] px-5 flex items-center justify-between shadow-2xl backdrop-blur-md">
+<!-- Home / Riwayat Tab -->
+<button aria-label="Beranda" class="p-3 text-subtext hover:text-white transition-colors">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+</button>
+<!-- Bills Tab -->
+<button aria-label="Tagihan" class="p-3 text-subtext hover:text-white transition-colors">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+</button>
+<!-- Active Profile Tab (Pill shape) -->
+<button aria-label="Profil Aktif" class="bg-brandOrange text-white font-bold text-[15px] pl-4 pr-5 py-2.5 rounded-full flex items-center space-x-2 shadow-md">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span class="tracking-tight">Profil</span>
+</button>
+</div>
+</nav>
+<!-- END: FloatingBottomNavigation -->
+</div>
+</body></html>

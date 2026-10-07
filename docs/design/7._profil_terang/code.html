@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Profil - Patungan</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#DDE5D6',
+            avatarBg: '#B6461D',
+            brandDark: '#15241A',
+            brandOrange: '#FF5722',
+            badgeOrange: '#FF5722',
+            textPrimary: '#142118',
+            textMuted: '#687768',
+            borderSubtle: '#D3DFCE',
+            dashBorder: '#DCE4DA'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles -->
+<style data-purpose="custom-layout">
+    body {
+      background-color: #DDE5D6;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    /* Dashed separator */
+    .dashed-line {
+      border-bottom: 1.5px dashed #E2E8DE;
+    }
+  </style>
+</head>
+<body class="bg-appBg text-textPrimary min-h-screen flex justify-center selection:bg-brandOrange selection:text-white">
+<!-- Mobile Screen Container -->
+<div class="w-full max-w-[430px] min-h-screen flex flex-col justify-between relative px-5 pt-12 pb-32">
+<main class="w-full flex flex-col">
+<!-- BEGIN: UserProfileHeader -->
+<section class="flex items-center justify-between mt-3 mb-6" data-purpose="user-profile-header">
+<div class="flex items-center gap-4">
+<!-- Avatar Icon -->
+<div class="w-16 h-16 rounded-full bg-avatarBg flex items-center justify-center text-white text-3xl font-extrabold shadow-sm shrink-0">
+<span>R</span>
+</div>
+<!-- Profile Text Details -->
+<div class="flex flex-col">
+<h1 class="text-[26px] font-extrabold tracking-tight text-textPrimary leading-tight">
+              Raka Pratama
+            </h1>
+<p class="text-[14px] text-textMuted font-normal mt-0.5">
+              Akun tamu di HP ini
+            </p>
+</div>
+</div>
+<!-- Edit Profile Button -->
+<button aria-label="Edit Profil" class="w-11 h-11 rounded-full border border-neutral-400/35 flex items-center justify-center bg-transparent active:bg-black/5 transition-colors" type="button">
+<svg class="w-5 h-5 text-textPrimary stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M12 20h9"></path>
+<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+</svg>
+</button>
+</section>
+<!-- END: UserProfileHeader -->
+<!-- BEGIN: SyncAccountCard -->
+<section class="bg-white rounded-3xl p-5 mb-7 shadow-[0_2px_8px_rgba(0,0,0,0.02)]" data-purpose="sync-card">
+<h2 class="text-[16px] font-bold text-textPrimary leading-snug">
+          Riwayatmu hanya tersimpan di HP ini
+        </h2>
+<p class="text-[13.5px] leading-relaxed text-[#516154] mt-2 mb-4">
+          Hubungkan akun Google supaya tagihan tidak hilang saat ganti HP.
+        </p>
+<!-- Connect Google Account CTA Button -->
+<button class="bg-[#17261C] hover:bg-black text-white text-[14px] font-semibold py-3 px-5 rounded-full inline-flex items-center justify-center transition-colors" type="button">
+          Hubungkan akun Google
+        </button>
+</section>
+<!-- END: SyncAccountCard -->
+<!-- BEGIN: PaymentAccountsSection -->
+<section class="mb-5" data-purpose="payment-accounts">
+<!-- Section Title & Subtitle -->
+<div class="flex items-start justify-between mb-3 px-0.5">
+<h3 class="text-[16px] font-bold text-textPrimary leading-tight max-w-[150px]">
+            Rekening dan e-wallet
+          </h3>
+<span class="text-[13px] text-textMuted font-normal text-right max-w-[180px] leading-tight">
+            Terlihat oleh teman satu tagihan
+          </span>
+</div>
+<!-- Payment Methods Card List -->
+<div class="bg-white rounded-3xl px-5 py-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex flex-col">
+<!-- Item 1: BCA -->
+<div class="flex items-center justify-between py-2">
+<div>
+<p class="text-[13px] text-textMuted font-medium">BCA, a.n. Raka Pratama</p>
+<p class="text-[17px] font-bold tracking-normal text-textPrimary mt-0.5">8830 1122 4567</p>
+</div>
+<div class="flex items-center gap-3">
+<!-- 'Utama' Badge -->
+<span class="bg-[#FF5526] text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">
+                Utama
+              </span>
+<!-- Chevron Right -->
+<svg class="w-4 h-4 text-neutral-400 stroke-[2.5]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</div>
+</div>
+<!-- Dashed Divider -->
+<div class="dashed-line my-2.5"></div>
+<!-- Item 2: GoPay and DANA -->
+<div class="flex items-center justify-between py-2">
+<div>
+<p class="text-[13px] text-textMuted font-medium">GoPay dan DANA</p>
+<p class="text-[17px] font-bold tracking-normal text-textPrimary mt-0.5">0812 3456 7890</p>
+</div>
+<svg class="w-4 h-4 text-neutral-400 stroke-[2.5]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</div>
+<!-- Dashed Divider -->
+<div class="dashed-line my-2.5"></div>
+<!-- Item 3: Add Payment Method -->
+<button class="flex items-center gap-2.5 py-2 text-textPrimary font-semibold text-[14.5px] text-left active:opacity-70 transition-opacity" type="button">
+<span class="text-xl leading-none font-bold text-textPrimary mb-0.5">+</span>
+<span>Tambah rekening atau e-wallet</span>
+</button>
+</div>
+</section>
+<!-- END: PaymentAccountsSection -->
+<!-- BEGIN: MenuOptionsSection -->
+<section class="flex flex-col mt-2 divide-y divide-[#D1DC sample] divide-borderSubtle" data-purpose="settings-menu-list">
+<!-- Default Bill Settings -->
+<div class="flex items-center justify-between py-3.5 px-0.5 active:opacity-70 cursor-pointer">
+<div class="flex flex-col pr-4">
+<span class="text-[15.5px] font-bold text-textPrimary">Pengaturan bawaan tagihan</span>
+<span class="text-[13px] text-textMuted font-medium mt-0.5">Service 5%, pajak 10%, bulatkan ke Rp100</span>
+</div>
+<svg class="w-4 h-4 text-textPrimary stroke-[2.2] shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</div>
+<!-- GitHub Source Code Link -->
+<div class="flex items-center justify-between py-3.5 px-0.5 active:opacity-70 cursor-pointer">
+<div class="flex flex-col pr-4">
+<span class="text-[15.5px] font-bold text-textPrimary">Kode sumber di GitHub</span>
+<span class="text-[13px] text-textMuted font-medium mt-0.5">Versi 0.4.0</span>
+</div>
+<!-- External Link Icon -->
+<svg class="w-4 h-4 text-textPrimary stroke-[2.2] shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<line x1="7" x2="17" y1="17" y2="7"></line>
+<polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+</div>
+</section>
+<!-- END: MenuOptionsSection -->
+</main>
+<!-- BEGIN: BottomNavigation -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-[390px] z-50" data-purpose="floating-navigation">
+<div class="bg-white/95 backdrop-blur-md rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] px-5 py-2 flex items-center justify-between">
+<!-- Tab: Beranda (Home) -->
+<button aria-label="Beranda" class="p-3 text-textPrimary/80 hover:text-textPrimary transition-colors flex items-center justify-center" type="button">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+</svg>
+</button>
+<!-- Tab: Riwayat (Receipt) -->
+<button aria-label="Riwayat" class="p-3 text-textPrimary/80 hover:text-textPrimary transition-colors flex items-center justify-center" type="button">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"></path>
+<line x1="8" x2="16" y1="8" y2="8"></line>
+<line x1="8" x2="16" y1="12" y2="12"></line>
+</svg>
+</button>
+<!-- Tab: Active Profil Pill -->
+<button aria-label="Profil" class="bg-[#FF5526] text-white px-5 py-2.5 rounded-full flex items-center gap-2 font-bold text-[14px] shadow-sm active:scale-95 transition-transform" type="button">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span>Profil</span>
+</button>
+</div>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+</body></html>

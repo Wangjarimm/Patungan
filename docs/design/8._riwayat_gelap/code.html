@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Riwayat - Mode Gelap</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & IBM Plex Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+          },
+          colors: {
+            app: {
+              bg: '#131D17',
+              card: '#22332A',
+              cardHover: '#283c31',
+              primaryText: '#E8EFE6',
+              secondaryText: '#A3B3A6',
+              border: '#1f2e25',
+              tomato: '#FF7A52',
+              tomatoText: '#FF8863',
+              greenLunas: '#6FD39B',
+              navBg: '#1C2A22',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    /* Disable default touch highlighting and scrollbars for native feel */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    body::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-[#0b100d] flex justify-center items-center min-h-screen p-0 sm:py-6 font-sans antialiased text-app-primaryText">
+<!-- BEGIN: MobileDeviceContainer -->
+<!-- Container mimicking iPhone viewport width/height proportion -->
+<div class="relative w-full max-w-[430px] min-h-screen sm:min-h-[920px] bg-app-bg overflow-x-hidden flex flex-col justify-between shadow-2xl sm:rounded-[44px]">
+<!-- Top Padding / Status Bar Spacer -->
+<div class="w-full pt-14 sm:pt-16 px-6">
+<!-- BEGIN: HeaderSection -->
+<header class="mb-6">
+<h1 class="text-[38px] leading-tight font-extrabold tracking-tight text-app-primaryText">
+          Riwayat
+        </h1>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: FilterPills -->
+<!-- Filter options: Semua (active), Belum lunas (with badge), Lunas -->
+<nav aria-label="Filter Riwayat" class="flex items-center gap-2.5 mb-8">
+<!-- Active Filter: Semua -->
+<button class="px-5 py-2.5 rounded-full bg-app-primaryText text-app-bg text-[15px] font-bold tracking-tight shadow-sm transition-transform active:scale-95" type="button">
+          Semua
+        </button>
+<!-- Filter: Belum Lunas with counter badge -->
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-full border border-[#2f4236] bg-transparent text-app-primaryText text-[15px] font-semibold transition-colors hover:border-app-secondaryText active:scale-95" type="button">
+<span>Belum lunas</span>
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-app-tomato text-app-bg font-bold text-xs">
+            2
+          </span>
+</button>
+<!-- Filter: Lunas -->
+<button class="px-5 py-2.5 rounded-full border border-[#2f4236] bg-transparent text-app-primaryText text-[15px] font-semibold transition-colors hover:border-app-secondaryText active:scale-95" type="button">
+          Lunas
+        </button>
+</nav>
+<!-- END: FilterPills -->
+<!-- BEGIN: MainContent -->
+<main class="space-y-7 pb-36">
+<!-- Section: Oktober 2026 -->
+<section aria-labelledby="section-okt-2026">
+<h2 class="text-sm font-semibold text-app-secondaryText mb-3 tracking-wide" id="section-okt-2026">
+            Oktober 2026
+          </h2>
+<div class="flex flex-col gap-3">
+<!-- Card 1: Kedai Mie Kenari -->
+<article class="bg-app-card rounded-2xl p-4 transition-all">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-[17px] font-bold text-app-primaryText leading-snug">
+                  Kedai Mie Kenari
+                </h3>
+<span class="font-mono font-semibold text-[17px] text-app-primaryText tracking-tight">
+                  243.900
+                </span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-app-secondaryText text-[13px] font-medium">
+                  Sab 3 Okt, Kantor lantai 3
+                </span>
+<!-- Status Tag -->
+<span class="inline-block bg-app-tomato text-app-bg text-[12px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap">
+                  Kamu menunggu 146.800
+                </span>
+</div>
+</article>
+<!-- Card 2: Martabak Bang Udin -->
+<article class="bg-app-card rounded-2xl p-4 transition-all">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-[17px] font-bold text-app-primaryText leading-snug">
+                  Martabak Bang Udin
+                </h3>
+<span class="font-mono font-semibold text-[17px] text-app-primaryText tracking-tight">
+                  94.500
+                </span>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-app-secondaryText text-[13px] font-medium">
+                  Kam 1 Okt, Kos Melati
+                </span>
+<!-- Status Tag -->
+<span class="inline-block bg-[#3c2520] text-app-tomatoText text-[12px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap">
+                  Kamu belum transfer 31.500
+                </span>
+</div>
+</article>
+</div>
+</section>
+<!-- Section: September 2026 -->
+<section aria-labelledby="section-sep-2026">
+<h2 class="text-sm font-semibold text-app-secondaryText mb-1 tracking-wide" id="section-sep-2026">
+            September 2026
+          </h2>
+<div class="divide-y divide-[#1B2921]">
+<!-- Row 1: Bakso Pak Darto -->
+<article class="py-3.5 flex justify-between items-center">
+<div>
+<h3 class="text-[16px] font-bold text-app-primaryText mb-0.5">
+                  Bakso Pak Darto
+                </h3>
+<p class="text-[13px] text-app-secondaryText font-medium">
+                  Rab 30 Sep, Kantor lantai 3
+                </p>
+</div>
+<div class="text-right">
+<div class="font-mono font-semibold text-[16px] text-app-primaryText">
+                  96.000
+                </div>
+<div class="text-[13px] font-bold text-app-greenLunas">
+                  Lunas
+                </div>
+</div>
+</article>
+<!-- Row 2: Nonton dan popcorn -->
+<article class="py-3.5 flex justify-between items-center">
+<div>
+<h3 class="text-[16px] font-bold text-app-primaryText mb-0.5">
+                  Nonton dan popcorn
+                </h3>
+<p class="text-[13px] text-app-secondaryText font-medium">
+                  Sab 26 Sep, Kantor lantai 3
+                </p>
+</div>
+<div class="text-right">
+<div class="font-mono font-semibold text-[16px] text-app-primaryText">
+                  310.000
+                </div>
+<div class="text-[13px] font-bold text-app-greenLunas">
+                  Lunas
+                </div>
+</div>
+</article>
+<!-- Row 3: Kado ulang tahun Dinda -->
+<article class="py-3.5 flex justify-between items-center">
+<div>
+<h3 class="text-[16px] font-bold text-app-primaryText mb-0.5">
+                  Kado ulang tahun Dinda
+                </h3>
+<p class="text-[13px] text-app-secondaryText font-medium">
+                  Sen 21 Sep, Kantor lantai 3
+                </p>
+</div>
+<div class="text-right">
+<div class="font-mono font-semibold text-[16px] text-app-primaryText">
+                  450.000
+                </div>
+<div class="text-[13px] font-bold text-app-greenLunas">
+                  Lunas
+                </div>
+</div>
+</article>
+<!-- Row 4: Belanja bulanan kos -->
+<article class="py-3.5 flex justify-between items-center">
+<div>
+<h3 class="text-[16px] font-bold text-app-primaryText mb-0.5">
+                  Belanja bulanan kos
+                </h3>
+<p class="text-[13px] text-app-secondaryText font-medium">
+                  Kam 10 Sep, Kos Melati
+                </p>
+</div>
+<div class="text-right">
+<div class="font-mono font-semibold text-[16px] text-app-primaryText">
+                  228.000
+                </div>
+<div class="text-[13px] font-bold text-app-greenLunas">
+                  Lunas
+                </div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- END: MainContent -->
+</div>
+<!-- BEGIN: FloatingBottomNavigation -->
+<!-- Floating Capsule Navbar styled with iOS home pill indicator spacing -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-[382px] z-50">
+<nav class="bg-app-navBg/95 backdrop-blur-md rounded-[38px] p-2 flex items-center justify-between border border-[#27382d]/60 shadow-[0_12px_24px_rgba(0,0,0,0.45)]">
+<!-- Tab: Beranda (Inactive) -->
+<button aria-label="Beranda" class="flex-1 flex justify-center items-center py-2 text-app-secondaryText hover:text-app-primaryText transition-colors" type="button">
+<svg class="w-6 h-6 stroke-[2] stroke-current fill-none" viewbox="0 0 24 24">
+<path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Tab: Riwayat (Active Pill) -->
+<button aria-current="page" class="bg-app-tomato text-[#131D17] font-bold flex items-center gap-2 px-6 py-3 rounded-full shadow-md active:scale-95 transition-transform" type="button">
+<!-- Receipt Icon -->
+<svg class="w-5 h-5 stroke-[2.2] stroke-current fill-none" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[15px] font-extrabold tracking-tight">Riwayat</span>
+</button>
+<!-- Tab: Profil (Inactive) -->
+<button aria-label="Profil" class="flex-1 flex justify-center items-center py-2 text-app-secondaryText hover:text-app-primaryText transition-colors" type="button">
+<svg class="w-6 h-6 stroke-[2] stroke-current fill-none" viewbox="0 0 24 24">
+<path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</nav>
+</div>
+<!-- END: FloatingBottomNavigation -->
+</div>
+<!-- END: MobileDeviceContainer -->
+</body></html>

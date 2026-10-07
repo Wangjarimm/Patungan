@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Gabung ke Tagihan Teman</title>
+<!-- Tailwind CSS CDN with forms and container plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans / Bricolage Grotesque -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'app-bg': '#DCE6D5',
+            'app-coral': '#FF6A3D',
+            'app-dark': '#152119',
+            'app-purple': '#6C38A8',
+            'app-muted': '#586A5E',
+          },
+          fontFamily: {
+            headline: ['"Bricolage Grotesque"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles for Receipt Edge -->
+<style data-purpose="receipt-sawtooth">
+    .zigzag-bottom {
+      background: #FFFFFF;
+      position: relative;
+    }
+    .zigzag-bottom::after {
+      content: "";
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: radial-gradient(circle, transparent, transparent 50%),
+                  linear-gradient(135deg, #FFFFFF 33.333%, transparent 33.333%),
+                  linear-gradient(225deg, #FFFFFF 33.333%, transparent 33.333%);
+      background-size: 14px 12px;
+      background-repeat: repeat-x;
+      background-position: left bottom;
+    }
+  </style>
+<!-- END: Custom Styles for Receipt Edge -->
+</head>
+<body class="bg-app-bg text-app-dark font-sans min-h-screen flex flex-col justify-between selection:bg-app-coral selection:text-white antialiased">
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-[420px] mx-auto px-6 pt-12 pb-6 flex-1 flex flex-col justify-between" data-purpose="container-screen">
+<div>
+<!-- BEGIN: Navigation / Close -->
+<nav class="mb-8" data-purpose="top-navigation">
+<button aria-label="Tutup" class="text-app-dark p-1 -ml-1 hover:opacity-75 transition-opacity" type="button">
+<!-- Close Icon (X) -->
+<svg class="h-6 w-6 stroke-[2.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</nav>
+<!-- END: Navigation / Close -->
+<!-- BEGIN: Header Section -->
+<header class="mb-7" data-purpose="screen-header">
+<h1 class="font-headline font-extrabold text-[38px] leading-[1.08] tracking-tight text-app-dark mb-3">
+          Gabung ke<br/>tagihan teman
+        </h1>
+<p class="text-[15px] font-medium leading-relaxed text-app-muted">
+          Minta kodenya ke orang yang bayar ke kasir.
+        </p>
+</header>
+<!-- END: Header Section -->
+<!-- BEGIN: Code Input Section -->
+<section aria-label="Input Kode Gabung" class="mb-7">
+<label class="block text-[14px] font-medium text-app-muted mb-2.5">
+          Kode gabung
+        </label>
+<!-- 6 Character Code Boxes -->
+<div class="grid grid-cols-6 gap-2" data-purpose="otp-code-container">
+<!-- Box M -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">M</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+<!-- Box I -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">I</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+<!-- Box E -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">E</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+<!-- Box 4 -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">4</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+<!-- Box 8 -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">8</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+<!-- Box 2 -->
+<div class="relative bg-white rounded-xl aspect-[1/1.22] flex items-center justify-center shadow-xs">
+<span class="font-headline font-extrabold text-[22px] text-app-dark">2</span>
+<div class="absolute bottom-0 inset-x-0 h-[3px] bg-app-coral rounded-b-xl"></div>
+</div>
+</div>
+</section>
+<!-- END: Code Input Section -->
+<!-- BEGIN: Receipt Card Preview -->
+<section class="zigzag-bottom rounded-t-2xl p-5 mb-10 shadow-sm" data-purpose="receipt-card">
+<!-- Receipt Top Header -->
+<div class="flex justify-between items-baseline mb-0.5">
+<h2 class="font-headline font-extrabold text-[19px] text-app-dark tracking-tight">Kedai Mie Kenari</h2>
+<span class="font-headline font-extrabold text-[15px] text-app-dark">Rp243.900</span>
+</div>
+<p class="text-[13px] font-medium text-app-muted">Dibuat Raka, Sabtu 3 Okt</p>
+<!-- Dashed Divider -->
+<div class="my-4 border-b border-dashed border-gray-300"></div>
+<!-- Question Prompt -->
+<h3 class="font-headline font-extrabold text-[14px] text-app-dark mb-3">Kamu yang mana?</h3>
+<!-- Member Pill Selector -->
+<div class="flex flex-wrap gap-2.5 mb-2.5" data-purpose="member-selection">
+<!-- Bima Option -->
+<button class="inline-flex items-center gap-2 pl-1 pr-4 py-1 rounded-full border border-gray-300 bg-white hover:bg-gray-50 transition-colors" type="button">
+<span class="w-7 h-7 rounded-full bg-app-purple text-white flex items-center justify-center font-bold text-[12px]">B</span>
+<span class="font-bold text-[13px] text-app-dark">Bima</span>
+</button>
+<!-- Fajar Option (Selected) -->
+<button class="inline-flex items-center gap-2 pl-1 pr-4 py-1 rounded-full border-2 border-app-dark bg-app-coral text-app-dark shadow-xs transition-transform active:scale-95" type="button">
+<span class="w-7 h-7 rounded-full bg-app-purple text-white flex items-center justify-center font-bold text-[12px]">F</span>
+<span class="font-bold text-[13px] text-app-dark">Fajar</span>
+</button>
+</div>
+<!-- Option: Bukan Keduanya -->
+<div class="mb-4">
+<button class="inline-block px-4 py-2 rounded-full border border-dashed border-gray-400 font-bold text-[13px] text-app-dark hover:bg-gray-50 transition-colors" type="button">
+            Bukan keduanya
+          </button>
+</div>
+<!-- Footnote Status -->
+<p class="text-[12px] text-app-muted font-normal pb-1">
+          Sekar dan Dinda sudah bergabung lebih dulu.
+        </p>
+</section>
+<!-- END: Receipt Card Preview -->
+</div>
+<!-- BEGIN: Bottom Action Button -->
+<footer class="w-full pb-4 pt-2" data-purpose="bottom-action">
+<button class="w-full h-14 bg-app-coral text-app-dark font-headline font-bold text-[16px] rounded-full shadow-sm hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center" type="button">
+        Gabung sebagai Fajar
+      </button>
+</footer>
+<!-- END: Bottom Action Button -->
+</main>
+<!-- END: MainContent -->
+</body></html>

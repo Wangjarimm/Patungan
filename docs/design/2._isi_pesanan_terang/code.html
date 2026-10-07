@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Patungan - Isi Pesanan</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Bricolage Grotesque & IBM Plex Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Bricolage Grotesque"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+          },
+          colors: {
+            appBg: '#DCE6D5',
+            brandOrange: '#FF6433',
+            memberRaka: '#BA4419',
+            memberDinda: '#2469A3',
+            memberBima: '#6A4BB7',
+            memberSekar: '#247950',
+            memberFajar: '#AB376B',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Style for Custom Scroll and Viewport Tuning -->
+<style data-purpose="typography-and-reset">
+    body {
+      background-color: #DCE6D5;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .font-mono-numbers {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    /* Hide scrollbars for clean app presentation */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#DCE6D5] text-neutral-900 min-h-screen flex justify-center items-start antialiased selection:bg-orange-200">
+<!-- BEGIN: MobileContainer -->
+<!-- Constrained mobile view simulating iPhone proportions -->
+<main class="w-full max-w-[430px] min-h-screen flex flex-col justify-between relative shadow-2xl bg-[#DCE6D5] overflow-x-hidden" data-purpose="mobile-frame">
+<!-- Top Content Area -->
+<div class="flex-1 flex flex-col pt-8 pb-36">
+<!-- BEGIN: HeaderSection -->
+<header class="px-5 pt-4 pb-2" data-purpose="top-nav-bar">
+<div class="flex items-start justify-between">
+<!-- Back button and Title group -->
+<div class="flex items-start gap-3">
+<button aria-label="Kembali" class="mt-4 p-1 -ml-1 text-neutral-900 active:scale-95 transition-transform" data-purpose="back-button">
+<svg class="w-6 h-6 stroke-[2.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div class="flex flex-col">
+<span class="text-[13px] font-medium text-neutral-600 tracking-tight" data-purpose="order-date">Sabtu, 3 Okt</span>
+<h1 class="text-[28px] font-bold leading-[1.12] tracking-tight text-neutral-950 mt-0.5" data-purpose="merchant-name">
+                Kedai Mie<br/>Kenari
+              </h1>
+</div>
+</div>
+<!-- Code chip with dashed border -->
+<button class="mt-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-dashed border-neutral-700/80 bg-transparent text-neutral-800 active:bg-black/5 transition-colors" data-purpose="order-code-badge">
+<span class="font-mono text-[13px] font-semibold tracking-wider">MIE482</span>
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: MembersHorizontalList -->
+<section aria-label="Daftar Anggota" class="mt-4 px-5 overflow-x-auto no-scrollbar" data-purpose="members-carousel">
+<div class="flex items-center justify-between min-w-full">
+<!-- Member: Raka (Active) -->
+<div class="flex flex-col items-center">
+<div class="w-12 h-12 rounded-full border-2 border-memberRaka p-[2px] flex items-center justify-center">
+<div class="w-full h-full rounded-full bg-memberRaka flex items-center justify-center text-white font-bold text-[17px]">
+                R
+              </div>
+</div>
+<span class="text-xs font-medium text-neutral-800 mt-1.5 tracking-tight">Raka</span>
+</div>
+<!-- Member: Dinda -->
+<div class="flex flex-col items-center">
+<div class="w-11 h-11 rounded-full bg-memberDinda flex items-center justify-center text-white font-bold text-[17px] shadow-sm">
+              D
+            </div>
+<span class="text-xs font-medium text-neutral-800 mt-2 tracking-tight">Dinda</span>
+</div>
+<!-- Member: Bima -->
+<div class="flex flex-col items-center">
+<div class="w-11 h-11 rounded-full bg-memberBima flex items-center justify-center text-white font-bold text-[17px] shadow-sm">
+              B
+            </div>
+<span class="text-xs font-medium text-neutral-800 mt-2 tracking-tight">Bima</span>
+</div>
+<!-- Member: Sekar -->
+<div class="flex flex-col items-center">
+<div class="w-11 h-11 rounded-full bg-memberSekar flex items-center justify-center text-white font-bold text-[17px] shadow-sm">
+              S
+            </div>
+<span class="text-xs font-medium text-neutral-800 mt-2 tracking-tight">Sekar</span>
+</div>
+<!-- Member: Fajar -->
+<div class="flex flex-col items-center">
+<div class="w-11 h-11 rounded-full bg-memberFajar flex items-center justify-center text-white font-bold text-[17px] shadow-sm">
+              F
+            </div>
+<span class="text-xs font-medium text-neutral-800 mt-2 tracking-tight">Fajar</span>
+</div>
+<!-- Add Member Button -->
+<div class="flex flex-col items-center">
+<button aria-label="Tambah Anggota" class="w-11 h-11 rounded-full border border-dashed border-neutral-500 flex items-center justify-center text-neutral-800 active:bg-black/5 transition">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-xs font-medium text-neutral-700 mt-2 tracking-tight">Tambah</span>
+</div>
+</div>
+</section>
+<!-- END: MembersHorizontalList -->
+<!-- BEGIN: ReceiptOrderCard -->
+<section class="mt-5 mx-4 bg-white rounded-2xl shadow-sm border border-neutral-100 flex flex-col overflow-hidden" data-purpose="order-receipt-card">
+<!-- Card Header -->
+<div class="px-4 pt-4 pb-2 border-b-2 border-neutral-900 flex items-center justify-between">
+<h2 class="text-[17px] font-bold text-neutral-950">Pesanan</h2>
+<span class="text-[12px] font-normal text-neutral-600">Ketuk inisial siapa yang makan</span>
+</div>
+<!-- Order Items List -->
+<div class="px-4 divide-y divide-dashed divide-neutral-200">
+<!-- Item 1: Mie goreng spesial -->
+<article class="py-3.5 flex flex-col" data-purpose="order-row-1">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-[15.5px] text-neutral-950 leading-snug">Mie goreng spesial</h3>
+<div class="text-[13px] text-neutral-500 font-mono font-normal mt-0.5">2 × 32.000</div>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[15.5px] text-neutral-950">64.000</span>
+</div>
+</div>
+<!-- Member allocation pill badges -->
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-2">
+<!-- R (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberRaka text-white font-bold text-[13px] flex items-center justify-center shadow-xs">R</span>
+<!-- D (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">D</span>
+<!-- B (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberBima text-white font-bold text-[13px] flex items-center justify-center shadow-xs">B</span>
+<!-- S (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">S</span>
+<!-- F (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">F</span>
+</div>
+<span class="text-[12.5px] text-neutral-500 font-medium">dibagi 2</span>
+</div>
+</article>
+<!-- Item 2: Pisang goreng keju -->
+<article class="py-3.5 flex flex-col" data-purpose="order-row-2">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-[15.5px] text-neutral-950 leading-snug">Pisang goreng keju</h3>
+<div class="text-[13px] text-neutral-500 font-mono font-normal mt-0.5">1 × 24.000</div>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[15.5px] text-neutral-950">24.000</span>
+</div>
+</div>
+<!-- Member allocation pill badges -->
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-2">
+<!-- R (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">R</span>
+<!-- D (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberDinda text-white font-bold text-[13px] flex items-center justify-center shadow-xs">D</span>
+<!-- B (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">B</span>
+<!-- S (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberSekar text-white font-bold text-[13px] flex items-center justify-center shadow-xs">S</span>
+<!-- F (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">F</span>
+</div>
+<span class="text-[12.5px] text-neutral-500 font-medium">dibagi 2</span>
+</div>
+</article>
+<!-- Item 3: Es teh manis -->
+<article class="py-3.5 flex flex-col" data-purpose="order-row-3">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-[15.5px] text-neutral-950 leading-snug">Es teh manis</h3>
+<div class="text-[13px] text-neutral-500 font-mono font-normal mt-0.5">5 × 6.000</div>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[15.5px] text-neutral-950">30.000</span>
+</div>
+</div>
+<!-- Member allocation pill badges -->
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-2">
+<!-- R (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberRaka text-white font-bold text-[13px] flex items-center justify-center shadow-xs">R</span>
+<!-- D (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberDinda text-white font-bold text-[13px] flex items-center justify-center shadow-xs">D</span>
+<!-- B (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberBima text-white font-bold text-[13px] flex items-center justify-center shadow-xs">B</span>
+<!-- S (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberSekar text-white font-bold text-[13px] flex items-center justify-center shadow-xs">S</span>
+<!-- F (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberFajar text-white font-bold text-[13px] flex items-center justify-center shadow-xs">F</span>
+</div>
+<span class="text-[12.5px] text-neutral-500 font-medium">semua</span>
+</div>
+</article>
+<!-- Item 4: Kwetiau siram -->
+<article class="py-3.5 flex flex-col" data-purpose="order-row-4">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="font-bold text-[15.5px] text-neutral-950 leading-snug">Kwetiau siram</h3>
+<div class="text-[13px] text-neutral-500 font-mono font-normal mt-0.5">1 × 30.000</div>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[15.5px] text-neutral-950">30.000</span>
+</div>
+</div>
+<!-- Member allocation pill badges -->
+<div class="flex items-center justify-between mt-3">
+<div class="flex items-center gap-2">
+<!-- R (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">R</span>
+<!-- D (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">D</span>
+<!-- B (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">B</span>
+<!-- S (Selected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-memberSekar text-white font-bold text-[13px] flex items-center justify-center shadow-xs">S</span>
+<!-- F (Unselected) -->
+<span class="w-[34px] h-[34px] rounded-full bg-neutral-100 text-neutral-600 font-bold text-[13px] flex items-center justify-center">F</span>
+</div>
+<div></div>
+</div>
+</article>
+</div>
+</section>
+<!-- END: ReceiptOrderCard -->
+</div>
+<!-- BEGIN: FloatingBottomActions -->
+<!-- Fixed position anchored to bottom frame -->
+<footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white pt-3 pb-8 px-4 rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.06)] border-t border-neutral-100" data-purpose="bottom-sheet-actions">
+<!-- Top Sub-action Buttons (Pill Outlines) -->
+<div class="grid grid-cols-2 gap-3 mb-4">
+<!-- Tambah menu -->
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border border-neutral-800 text-neutral-900 text-[14.5px] font-semibold active:bg-neutral-50 transition" data-purpose="btn-add-item">
+<svg class="w-4 h-4 stroke-[2.4]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Tambah menu</span>
+</button>
+<!-- Scan struk -->
+<button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-full border border-neutral-800 text-neutral-900 text-[14.5px] font-semibold active:bg-neutral-50 transition" data-purpose="btn-scan-receipt">
+<svg class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M14.25 14.25h1.5v1.5h-1.5zM18.75 14.25h1.5v1.5h-1.5zM14.25 18.75h1.5v1.5h-1.5zM18.75 18.75h1.5v1.5h-1.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Scan struk</span>
+</button>
+</div>
+<!-- Bottom Checkout / Summary Row -->
+<div class="flex items-center justify-between pt-1">
+<!-- Total Price & Tax Disclaimer -->
+<div class="flex flex-col">
+<div class="flex items-baseline">
+<span class="font-bold text-[22px] tracking-tight text-neutral-950 font-sans">Rp243</span>
+<span class="font-bold text-[22px] tracking-tight text-neutral-950 font-sans">.705</span>
+</div>
+<span class="text-[12px] text-neutral-600 font-normal leading-tight mt-0.5">
+            termasuk service 5% dan pajak 10%
+          </span>
+</div>
+<!-- Primary Call to Action Button -->
+<button class="bg-[#FF6433] hover:bg-[#fa5521] active:scale-[0.98] text-neutral-950 font-bold text-[15.5px] px-6 py-3.5 rounded-full shadow-sm transition-all" data-purpose="btn-view-split">
+          Lihat bagian
+        </button>
+</div>
+</footer>
+<!-- END: FloatingBottomActions -->
+</main>
+<!-- END: MobileContainer -->
+</body></html>

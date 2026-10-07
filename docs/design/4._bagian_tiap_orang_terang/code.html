@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Bagian Tiap Orang - Patungan</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+<style data-purpose="receipt-zigzag">
+    /* CSS generated zigzag tear edge for receipt bottom */
+    .receipt-tear {
+      position: relative;
+      background-color: #ffffff;
+    }
+    .receipt-tear::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background: linear-gradient(135deg, #ffffff 5px, transparent 0),
+                  linear-gradient(-135deg, #ffffff 5px, transparent 0);
+      background-size: 14px 10px;
+      background-repeat: repeat-x;
+    }
+  </style>
+</head>
+<body class="bg-[#DBE5D4] text-[#1E251F] min-h-screen flex flex-col justify-between items-center selection:bg-orange-200">
+<!-- Mobile Screen Container -->
+<main class="w-full max-w-[430px] min-h-screen flex flex-col justify-between pb-28 relative">
+<!-- BEGIN: Header Section -->
+<header class="pt-8 px-5 pb-3">
+<!-- Back button and Title -->
+<div class="flex items-center gap-3 mb-5">
+<button aria-label="Kembali" class="p-1 -ml-1 text-[#1E251F] hover:opacity-75 transition-opacity" type="button">
+<svg class="w-5 h-5 stroke-[2.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<h1 class="text-[26px] font-extrabold tracking-tight text-[#161B17]">
+          Bagian tiap orang
+        </h1>
+</div>
+<!-- Status Subtitle and Remaining Amount -->
+<div class="flex justify-between items-baseline mb-2.5 text-[15px]">
+<div class="text-[#2B352C]">
+<span class="font-extrabold text-[#161B17]">2 dari 5</span>
+<span class="font-medium ml-1">sudah beres</span>
+</div>
+<div class="text-[14px]">
+<span class="text-[#59665B] font-normal">sisa </span>
+<span class="font-bold text-[#161B17]">Rp146.800</span>
+</div>
+</div>
+<!-- 5-Segment Progress Bar -->
+<div aria-label="Progress status pembayaran" class="grid grid-cols-5 gap-1.5 h-[5px] w-full">
+<div class="bg-[#2D734C] rounded-full h-full"></div>
+<div class="bg-[#2D734C] rounded-full h-full"></div>
+<div class="bg-[#C6D2C2] rounded-full h-full"></div>
+<div class="bg-[#C6D2C2] rounded-full h-full"></div>
+<div class="bg-[#C6D2C2] rounded-full h-full"></div>
+</div>
+</header>
+<!-- END: Header Section -->
+<!-- BEGIN: Bill Breakdown List -->
+<section class="px-5 space-y-3 flex-1 mt-2">
+<!-- Expanded Receipt Card (Sekar) -->
+<article class="receipt-tear rounded-t-2xl pt-4 px-4 pb-5 shadow-sm">
+<!-- User Info Bar -->
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#186F45] text-white flex items-center justify-center font-bold text-sm shadow-inner">
+              S
+            </div>
+<span class="text-[17px] font-bold text-[#161B17]">Sekar</span>
+</div>
+<span class="bg-[#FEEDDF] text-[#A2421A] text-[11px] font-semibold px-2.5 py-1 rounded-full tracking-wide">
+            Belum transfer
+          </span>
+</div>
+<!-- Ordered Items Breakdown -->
+<div class="space-y-1.5 text-[14px] text-[#1D221E] pt-1">
+<div class="flex justify-between items-center">
+<span class="font-normal text-[#273029]">Kwetiau siram</span>
+<span class="font-semibold text-[#181D1A]">30.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-normal text-[#273029]">Pisang goreng keju <span class="text-xs text-[#526055]">÷2</span></span>
+<span class="font-semibold text-[#181D1A]">12.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-normal text-[#273029]">Es teh manis <span class="text-xs text-[#526055]">÷5</span></span>
+<span class="font-semibold text-[#181D1A]">6.000</span>
+</div>
+</div>
+<!-- Dashed Divider -->
+<div class="border-b border-dashed border-[#D5DED2] my-3"></div>
+<!-- Taxes & Fees Breakdown -->
+<div class="space-y-1.5 text-[14px] text-[#273029]">
+<div class="flex justify-between items-center">
+<span>Service 5%</span>
+<span class="font-semibold text-[#181D1A]">2.400</span>
+</div>
+<div class="flex justify-between items-center">
+<span>Pajak 10%</span>
+<span class="font-semibold text-[#181D1A]">5.040</span>
+</div>
+</div>
+<!-- Total and Action Button -->
+<div class="flex items-end justify-between pt-5">
+<button class="inline-flex items-center gap-1.5 border border-[#CCD8C8] rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#161B17] hover:bg-neutral-50 active:scale-95 transition-all" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Ingatkan
+          </button>
+<!-- Highlighted Total Amount -->
+<div class="relative">
+<span class="relative z-10 text-[22px] font-black tracking-tight text-[#111613]">
+              55.500
+            </span>
+<div class="absolute bottom-1 left-0 right-0 h-[10px] bg-[#FF6332] z-0 rounded-xs"></div>
+</div>
+</div>
+</article>
+<!-- Member Card: Bima -->
+<article class="bg-white rounded-xl px-4 py-3 shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#6548BD] text-white flex items-center justify-center font-bold text-xs">
+            B
+          </div>
+<span class="text-[15px] font-bold text-[#161B17]">Bima</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-[#FEEDDF] text-[#A2421A] text-[11px] font-semibold px-2 py-0.5 rounded-full">
+            Belum
+          </span>
+<span class="text-[15px] font-bold text-[#161B17] tracking-tight">
+            43.900
+          </span>
+</div>
+</article>
+<!-- Member Card: Fajar -->
+<article class="bg-white rounded-xl px-4 py-3 shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#AC3264] text-white flex items-center justify-center font-bold text-xs">
+            F
+          </div>
+<span class="text-[15px] font-bold text-[#161B17]">Fajar</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="bg-[#FEEDDF] text-[#A2421A] text-[11px] font-semibold px-2 py-0.5 rounded-full">
+            Belum
+          </span>
+<span class="text-[15px] font-bold text-[#161B17] tracking-tight">
+            47.400
+          </span>
+</div>
+</article>
+<!-- Member Card: Dinda -->
+<article class="bg-white rounded-xl px-4 py-3 shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#206CA7] text-white flex items-center justify-center font-bold text-xs">
+            D
+          </div>
+<span class="text-[15px] font-bold text-[#161B17]">Dinda</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[#20754A] text-[11px] font-bold flex items-center gap-0.5">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4.5 12.75l6 6 9-13.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Lunas
+          </span>
+<span class="text-[15px] font-bold text-[#161B17] tracking-tight">
+            53.200
+          </span>
+</div>
+</article>
+<!-- Member Card: Raka -->
+<article class="bg-white rounded-xl px-4 py-3 shadow-xs flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#BA4B1B] text-white flex items-center justify-center font-bold text-xs">
+            R
+          </div>
+<span class="text-[15px] font-bold text-[#161B17]">Raka</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[#59665B] text-[12px] font-medium">
+            bayar ke kasir
+          </span>
+<span class="text-[15px] font-bold text-[#161B17] tracking-tight">
+            43.900
+          </span>
+</div>
+</article>
+</section>
+<!-- END: Bill Breakdown List -->
+<!-- BEGIN: Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#DDE4DB] py-3 px-5 z-50">
+<div class="max-w-[430px] mx-auto flex items-center gap-3">
+<!-- WhatsApp CTA Button -->
+<button class="flex-1 bg-[#FF6332] active:bg-[#e85425] text-[#141A15] font-bold text-[15px] py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-[0.98]" type="button">
+<svg class="w-4 h-4 fill-current -rotate-45 relative -top-0.5" viewbox="0 0 24 24">
+<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+</svg>
+<span>Kirim ke WhatsApp</span>
+</button>
+<!-- Copy / Share Action Button -->
+<button aria-label="Salin rincian" class="w-12 h-12 rounded-full border border-[#D5DED2] flex items-center justify-center text-[#232B25] hover:bg-neutral-50 active:scale-95 transition-all shrink-0" type="button">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- END: Sticky Bottom Bar -->
+</main>
+</body></html>

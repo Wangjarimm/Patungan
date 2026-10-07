@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Patungan - Scan Struk (Mode Gelap)</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appDarkBg: '#112229',
+            sheetBg: '#1e3029',
+            sheetBorder: '#293d34',
+            lightPaper: '#e6e4d5',
+            receiptGray: '#8a9492',
+            receiptBar: '#63706e',
+            orangeHighlight: '#ff7b52',
+            lightText: '#e8efe6',
+            subText: '#98ab9d',
+            alertRed: '#ff6b6b',
+            btnBgCream: '#e8efe6',
+            btnDarkText: '#131d17',
+            btnBorderDark: '#394f43'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="custom-styling">
+    /* Custom scrollbar hiding & native app feel */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      background-color: #0b151a;
+    }
+    
+    /* Subtle 3D perspective for receipt preview */
+    .receipt-tilt {
+      transform: perspective(1000px) rotateX(10deg) rotateZ(-2deg) translateY(8px);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Dashed separator styling */
+    .dashed-line {
+      border-bottom: 2px dashed #9ca5a0;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="min-h-screen flex items-center justify-center font-sans antialiased">
+<!-- BEGIN: Mobile App Container -->
+<div class="w-full max-w-[428px] h-[926px] bg-[#0c1e24] flex flex-col justify-between relative overflow-hidden text-white shadow-2xl" data-purpose="mobile-screen">
+<!-- BEGIN: Top Camera Viewport & Controls -->
+<section class="relative w-full h-[48%] flex flex-col items-center justify-between pt-6 px-6 overflow-hidden" data-purpose="camera-preview-section">
+<!-- Top Actions: Close & Flash -->
+<div class="w-full flex justify-between items-center z-20 pt-2">
+<!-- Close Button (X) -->
+<button aria-label="Tutup" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/60 transition active:scale-95" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Flash Button -->
+<button aria-label="Nyalakan Lampu Flash" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/60 transition active:scale-95" type="button">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+</button>
+</div>
+<!-- Scanned Receipt Paper Graphic -->
+<div class="w-[245px] h-[340px] bg-[#e7e5d8] rounded-t-lg rounded-b-[2px] receipt-tilt absolute -bottom-8 flex flex-col pt-7 px-5 pb-6 text-gray-700">
+<!-- Top header dummy lines -->
+<div class="w-32 h-2.5 bg-[#849491] rounded-full mx-auto mb-2.5"></div>
+<div class="w-20 h-2 bg-[#a3b0ae] rounded-full mx-auto mb-5"></div>
+<!-- Detected OCR Lines (Receipt rows with orange/coral bounding boxes) -->
+<div class="space-y-[6px]">
+<!-- Row 1 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-24 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-8 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+<!-- Row 2 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-28 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-9 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+<!-- Row 3 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-20 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-9 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+<!-- Row 4 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-18 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-9 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+<!-- Row 5 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-24 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-9 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+<!-- Row 6 -->
+<div class="flex items-center justify-between border-[1.5px] border-[#ff7a52] rounded-[4px] px-1.5 py-[3px]">
+<div class="w-16 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+<div class="w-9 h-1.5 bg-[#5e6d6c] rounded-full"></div>
+</div>
+</div>
+<!-- Receipt Divider Line -->
+<div class="dashed-line my-3 w-full opacity-60"></div>
+<!-- Bottom Total dummy bars -->
+<div class="flex justify-between items-center mt-0.5">
+<div class="w-12 h-2.5 bg-[#788785] rounded-full"></div>
+<div class="w-9 h-2.5 bg-[#788785] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- END: Top Camera Viewport & Controls -->
+<!-- BEGIN: Bottom Sheet Modal -->
+<main class="relative z-30 w-full bg-[#1c2c25] rounded-t-[32px] pt-3 pb-8 px-6 flex flex-col justify-between shadow-[0_-12px_36px_rgba(0,0,0,0.6)]" data-purpose="ocr-results-sheet">
+<div>
+<!-- Sheet Handle / Pill -->
+<div class="w-12 h-1 bg-[#43594e] rounded-full mx-auto mb-4"></div>
+<!-- Sheet Header -->
+<header class="mb-5">
+<h1 class="text-[26px] font-bold text-[#eef4ed] leading-snug tracking-tight">Terbaca 6 menu</h1>
+<p class="text-[14px] text-[#9aada0] mt-0.5 font-normal tracking-wide">Cek yang bertanda oranye sebelum dimasukkan.</p>
+</header>
+<!-- Menu Items List -->
+<section class="space-y-4" data-purpose="detected-items-list">
+<!-- Item 1 -->
+<div class="flex justify-between items-center text-[15px]">
+<span class="text-[#e2ece3] font-medium tracking-normal">2 Mie goreng spesial</span>
+<span class="text-[#e2ece3] font-bold tracking-tight">64.000</span>
+</div>
+<!-- Item 2 -->
+<div class="flex justify-between items-center text-[15px]">
+<span class="text-[#e2ece3] font-medium tracking-normal">1 Nasi goreng kampung</span>
+<span class="text-[#e2ece3] font-bold tracking-tight">28.000</span>
+</div>
+<!-- Item 3 -->
+<div class="flex justify-between items-center text-[15px]">
+<span class="text-[#e2ece3] font-medium tracking-normal">1 Mie kuah seafood</span>
+<span class="text-[#e2ece3] font-bold tracking-tight">35.000</span>
+</div>
+<!-- Item 4 (Needs Verification / Highlighted Alert) -->
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-[#e2ece3] font-medium text-[15px]">1 Kwetiau siram</span>
+<span class="text-[#ff6b6b] text-[12.5px] font-normal leading-tight mt-0.5">Angka kurang jelas</span>
+</div>
+<!-- Editable/Highlighted Price Badge -->
+<div class="border-[1.5px] border-[#ff6b6b] bg-[#382324] rounded-lg px-3.5 py-1.5 flex items-center justify-center" data-purpose="editable-price-field">
+<span class="text-white font-bold text-[15px] tracking-tight">30.000</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="flex justify-between items-center text-[15px]">
+<span class="text-[#e2ece3] font-medium tracking-normal">1 Pisang goreng keju</span>
+<span class="text-[#e2ece3] font-bold tracking-tight">24.000</span>
+</div>
+<!-- Item 6 -->
+<div class="flex justify-between items-center text-[15px]">
+<span class="text-[#e2ece3] font-medium tracking-normal">5 Es teh manis</span>
+<span class="text-[#e2ece3] font-bold tracking-tight">30.000</span>
+</div>
+<!-- Subtotal / Taxes Section -->
+<div class="pt-3 border-t border-[#31483c] flex justify-between items-center text-[14px]">
+<span class="text-[#98ab9d]">Juga terbaca: service 5%, pajak 10%</span>
+<span class="text-[#e2ece3] font-bold text-[15px] tracking-tight">211.000</span>
+</div>
+</section>
+</div>
+<!-- Action Buttons Container -->
+<footer class="mt-8 pt-2 flex items-center gap-3" data-purpose="sheet-actions">
+<!-- Retake Photo Button -->
+<button class="w-[38%] py-3.5 px-4 rounded-full border border-[#43594e] text-[#e8efe6] font-semibold text-[15px] hover:bg-[#25392f] active:scale-[0.98] transition text-center whitespace-nowrap" type="button">
+          Foto ulang
+        </button>
+<!-- Submit to Bill Button -->
+<button class="w-[62%] py-3.5 px-4 rounded-full bg-[#e8efe6] text-[#131d17] font-bold text-[15px] hover:bg-[#dce3da] active:scale-[0.98] transition text-center shadow-md whitespace-nowrap" type="button">
+          Masukkan ke tagihan
+        </button>
+</footer>
+</main>
+<!-- END: Bottom Sheet Modal -->
+</div>
+<!-- END: Mobile App Container -->
+</body></html>

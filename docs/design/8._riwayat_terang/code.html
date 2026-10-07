@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Riwayat - Patungan</title>
+<!-- Google Fonts: Bricolage Grotesque & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#DCE6D5',
+            appDark: '#131F16',
+            appTextMuted: '#58675B',
+            appTomato: '#FF5C2B',
+            appTomatoBg: '#FFE7DE',
+            appGreenPaid: '#1B633A',
+            navBg: '#FFFFFF',
+          },
+          fontFamily: {
+            bricolage: ['"Bricolage Grotesque"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    body {
+      background-color: #DCE6D5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .font-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+    /* Subtle touch active effects */
+    .tap-effect:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  </style>
+</head>
+<body class="bg-[#DCE6D5] text-[#131F16] min-h-screen flex justify-center selection:bg-[#FF5C2B]/20">
+<!-- BEGIN: MobileDeviceContainer -->
+<div class="w-full max-w-[430px] min-h-screen relative flex flex-col justify-between px-5 pt-12 pb-32">
+<!-- BEGIN: TopSection -->
+<header class="w-full">
+<!-- Page Title -->
+<h1 class="text-[44px] font-[800] tracking-[-0.03em] text-[#131F16] font-heading leading-tight mb-6">
+        Riwayat
+      </h1>
+<!-- BEGIN: FilterPills -->
+<!-- Horizontal scrollable filter pill bar -->
+<nav aria-label="Filter Riwayat" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1">
+<!-- Active Filter: Semua -->
+<button class="tap-effect h-[46px] px-6 rounded-full bg-[#1A261D] text-white text-[15px] font-semibold flex items-center justify-center shrink-0">
+          Semua
+        </button>
+<!-- Filter: Belum lunas with notification counter -->
+<button class="tap-effect h-[46px] pl-5 pr-4 rounded-full border border-[#7D8F80]/70 bg-transparent text-[#131F16] text-[15px] font-medium flex items-center gap-2 shrink-0">
+<span>Belum lunas</span>
+<span class="w-[21px] h-[21px] bg-[#FF5C2B] text-white text-[12px] font-bold rounded-full flex items-center justify-center">
+            2
+          </span>
+</button>
+<!-- Filter: Lunas -->
+<button class="tap-effect h-[46px] px-6 rounded-full border border-[#7D8F80]/70 bg-transparent text-[#131F16] text-[15px] font-medium flex items-center justify-center shrink-0">
+          Lunas
+        </button>
+</nav>
+<!-- END: FilterPills -->
+</header>
+<!-- END: TopSection -->
+<!-- BEGIN: MainContentList -->
+<main class="w-full mt-7 space-y-7">
+<!-- BEGIN: MonthSectionOktober -->
+<section aria-labelledby="heading-okt-2026">
+<h2 class="text-[14px] font-bold text-[#556457] tracking-tight mb-3" id="heading-okt-2026">
+          Oktober 2026
+        </h2>
+<!-- Card List (Unpaid/Pending Bills) -->
+<div class="space-y-3">
+<!-- Item 1: Kedai Mie Kenari -->
+<article class="bg-white rounded-[18px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Kedai Mie Kenari</h3>
+<span class="text-[16px] font-bold text-[#131F16]">243.900</span>
+</div>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[13px] text-[#697A6D] font-normal">Sab 3 Okt, Kantor lantai 3</span>
+<span class="inline-flex items-center px-3 py-1 bg-[#FF5C2B] text-white text-[11.5px] font-bold rounded-full tracking-wide">
+                Kamu menunggu 146.800
+              </span>
+</div>
+</article>
+<!-- Item 2: Martabak Bang Udin -->
+<article class="bg-white rounded-[18px] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Martabak Bang Udin</h3>
+<span class="text-[16px] font-bold text-[#131F16]">94.500</span>
+</div>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[13px] text-[#697A6D] font-normal">Kam 1 Okt, Kos Melati</span>
+<span class="inline-flex items-center px-3 py-1 bg-[#FFECE5] text-[#9A3412] text-[11.5px] font-bold rounded-full tracking-wide">
+                Kamu belum transfer 31.500
+              </span>
+</div>
+</article>
+</div>
+</section>
+<!-- END: MonthSectionOktober -->
+<!-- BEGIN: MonthSectionSeptember -->
+<section aria-labelledby="heading-sep-2026">
+<h2 class="text-[14px] font-bold text-[#556457] tracking-tight mb-3" id="heading-sep-2026">
+          September 2026
+        </h2>
+<!-- Flat List (Settled/Lunas Bills) -->
+<div class="space-y-0 divide-y divide-[#CCD6C7]">
+<!-- Item 1: Bakso Pak Darto -->
+<article class="py-3.5 first:pt-1">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Bakso Pak Darto</h3>
+<span class="text-[16px] font-bold text-[#131F16]">96.000</span>
+</div>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-[13px] text-[#697A6D] font-normal">Rab 30 Sep, Kantor lantai 3</span>
+<span class="text-[12px] font-bold text-[#1B633A]">Lunas</span>
+</div>
+</article>
+<!-- Item 2: Nonton dan popcorn -->
+<article class="py-3.5">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Nonton dan popcorn</h3>
+<span class="text-[16px] font-bold text-[#131F16]">310.000</span>
+</div>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-[13px] text-[#697A6D] font-normal">Sab 26 Sep, Kantor lantai 3</span>
+<span class="text-[12px] font-bold text-[#1B633A]">Lunas</span>
+</div>
+</article>
+<!-- Item 3: Kado ulang tahun Dinda -->
+<article class="py-3.5">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Kado ulang tahun Dinda</h3>
+<span class="text-[16px] font-bold text-[#131F16]">450.000</span>
+</div>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-[13px] text-[#697A6D] font-normal">Sen 21 Sep, Kantor lantai 3</span>
+<span class="text-[12px] font-bold text-[#1B633A]">Lunas</span>
+</div>
+</article>
+<!-- Item 4: Belanja bulanan kos -->
+<article class="py-3.5">
+<div class="flex items-start justify-between">
+<h3 class="text-[16px] font-bold text-[#131F16]">Belanja bulanan kos</h3>
+<span class="text-[16px] font-bold text-[#131F16]">228.000</span>
+</div>
+<div class="flex items-center justify-between mt-0.5">
+<span class="text-[13px] text-[#697A6D] font-normal">Kam 10 Sep, Kos Melati</span>
+<span class="text-[12px] font-bold text-[#1B633A]">Lunas</span>
+</div>
+</article>
+</div>
+</section>
+<!-- END: MonthSectionSeptember -->
+</main>
+<!-- END: MainContentList -->
+<!-- BEGIN: BottomFloatingNavigation -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-[390px] h-[72px] bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex items-center justify-between px-2.5 z-50">
+<!-- Nav Item: Beranda (Active pill with coral-red highlight) -->
+<a class="h-[54px] px-5 rounded-full bg-[#FF5C2B] text-white flex items-center gap-2 tap-effect font-bold text-[14px]" href="#">
+<svg class="w-[20px] h-[20px]" fill="none" stroke="currentColor" stroke-width="2.3" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Beranda</span>
+</a>
+<!-- Nav Item: Riwayat (Receipt Icon) -->
+<a aria-label="Riwayat" class="w-[54px] h-[54px] flex items-center justify-center text-[#233327] tap-effect" href="#">
+<svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<!-- Nav Item: Profil (User Icon) -->
+<a aria-label="Profil" class="w-[54px] h-[54px] flex items-center justify-center text-[#233327] tap-effect mr-1" href="#">
+<svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</nav>
+<!-- END: BottomFloatingNavigation -->
+</div>
+<!-- END: MobileDeviceContainer -->
+</body></html>

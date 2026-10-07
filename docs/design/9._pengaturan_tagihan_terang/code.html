@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Pengaturan Tagihan - Patungan</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#DCE6D5',
+              card: '#FFFFFF',
+              coral: '#FF6433',
+              dark: '#1C261E',
+              subtle: '#6B7E6F',
+              border: '#E3E9E0',
+              avatar: '#B24515',
+              darkpill: '#16231C'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+            mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Dashed Dividers and Clean Rendering -->
+<style data-purpose="custom-utilities">
+    .dashed-divider {
+      border-top: 1.5px dashed #D3DDCF;
+      margin-top: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+</head>
+<body class="bg-[#DCE6D5] text-[#1C261E] min-h-screen flex justify-center selection:bg-brand-coral selection:text-white">
+<!-- Mobile Container (390px to match iPhone standard ratio) -->
+<div class="w-full max-w-[430px] min-h-screen flex flex-col justify-between relative pb-28">
+<!-- BEGIN: TopBarAndContent -->
+<main class="px-5 pt-8">
+<!-- BEGIN: HeaderSection -->
+<header class="mb-5 flex items-start gap-3.5">
+<!-- Back Navigation Button -->
+<button aria-label="Kembali" class="mt-1 text-[#1C261E] hover:opacity-75 transition-opacity" type="button">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 19.5L8.25 12l7.5-7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Title & Subtitle -->
+<div>
+<p class="text-[13px] leading-tight text-[#647466] font-medium tracking-tight mb-0.5">Kedai Mie Kenari</p>
+<h1 class="text-[23.5px] leading-tight font-extrabold text-[#19241B] tracking-tight">Pajak, service, diskon</h1>
+</div>
+</header>
+<!-- END: HeaderSection -->
+<!-- BEGIN: ConfigurationCard -->
+<section class="bg-white rounded-[22px] px-5 py-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)]" data-purpose="settings-card">
+<!-- 1. Service Charge -->
+<div class="flex items-center justify-between">
+<span class="text-[15px] font-bold text-[#1C261E]">Service charge</span>
+<div class="flex items-center gap-3">
+<button aria-label="Kurangi service charge" class="w-9 h-9 rounded-full border border-[#D5DED2] flex items-center justify-center text-[#2A372C] active:scale-95 transition-transform" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19.5 12h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="w-9 text-center font-bold text-[15px] text-[#1C261E]">5%</span>
+<button aria-label="Tambah service charge" class="w-9 h-9 rounded-full border border-[#D5DED2] flex items-center justify-center text-[#2A372C] active:scale-95 transition-transform" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<div class="dashed-divider"></div>
+<!-- 2. Pajak Restoran -->
+<div class="flex items-center justify-between">
+<span class="text-[15px] font-bold text-[#1C261E]">Pajak restoran</span>
+<div class="flex items-center gap-3">
+<button aria-label="Kurangi pajak" class="w-9 h-9 rounded-full border border-[#D5DED2] flex items-center justify-center text-[#2A372C] active:scale-95 transition-transform" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19.5 12h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="w-9 text-center font-bold text-[15px] text-[#1C261E]">10%</span>
+<button aria-label="Tambah pajak" class="w-9 h-9 rounded-full border border-[#D5DED2] flex items-center justify-center text-[#2A372C] active:scale-95 transition-transform" type="button">
+<svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<div class="dashed-divider"></div>
+<!-- 3. Pajak Dihitung Setelah Service (Toggle) -->
+<div class="flex items-center justify-between">
+<div>
+<p class="text-[14.5px] font-bold text-[#1C261E]">Pajak dihitung setelah service</p>
+<p class="text-[12px] text-[#69796C] mt-0.5">Cara yang umum di restoran</p>
+</div>
+<!-- iOS style toggle switch active -->
+<div class="relative inline-flex items-center cursor-pointer">
+<input aria-label="Pajak dihitung setelah service" checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[50px] h-[30px] bg-[#1E2920] peer-checked:bg-[#FF6433] rounded-full p-1 transition-colors duration-200 ease-in-out">
+<div class="bg-white w-[22px] h-[22px] rounded-full shadow-md transform transition-transform duration-200 ease-in-out translate-x-5"></div>
+</div>
+</div>
+</div>
+<div class="dashed-divider"></div>
+<!-- 4. Diskon -->
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-[15px] font-bold text-[#1C261E]">Diskon</span>
+<!-- Rp / % Segmented Switcher -->
+<div class="flex items-center p-0.5 rounded-full border border-[#DFE5DC] bg-white">
+<button class="px-3.5 py-1 text-[13px] font-bold bg-[#17251C] text-white rounded-full transition-all" type="button">Rp</button>
+<button class="px-3 py-1 text-[13px] font-bold text-[#2A372C] rounded-full transition-all" type="button">%</button>
+</div>
+</div>
+<!-- Input Field Line -->
+<div class="border-b border-[#E3E8E1] pb-2">
+<input class="w-full border-0 p-0 text-[14.5px] font-mono tracking-tight text-[#4C5E50] placeholder-[#819284] focus:ring-0 focus:outline-none bg-transparent" placeholder="Misal 20.000 dari promo" type="text"/>
+</div>
+</div>
+<div class="dashed-divider"></div>
+<!-- 5. Ongkir atau Biaya Lain -->
+<div>
+<p class="text-[15px] font-bold text-[#1C261E]">Ongkir atau biaya lain</p>
+<div class="border-b border-[#E3E8E1] pb-2 mt-3.5">
+<input class="w-full border-0 p-0 text-[14.5px] font-mono tracking-tight text-[#4C5E50] placeholder-[#819284] focus:ring-0 focus:outline-none bg-transparent" placeholder="Dibagi rata ke semua orang" type="text"/>
+</div>
+</div>
+<div class="dashed-divider"></div>
+<!-- 6. Bulatkan Bagian Tiap Orang ke Atas -->
+<div>
+<p class="text-[14.5px] font-bold text-[#1C261E] mb-3">Bulatkan bagian tiap orang ke atas</p>
+<div class="grid grid-cols-4 gap-2">
+<!-- Tidak -->
+<button class="py-2.5 rounded-full border border-[#D5DDD2] text-[13px] font-bold text-[#253328] text-center active:scale-95 transition-all" type="button">
+              Tidak
+            </button>
+<!-- 100 (Selected) -->
+<button class="py-2.5 rounded-full bg-[#FF6433] text-[13px] font-bold text-[#1C261E] text-center shadow-sm active:scale-95 transition-all" type="button">
+              100
+            </button>
+<!-- 500 -->
+<button class="py-2.5 rounded-full border border-[#D5DDD2] text-[13px] font-bold text-[#253328] text-center active:scale-95 transition-all" type="button">
+              500
+            </button>
+<!-- 1.000 -->
+<button class="py-2.5 rounded-full border border-[#D5DDD2] text-[13px] font-bold text-[#253328] text-center active:scale-95 transition-all" type="button">
+              1.000
+            </button>
+</div>
+</div>
+</section>
+<!-- END: ConfigurationCard -->
+<!-- BEGIN: PayerRow -->
+<section class="mt-4 pt-1" data-purpose="payer-selector">
+<div class="flex items-center justify-between px-1 py-2 cursor-pointer">
+<span class="text-[14.5px] font-bold text-[#1C261E]">Yang bayar ke kasir</span>
+<div class="flex items-center gap-2">
+<!-- User Initial Badge -->
+<div class="w-6 h-6 rounded-full bg-[#B24515] flex items-center justify-center text-white text-[11px] font-extrabold">
+              R
+            </div>
+<!-- Name -->
+<span class="text-[14px] font-medium text-[#1C261E]">Raka</span>
+<!-- Chevron -->
+<svg class="w-4 h-4 text-[#435346] stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: PayerRow -->
+</main>
+<!-- END: TopBarAndContent -->
+<!-- BEGIN: BottomBar -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white px-5 py-4 flex items-center justify-between border-t border-[#EDF2EB] shadow-lg z-50" data-purpose="sticky-bottom-bar">
+<!-- Total Calculation -->
+<div>
+<p class="text-[11px] font-semibold text-[#667768] tracking-tight mb-0.5">Total jadi</p>
+<p class="text-[20px] font-extrabold text-[#18241A] tracking-tight">Rp243.900</p>
+</div>
+<!-- Action Button -->
+<button class="bg-[#FF6433] hover:bg-[#ff5621] active:scale-[0.98] text-[#142218] font-extrabold text-[15px] px-8 py-3.5 rounded-full shadow-sm transition-all" type="button">
+        Simpan
+      </button>
+</footer>
+<!-- END: BottomBar -->
+</div>
+</body></html>

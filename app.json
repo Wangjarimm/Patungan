@@ -37,6 +37,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9231363a-8b35-4db2-9905-6e95169b09ce"
+      }
+    },
+    "owner": "wangjarimms-team"
   }
 }

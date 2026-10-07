@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Patungan - Scan Struk</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            viewfinder: '#10222a',
+            primaryDark: '#13211a',
+            receiptBg: '#ece8db',
+            alertRed: '#df4c3e',
+            alertSoftBg: '#faecea',
+            warningOrange: '#ff6238',
+            subtleGray: '#83888c',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* Prevent rubber banding and setup mobile screen constraints */
+    body {
+      background-color: #0b151b;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .receipt-tilt {
+      transform: perspective(800px) rotateZ(-3deg) rotateX(12deg) translateY(12px);
+      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.45);
+    }
+    .dashed-border-b {
+      background-image: linear-gradient(to right, #e2e8f0 50%, rgba(255,255,255,0) 0%);
+      background-position: bottom;
+      background-size: 8px 1px;
+      background-repeat: repeat-x;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen text-slate-900 antialiased p-0 md:p-4">
+<!-- BEGIN: PhoneContainer -->
+<!-- Constrained container to match real iPhone screen proportions (780x1688 aspect) -->
+<div class="relative w-full max-w-[425px] h-screen max-h-[920px] bg-viewfinder overflow-hidden flex flex-col justify-between shadow-2xl md:rounded-[48px]">
+<!-- BEGIN: CameraViewfinder -->
+<section class="relative w-full flex-1 overflow-hidden" data-purpose="camera-viewfinder">
+<!-- Camera action buttons -->
+<div class="absolute top-10 inset-x-0 px-6 flex justify-between items-center z-20">
+<!-- Close Button -->
+<button aria-label="Tutup" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/60 transition-colors" type="button">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Flash Button -->
+<button aria-label="Nyalakan Flash" class="w-11 h-11 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white/90 hover:bg-black/60 transition-colors" type="button">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
+<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+</svg>
+</button>
+</div>
+<!-- Illustrated Scanned Receipt in Viewfinder -->
+<div class="w-full h-full flex items-center justify-center pt-8 overflow-hidden">
+<div class="receipt-tilt w-[240px] h-[350px] bg-receiptBg rounded-sm p-4 relative flex flex-col items-center">
+<!-- Top Receipt Lines (Header simulation) -->
+<div class="w-32 h-2.5 bg-[#8b9795] rounded-full mb-2"></div>
+<div class="w-24 h-2 bg-[#a3ada9] rounded-full mb-4"></div>
+<!-- OCR Detection Boxes with Orange/Red highlights -->
+<div class="w-full space-y-1.5 mt-1">
+<!-- Item 1 detected box -->
+<div class="border-[1.5px] border-warningOrange/90 rounded-[4px] p-1 flex justify-between items-center bg-warningOrange/[0.04]">
+<div class="w-28 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+<!-- Item 2 detected box -->
+<div class="border-[1.5px] border-warningOrange/90 rounded-[4px] p-1 flex justify-between items-center bg-warningOrange/[0.04]">
+<div class="w-24 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+<!-- Item 3 detected box -->
+<div class="border-[1.5px] border-warningOrange/90 rounded-[4px] p-1 flex justify-between items-center bg-warningOrange/[0.04]">
+<div class="w-26 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+<!-- Item 4 (Unclear item) - Red bordered highlight -->
+<div class="border-[1.5px] border-alertRed rounded-[4px] p-1 flex justify-between items-center bg-alertRed/[0.08]">
+<div class="w-20 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+<!-- Item 5 detected box -->
+<div class="border-[1.5px] border-warningOrange/90 rounded-[4px] p-1 flex justify-between items-center bg-warningOrange/[0.04]">
+<div class="w-24 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+<!-- Item 6 detected box -->
+<div class="border-[1.5px] border-warningOrange/90 rounded-[4px] p-1 flex justify-between items-center bg-warningOrange/[0.04]">
+<div class="w-20 h-1.5 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-1.5 bg-[#6b7573] rounded-full"></div>
+</div>
+</div>
+<!-- Bottom Receipt Totals/Divider -->
+<div class="w-full border-t border-dashed border-[#8d9a96] my-2.5"></div>
+<div class="w-full flex justify-between px-1">
+<div class="w-14 h-2 bg-[#6b7573] rounded-full"></div>
+<div class="w-10 h-2 bg-[#6b7573] rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: CameraViewfinder -->
+<!-- BEGIN: BottomSheet -->
+<main class="relative bg-white rounded-t-[34px] shadow-[0_-8px_30px_rgba(0,0,0,0.25)] flex flex-col pt-3 pb-8 px-6 z-30" data-purpose="ocr-results-sheet">
+<!-- Drag handle bar -->
+<div class="w-full flex justify-center pb-2">
+<div class="w-11 h-[5px] bg-[#d5dadc] rounded-full"></div>
+</div>
+<!-- Sheet Header -->
+<header class="mt-1 mb-3">
+<h1 class="text-[25px] font-bold text-slate-900 tracking-tight leading-none mb-1.5">
+          Terbaca 6 menu
+        </h1>
+<p class="text-[13.5px] text-[#555e65] font-normal leading-tight">
+          Cek yang bertanda oranye sebelum dimasukkan.
+        </p>
+</header>
+<!-- Scanned Items List -->
+<div class="flex flex-col text-[14.5px] font-medium" data-purpose="scanned-items-list">
+<!-- Item 1 -->
+<div class="flex justify-between items-center py-2.5 dashed-border-b">
+<span class="text-slate-900">2 Mie goreng spesial</span>
+<span class="font-bold text-slate-900 tracking-tight">64.000</span>
+</div>
+<!-- Item 2 -->
+<div class="flex justify-between items-center py-2.5 dashed-border-b">
+<span class="text-slate-900">1 Nasi goreng kampung</span>
+<span class="font-bold text-slate-900 tracking-tight">28.000</span>
+</div>
+<!-- Item 3 -->
+<div class="flex justify-between items-center py-2.5 dashed-border-b">
+<span class="text-slate-900">1 Mie kuah seafood</span>
+<span class="font-bold text-slate-900 tracking-tight">35.000</span>
+</div>
+<!-- Item 4: Warning/Correction Item -->
+<div class="flex justify-between items-center py-2 dashed-border-b" data-purpose="clarification-required-item">
+<div class="flex flex-col">
+<span class="text-slate-900 leading-tight">1 Kwetiau siram</span>
+<span class="text-alertRed text-[11.5px] font-semibold mt-0.5">Angka kurang jelas</span>
+</div>
+<!-- Editable price input container -->
+<div class="bg-alertSoftBg border border-alertRed rounded-lg px-4 py-1.5 flex items-center justify-center shadow-xs">
+<span class="font-bold text-slate-900 tracking-tight text-[14.5px]">30.000</span>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="flex justify-between items-center py-2.5 dashed-border-b">
+<span class="text-slate-900">1 Pisang goreng keju</span>
+<span class="font-bold text-slate-900 tracking-tight">24.000</span>
+</div>
+<!-- Item 6 -->
+<div class="flex justify-between items-center py-2.5 border-b-[1.5px] border-slate-900">
+<span class="text-slate-900">5 Es teh manis</span>
+<span class="font-bold text-slate-900 tracking-tight">30.000</span>
+</div>
+<!-- Summary / Tax note -->
+<div class="flex justify-between items-center pt-3 pb-1 text-[13px]">
+<span class="text-subtleGray font-normal">Juga terbaca: service 5%, pajak 10%</span>
+<span class="font-bold text-slate-900 text-[14.5px] tracking-tight">211.000</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<footer class="flex items-center gap-3 mt-6 mb-2">
+<!-- Retake Photo Button -->
+<button class="w-[38%] py-3.5 px-3 rounded-full border border-slate-300 bg-white text-slate-900 font-semibold text-[14px] text-center active:bg-slate-50 transition-colors" type="button">
+          Foto ulang
+        </button>
+<!-- Submit Button -->
+<button class="flex-1 py-3.5 px-4 rounded-full bg-primaryDark text-white font-semibold text-[14px] text-center shadow-md active:bg-black transition-colors" type="button">
+          Masukkan ke tagihan
+        </button>
+</footer>
+</main>
+<!-- END: BottomSheet -->
+</div>
+<!-- END: PhoneContainer -->
+</body></html>

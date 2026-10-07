@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Patungan - Beranda</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Bricolage Grotesque, Plus Jakarta Sans, IBM Plex Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=IBM+Plex+Mono:wght@500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#DDE6D5',
+              coral: '#FF6B3D',
+              coralBadge: '#FF6B3D',
+              coralBadgeText: '#FFFFFF',
+              dark: '#16231A',
+              muted: '#627364',
+              border: '#93A48F',
+              avatarOrange: '#B5491C',
+              avatarBlue: '#1B6CB0',
+              avatarPurple: '#4D368E',
+              avatarGreen: '#1E6E43',
+              avatarMagenta: '#9E2458',
+              avatarGray: '#4A5B52'
+            }
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for Specific Visual Nuances -->
+<style data-purpose="custom-utilities">
+    /* Custom zig-zag torn paper bottom border */
+    .receipt-zigzag {
+      background-image: radial-gradient(circle at 10px -5px, transparent 12px, #ffffff 13px);
+    }
+    
+    /* Highlight effect for pending balance */
+    .highlight-mark {
+      position: relative;
+      display: inline-block;
+      z-index: 1;
+    }
+    .highlight-mark::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      right: -2px;
+      bottom: 2px;
+      height: 11px;
+      background-color: #FF6B3D;
+      z-index: -1;
+      border-radius: 2px;
+    }
+
+    /* Hide scrollbars cleanly */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[#242b25] min-h-screen flex justify-center items-center p-0 sm:py-6 antialiased font-sans select-none">
+<!-- BEGIN: MobileDeviceFrame -->
+<div class="w-full max-w-[390px] h-[844px] bg-[#DDE6D5] relative flex flex-col overflow-hidden shadow-2xl sm:rounded-[44px]">
+<!-- BEGIN: TopBar -->
+<header class="pt-12 px-6 pb-2" data-purpose="app-header">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[17px] font-medium text-[#4D5E51]">Halo, Raka</span>
+<!-- User Avatar Profile -->
+<div aria-label="Profil Raka" class="w-11 h-11 rounded-full bg-[#B5491C] text-white flex items-center justify-center font-bold text-lg tracking-wider">
+          R
+        </div>
+</div>
+<h1 class="font-display font-extrabold text-[44px] leading-tight tracking-tight text-[#16231A]">
+        Patungan
+      </h1>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: ScrollableContent -->
+<main class="flex-1 overflow-y-auto px-4 pb-28 pt-2 no-scrollbar" data-purpose="main-content">
+<!-- BEGIN: ReceiptCard -->
+<section aria-label="Ringkasan Tagihan" class="relative mb-5">
+<!-- Receipt Top & Body -->
+<div class="bg-white rounded-t-[20px] px-5 pt-5 pb-3">
+<p class="text-[14px] text-[#556557] font-medium mb-1">Masih ditunggu dari teman</p>
+<div class="flex items-baseline justify-between mb-4">
+<div class="flex items-baseline">
+<span class="highlight-mark font-mono font-bold text-[31px] text-[#16231A] tracking-tight leading-none">
+                Rp146.800
+              </span>
+</div>
+<span class="text-[14px] font-medium text-[#4D5E51]">3 orang</span>
+</div>
+<!-- Dashed Receipt Separator -->
+<div class="border-b border-dashed border-[#D2DCD0] my-4"></div>
+<!-- Debt Information Row -->
+<div class="flex justify-between items-start pt-1">
+<div class="max-w-[190px]">
+<p class="text-[13px] text-[#556557] leading-snug">
+                Kamu masih berutang<br/>
+<span class="text-[#16231A] font-medium">ke Wulan, grup Kos Melati</span>
+</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[17px] text-[#16231A] tracking-tight">
+                Rp31.500
+              </span>
+</div>
+</div>
+</div>
+<!-- Jagged / Zigzag Torn Paper Bottom -->
+<div class="w-full h-[10px] overflow-hidden leading-none relative">
+<svg class="w-full h-full text-white fill-current" preserveaspectratio="none" viewbox="0 0 390 10">
+<path d="M0,0 
+                     L10,10 L20,0 L30,10 L40,0 L50,10 L60,0 L70,10 L80,0 L90,10 L100,0
+                     L110,10 L120,0 L130,10 L140,0 L150,10 L160,0 L170,10 L180,0 L190,10 L200,0
+                     L210,10 L220,0 L230,10 L240,0 L250,10 L260,0 L270,10 L280,0 L290,10 L300,0
+                     L310,10 L320,0 L330,10 L340,0 L350,10 L360,0 L370,10 L380,0 L390,10 
+                     L390,0 Z"></path>
+</svg>
+</div>
+</section>
+<!-- END: ReceiptCard -->
+<!-- BEGIN: ActionButtons -->
+<section class="space-y-3 mb-6" data-purpose="quick-actions">
+<!-- Primary Action Button -->
+<button class="w-full bg-[#FF6B3D] active:scale-[0.99] transition-transform text-[#16231A] font-bold text-[17px] py-[15px] px-6 rounded-full flex items-center justify-center gap-2 shadow-sm">
+<svg class="w-5 h-5 stroke-[2.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Buat tagihan baru</span>
+</button>
+<!-- Secondary Action Row -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Scan Receipt Button -->
+<button class="border border-[#8FA48C] rounded-full py-3 px-4 flex items-center justify-center gap-2 text-[#16231A] font-semibold text-[14px] bg-transparent active:bg-black/5">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5m8.25 0h4.5c.621 0 1.125.504 1.125 1.125v4.5m0 8.25v4.5c0 .621-.504 1.125-1.125 1.125h-4.5m-8.25 0h-4.5A1.125 1.125 0 013.75 19.125v-4.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Scan struk</span>
+</button>
+<!-- Join with Code Button -->
+<button class="border border-[#8FA48C] rounded-full py-3 px-3 flex items-center justify-center gap-2 text-[#16231A] font-semibold text-[14px] bg-transparent active:bg-black/5">
+<svg class="w-4 h-4 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l3 3m0 0l-3 3m3-3H2.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-left leading-tight">Gabung pakai kode</span>
+</button>
+</div>
+</section>
+<!-- END: ActionButtons -->
+<!-- BEGIN: GroupsSection -->
+<section class="mb-7" data-purpose="groups-list">
+<h2 class="font-display font-extrabold text-[20px] text-[#16231A] mb-3">Grup</h2>
+<div class="grid grid-cols-2 gap-3">
+<!-- Group Card 1 -->
+<div class="bg-white rounded-[18px] p-4 flex flex-col justify-between shadow-xs">
+<!-- Avatars Row -->
+<div class="flex items-center -space-x-1.5 mb-3">
+<div class="w-7 h-7 rounded-full bg-[#B5491C] text-white flex items-center justify-center text-xs font-bold border-2 border-white">R</div>
+<div class="w-7 h-7 rounded-full bg-[#1B6CB0] text-white flex items-center justify-center text-xs font-bold border-2 border-white">D</div>
+<div class="w-7 h-7 rounded-full bg-[#4D368E] text-white flex items-center justify-center text-xs font-bold border-2 border-white">B</div>
+<div class="w-7 h-7 rounded-full bg-[#4A5B52] text-white flex items-center justify-center text-[10px] font-bold border-2 border-white">+2</div>
+</div>
+<div>
+<p class="font-bold text-[15px] text-[#16231A] leading-tight">Kantor lantai 3</p>
+<p class="text-[13px] text-[#556557] font-medium mt-0.5">5 orang</p>
+</div>
+</div>
+<!-- Group Card 2 -->
+<div class="bg-white rounded-[18px] p-4 flex flex-col justify-between shadow-xs">
+<!-- Avatars Row -->
+<div class="flex items-center -space-x-1.5 mb-3">
+<div class="w-7 h-7 rounded-full bg-[#B5491C] text-white flex items-center justify-center text-xs font-bold border-2 border-white">R</div>
+<div class="w-7 h-7 rounded-full bg-[#1E6E43] text-white flex items-center justify-center text-xs font-bold border-2 border-white">W</div>
+<div class="w-7 h-7 rounded-full bg-[#9E2458] text-white flex items-center justify-center text-xs font-bold border-2 border-white">T</div>
+</div>
+<div>
+<p class="font-bold text-[15px] text-[#16231A] leading-tight">Kos Melati</p>
+<p class="text-[13px] text-[#556557] font-medium mt-0.5">3 orang</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: GroupsSection -->
+<!-- BEGIN: RecentActivitiesSection -->
+<section class="mb-4" data-purpose="recent-activities">
+<h2 class="font-display font-extrabold text-[20px] text-[#16231A] mb-3">Terakhir</h2>
+<div class="space-y-4">
+<!-- Activity Item 1 -->
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-bold text-[16px] text-[#16231A]">Kedai Mie Kenari</h3>
+<p class="text-[13px] text-[#556557] font-medium mt-0.5">Sabtu, 3 Okt</p>
+</div>
+<div class="text-right flex flex-col items-end">
+<span class="font-mono font-bold text-[15px] text-[#16231A]">Rp243.900</span>
+<span class="mt-1 inline-block bg-[#FF6B3D] text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
+                3 belum transfer
+              </span>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex justify-between items-start opacity-90">
+<div>
+<h3 class="font-bold text-[16px] text-[#16231A]">Bakso Pak Darto</h3>
+<p class="text-[13px] text-[#556557] font-medium mt-0.5">Jumat, 2 Okt</p>
+</div>
+<div class="text-right">
+<span class="font-mono font-bold text-[15px] text-[#16231A]">Rp96.000</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: RecentActivitiesSection -->
+</main>
+<!-- END: ScrollableContent -->
+<!-- BEGIN: BottomNavigation -->
+<nav aria-label="Navigasi Utama" class="absolute bottom-5 inset-x-4 h-[62px] bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-between px-2.5 z-30">
+<!-- Tab 1: Beranda (Active) -->
+<button class="flex items-center gap-2 bg-[#FF6B3D] text-[#16231A] font-bold text-[14px] py-2.5 px-5 rounded-full shadow-xs transition-colors">
+<svg class="w-5 h-5 stroke-[2.2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Beranda</span>
+</button>
+<!-- Tab 2: Riwayat -->
+<button aria-label="Riwayat" class="w-12 h-12 flex items-center justify-center text-[#16231A] rounded-full hover:bg-black/5 transition-colors">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Tab 3: Profil -->
+<button aria-label="Profil Akun" class="w-12 h-12 flex items-center justify-center text-[#16231A] rounded-full hover:bg-black/5 transition-colors">
+<svg class="w-6 h-6 stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</nav>
+<!-- END: BottomNavigation -->
+</div>
+<!-- END: MobileDeviceFrame -->
+</body></html>

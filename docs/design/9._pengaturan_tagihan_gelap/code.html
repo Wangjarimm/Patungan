@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Pajak, service, diskon - Patungan</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#131D17',
+            cardBg: '#22332A',
+            borderGreen: '#4F6656',
+            dashedGreen: '#3A4D41',
+            textLight: '#E8EFE6',
+            textSub: '#A3B3A6',
+            textMuted: '#6B7E70',
+            primaryOrange: '#FF7A52',
+            avatarOrange: '#B8380D'
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+            mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Courier New', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    body {
+      background-color: #131D17;
+      color: #E8EFE6;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Dashed separator style matching mockup */
+    .border-dashed-custom {
+      border-bottom: 1px dashed #3A4D41;
+    }
+    .border-solid-custom {
+      border-bottom: 1px solid #324439;
+    }
+    /* Custom switch toggle */
+    .switch-checkbox:checked {
+      right: 0;
+      background-color: #FF7A52;
+    }
+  </style>
+</head>
+<body class="bg-appBg text-textLight font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-primaryOrange selection:text-white">
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-[430px] mx-auto px-5 pt-8 pb-32 flex-1 flex flex-col justify-start">
+<!-- BEGIN: TopBar -->
+<header class="mb-5 pt-2">
+<div class="flex items-start gap-3">
+<!-- Back Button -->
+<button aria-label="Kembali" class="text-textLight mt-1 hover:opacity-80 active:scale-95 transition-transform" type="button">
+<svg class="w-6 h-6 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Header Titles -->
+<div class="flex flex-col">
+<span class="text-textSub text-[15px] font-normal leading-tight tracking-tight">Kedai Mie Kenari</span>
+<h1 class="text-[28px] font-extrabold tracking-tight text-textLight leading-tight mt-0.5">Pajak, service, diskon</h1>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: FormCard -->
+<section class="bg-cardBg rounded-[20px] p-5 mb-5 flex flex-col gap-5 border border-[#2d4236]/30 shadow-lg shadow-black/20" data-purpose="tax-service-card">
+<!-- Row: Service Charge -->
+<div class="flex items-center justify-between">
+<span class="text-[17px] font-bold text-textLight tracking-tight">Service charge</span>
+<div class="flex items-center gap-3">
+<!-- Minus button -->
+<button class="w-10 h-10 rounded-full border border-dashedGreen flex items-center justify-center text-textLight active:bg-dashedGreen/40 transition-colors" type="button">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-[17px] font-bold text-textLight w-9 text-center">5%</span>
+<!-- Plus button -->
+<button class="w-10 h-10 rounded-full border border-dashedGreen flex items-center justify-center text-textLight active:bg-dashedGreen/40 transition-colors" type="button">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Row: Pajak Restoran -->
+<div class="flex items-center justify-between">
+<span class="text-[17px] font-bold text-textLight tracking-tight">Pajak restoran</span>
+<div class="flex items-center gap-3">
+<!-- Minus button -->
+<button class="w-10 h-10 rounded-full border border-dashedGreen flex items-center justify-center text-textLight active:bg-dashedGreen/40 transition-colors" type="button">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-[17px] font-bold text-textLight w-9 text-center">10%</span>
+<!-- Plus button -->
+<button class="w-10 h-10 rounded-full border border-dashedGreen flex items-center justify-center text-textLight active:bg-dashedGreen/40 transition-colors" type="button">
+<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Dashed Divider -->
+<div class="border-dashed-custom"></div>
+<!-- Row: Pajak dihitung setelah service (Toggle Switch) -->
+<div class="flex items-center justify-between">
+<div class="flex flex-col pr-3">
+<span class="text-[16px] font-bold text-textLight leading-snug">Pajak dihitung setelah service</span>
+<span class="text-[14px] text-textSub font-normal mt-0.5">Cara yang umum di restoran</span>
+</div>
+<!-- iOS Toggle -->
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-[52px] h-[31px] bg-[#3a4d41] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-[27px] after:w-[27px] after:transition-all peer-checked:bg-primaryOrange shadow-inner"></div>
+</label>
+</div>
+<!-- Dashed Divider -->
+<div class="border-dashed-custom"></div>
+<!-- Row: Diskon -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="text-[17px] font-bold text-textLight">Diskon</span>
+<!-- Pill Toggle [Rp | %] -->
+<div class="inline-flex rounded-full bg-[#18261F] p-[2px] border border-dashedGreen">
+<button class="px-3.5 py-1 text-sm font-semibold rounded-full bg-textLight text-appBg transition-all shadow-sm" type="button">
+              Rp
+            </button>
+<button class="px-3 py-1 text-sm font-semibold rounded-full text-textLight hover:text-white transition-all" type="button">
+              %
+            </button>
+</div>
+</div>
+<!-- Input Placeholder -->
+<div class="border-solid-custom pb-2 pt-1">
+<input aria-label="Jumlah diskon" class="w-full bg-transparent border-0 p-0 text-textSub placeholder:text-textMuted font-mono text-[16px] focus:ring-0 focus:outline-none" placeholder="Misal 20.000 dari promo" type="text"/>
+</div>
+</div>
+<!-- Row: Ongkir atau biaya lain -->
+<div class="flex flex-col gap-1 pt-1">
+<span class="text-[17px] font-bold text-textLight">Ongkir atau biaya lain</span>
+<!-- Input Placeholder -->
+<div class="border-solid-custom pb-2 pt-2">
+<input aria-label="Ongkir atau biaya lain" class="w-full bg-transparent border-0 p-0 text-textSub placeholder:text-textMuted font-mono text-[16px] focus:ring-0 focus:outline-none" placeholder="Dibagi rata ke semua orang" type="text"/>
+</div>
+</div>
+<!-- Dashed Divider -->
+<div class="border-dashed-custom my-1"></div>
+<!-- Row: Bulatkan bagian tiap orang ke atas -->
+<div class="flex flex-col gap-3">
+<span class="text-[16px] font-bold text-textLight">Bulatkan bagian tiap orang ke atas</span>
+<!-- Rounding Pills -->
+<div class="grid grid-cols-4 gap-2 pt-1">
+<!-- Pill: Tidak -->
+<button class="py-2.5 rounded-full border border-dashedGreen text-textLight text-[15px] font-medium text-center active:scale-95 transition-transform" type="button">
+            Tidak
+          </button>
+<!-- Pill: 100 (Selected) -->
+<button class="py-2.5 rounded-full bg-primaryOrange text-appBg text-[15px] font-bold text-center active:scale-95 transition-transform shadow-md shadow-primaryOrange/20" type="button">
+            100
+          </button>
+<!-- Pill: 500 -->
+<button class="py-2.5 rounded-full border border-dashedGreen text-textLight text-[15px] font-medium text-center active:scale-95 transition-transform" type="button">
+            500
+          </button>
+<!-- Pill: 1.000 -->
+<button class="py-2.5 rounded-full border border-dashedGreen text-textLight text-[15px] font-medium text-center active:scale-95 transition-transform" type="button">
+            1.000
+          </button>
+</div>
+</div>
+</section>
+<!-- END: FormCard -->
+<!-- BEGIN: PayerRow -->
+<section class="px-2 py-4 border-b border-[#23352B]" data-purpose="payer-selector">
+<div class="flex items-center justify-between cursor-pointer active:opacity-80 transition-opacity">
+<span class="text-[17px] font-bold text-textLight">Yang bayar ke kasir</span>
+<div class="flex items-center gap-2">
+<!-- Avatar Icon 'R' -->
+<div class="w-7 h-7 rounded-full bg-avatarOrange flex items-center justify-center text-white text-xs font-bold ring-1 ring-white/10">
+            R
+          </div>
+<span class="text-[16px] font-medium text-textLight">Raka</span>
+<!-- Chevron Right -->
+<svg class="w-4 h-4 text-textSub stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+</section>
+<!-- END: PayerRow -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: StickyBottomBar -->
+<footer class="fixed bottom-0 left-0 right-0 bg-[#16221B]/95 backdrop-blur-md border-t border-[#23352B] py-3.5 px-6 z-50">
+<div class="max-w-[430px] mx-auto flex items-center justify-between">
+<!-- Total Calculation -->
+<div class="flex flex-col">
+<span class="text-xs text-textSub font-normal">Total jadi</span>
+<span class="text-[22px] font-extrabold text-white tracking-tight leading-tight">Rp243.900</span>
+</div>
+<!-- Action Button -->
+<button class="bg-primaryOrange text-[#131D17] font-bold text-[17px] px-8 py-3 rounded-full hover:brightness-105 active:scale-95 transition-all shadow-md shadow-primaryOrange/20" type="button">
+        Simpan
+      </button>
+</div>
+</footer>
+<!-- END: StickyBottomBar -->
+</body></html>

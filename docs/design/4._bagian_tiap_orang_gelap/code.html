@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Bagian Tiap Orang - Patungan</title>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appBg: '#131D17',
+            cardBg: '#1F3127',
+            cardBgLight: '#23382D',
+            brandGreen: '#3ECF8E',
+            textPrimary: '#EBF2EA',
+            textSecondary: '#9EAEA2',
+            accentOrange: '#FF7043',
+            badgeOrangeBg: '#3F2722',
+            badgeOrangeText: '#FF8A65',
+            badgeGreenText: '#4ADE80',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-layout">
+    /* Custom zigzag receipt jagged edge simulation */
+    .receipt-zigzag {
+      position: relative;
+      background-color: #1F3127;
+    }
+    .receipt-zigzag::after {
+      content: "";
+      position: absolute;
+      bottom: -11px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: radial-gradient(circle, transparent, transparent 50%, #1F3127 50%, #1F3127 100%);
+      background-size: 14px 14px;
+      /* Precise jagged teeth edge using repeating linear gradient */
+      background: linear-gradient(135deg, #1F3127 8px, transparent 0), linear-gradient(-135deg, #1F3127 8px, transparent 0);
+      background-position: left bottom;
+      background-repeat: repeat-x;
+      background-size: 16px 12px;
+    }
+    /* Safe padding for iOS mobile devices */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+    }
+  </style>
+</head>
+<body class="bg-black flex justify-center items-center min-h-screen font-sans antialiased select-none">
+<!-- Mobile Screen Container (iPhone aspect ratio) -->
+<div class="relative w-full max-w-[430px] min-h-screen bg-appBg text-textPrimary flex flex-col justify-between overflow-x-hidden shadow-2xl">
+<!-- Top Content Area -->
+<div class="flex-1 pb-28">
+<!-- BEGIN: Header -->
+<header class="pt-12 px-6 pb-4" data-purpose="screen-header">
+<!-- Back Navigation & Title -->
+<div class="flex items-center gap-4 mb-5">
+<button aria-label="Kembali" class="p-1 -ml-2 text-textPrimary hover:text-white transition" type="button">
+<svg class="w-6 h-6 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<h1 class="text-[26px] font-bold tracking-tight text-white leading-none">Bagian tiap orang</h1>
+</div>
+<!-- Progress Summary & Sisa Status -->
+<div class="flex justify-between items-baseline mb-3">
+<p class="text-[15px] font-semibold tracking-normal text-textPrimary">
+            2 dari 5 <span class="font-normal text-textSecondary">sudah beres</span>
+</p>
+<p class="text-[15px] text-textSecondary">
+            sisa <span class="font-bold text-white tracking-tight">Rp146.800</span>
+</p>
+</div>
+<!-- 5-Segment Progress Bar -->
+<div class="grid grid-cols-5 gap-2" data-purpose="split-progress-bar">
+<!-- Item 1: Complete -->
+<div class="h-[6px] rounded-full bg-brandGreen"></div>
+<!-- Item 2: Complete -->
+<div class="h-[6px] rounded-full bg-brandGreen"></div>
+<!-- Item 3: Pending -->
+<div class="h-[6px] rounded-full bg-[#273B30]"></div>
+<!-- Item 4: Pending -->
+<div class="h-[6px] rounded-full bg-[#273B30]"></div>
+<!-- Item 5: Pending -->
+<div class="h-[6px] rounded-full bg-[#273B30]"></div>
+</div>
+</header>
+<!-- END: Header -->
+<!-- BEGIN: Member Cards List -->
+<main class="px-5 space-y-3 pt-2" data-purpose="participants-list">
+<!-- CARD 1: Sekar (Expanded / Detailed Receipt) -->
+<div class="relative pt-1 pb-4">
+<div class="receipt-zigzag rounded-t-[20px] p-5 pb-7 text-textPrimary">
+<!-- Person Header -->
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-[#2E945F] flex items-center justify-center font-bold text-white text-[17px]">
+                  S
+                </div>
+<h2 class="text-xl font-bold text-white tracking-tight">Sekar</h2>
+</div>
+<span class="text-xs px-2.5 py-1 rounded-full bg-[#39241E] text-badgeOrangeText font-medium">
+                Belum transfer
+              </span>
+</div>
+<!-- Items Breakdown -->
+<div class="space-y-1.5 text-[15px] mb-3">
+<div class="flex justify-between items-center">
+<span class="text-textPrimary">Kwetiau siram</span>
+<span class="font-semibold text-textPrimary">30.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-textPrimary">Pisang goreng keju <span class="text-textSecondary text-xs">÷2</span></span>
+<span class="font-semibold text-textPrimary">12.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-textPrimary">Es teh manis <span class="text-textSecondary text-xs">÷5</span></span>
+<span class="font-semibold text-textPrimary">6.000</span>
+</div>
+</div>
+<!-- Subtle Separator -->
+<div class="border-t border-[#294235] my-3"></div>
+<!-- Tax & Services -->
+<div class="space-y-1 text-[14px] text-textSecondary mb-5">
+<div class="flex justify-between items-center">
+<span>Service 5%</span>
+<span class="font-semibold text-textSecondary">2.400</span>
+</div>
+<div class="flex justify-between items-center">
+<span>Pajak 10%</span>
+<span class="font-semibold text-textSecondary">5.040</span>
+</div>
+</div>
+<!-- Bottom Total & Action -->
+<div class="flex items-center justify-between pt-1">
+<!-- Ingatkan Button -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-full border border-[#355342] text-[14px] font-medium text-textPrimary hover:bg-[#283f32] active:scale-95 transition" type="button">
+<svg class="w-4 h-4 text-textSecondary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                Ingatkan
+              </button>
+<!-- Total with Accent Underline -->
+<div class="relative pb-1">
+<span class="text-[28px] font-extrabold tracking-tight text-white leading-none">55.500</span>
+<div class="absolute bottom-0 left-0 right-0 h-[3.5px] bg-accentOrange rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- CARD 2: Bima -->
+<div class="bg-cardBg rounded-[16px] px-4 py-3.5 flex items-center justify-between hover:bg-[#23382D] transition cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#6C4AEB] flex items-center justify-center font-bold text-white text-[15px]">
+              B
+            </div>
+<span class="text-[17px] font-semibold text-white">Bima</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs px-2.5 py-0.5 rounded bg-[#3A2621] text-badgeOrangeText font-medium">
+              Belum
+            </span>
+<span class="text-[17px] font-bold text-white">43.900</span>
+</div>
+</div>
+<!-- CARD 3: Fajar -->
+<div class="bg-cardBg rounded-[16px] px-4 py-3.5 flex items-center justify-between hover:bg-[#23382D] transition cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#E53974] flex items-center justify-center font-bold text-white text-[15px]">
+              F
+            </div>
+<span class="text-[17px] font-semibold text-white">Fajar</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs px-2.5 py-0.5 rounded bg-[#3A2621] text-badgeOrangeText font-medium">
+              Belum
+            </span>
+<span class="text-[17px] font-bold text-white">47.400</span>
+</div>
+</div>
+<!-- CARD 4: Dinda (Lunas) -->
+<div class="bg-cardBg rounded-[16px] px-4 py-3.5 flex items-center justify-between hover:bg-[#23382D] transition cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#2978DE] flex items-center justify-center font-bold text-white text-[15px]">
+              D
+            </div>
+<span class="text-[17px] font-semibold text-white">Dinda</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[13px] text-badgeGreenText flex items-center gap-1 font-medium">
+<svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Lunas
+            </span>
+<span class="text-[17px] font-bold text-white">53.200</span>
+</div>
+</div>
+<!-- CARD 5: Raka (Bayar ke kasir) -->
+<div class="bg-cardBg rounded-[16px] px-4 py-3.5 flex items-center justify-between hover:bg-[#23382D] transition cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#E65100] flex items-center justify-center font-bold text-white text-[15px]">
+              R
+            </div>
+<span class="text-[17px] font-semibold text-white">Raka</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[13px] text-textSecondary font-normal">
+              bayar ke kasir
+            </span>
+<span class="text-[17px] font-bold text-white">43.900</span>
+</div>
+</div>
+</main>
+<!-- END: Member Cards List -->
+</div>
+<!-- BEGIN: Sticky Bottom Bar -->
+<footer class="fixed bottom-0 max-w-[430px] w-full bg-gradient-to-t from-appBg via-appBg to-transparent pt-6 pb-6 px-5 flex items-center gap-3.5" data-purpose="action-bar">
+<!-- Main Action Pill Button -->
+<button class="flex-1 bg-accentOrange hover:bg-[#ff6130] text-black font-bold h-14 rounded-full flex items-center justify-center gap-2.5 text-[17px] shadow-lg active:scale-[0.98] transition" type="button">
+<svg class="w-5 h-5 -rotate-45 mb-0.5 fill-black stroke-black" viewbox="0 0 24 24">
+<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+</svg>
+        Kirim ke WhatsApp
+      </button>
+<!-- Copy Button -->
+<button aria-label="Salin ringkasan" class="w-14 h-14 rounded-full bg-cardBg border border-[#2b4436] flex items-center justify-center text-textPrimary hover:bg-[#283f32] active:scale-95 transition flex-shrink-0" type="button">
+<svg class="w-5 h-5 text-[#C4D4C7]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="12" rx="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="12" x="9" y="9"></rect>
+<path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</footer>
+<!-- END: Sticky Bottom Bar -->
+</div>
+</body></html>

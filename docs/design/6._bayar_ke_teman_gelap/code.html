@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Bayar ke Teman - Patungan</title>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            appDark: '#131D17',
+            surfaceCard: '#1E2D25',
+            brandOrange: '#FF7043',
+            avatarOrange: '#C84B1F',
+            textPrimary: '#F0F5EE',
+            textSecondary: '#8B9C90',
+            buttonLight: '#E8ECE7',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Font Adjustments and Typography -->
+<style data-purpose="custom-styling">
+    body {
+      background-color: #131D17;
+      color: #F0F5EE;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .dashed-border-b {
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-appDark flex justify-center selection:bg-brandOrange selection:text-white">
+<!-- Mobile Screen Container -->
+<div class="w-full max-w-md min-h-screen flex flex-col justify-between px-6 pt-12 pb-8">
+<div>
+<!-- BEGIN: NavigationBar -->
+<header class="flex items-center gap-4 pt-2 mb-8">
+<button aria-label="Kembali" class="text-textSecondary hover:text-white transition-colors focus:outline-none -ml-1" type="button">
+<svg class="w-6 h-6 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-textSecondary text-[15px] font-medium tracking-tight">Kedai Mie Kenari</span>
+</header>
+<!-- END: NavigationBar -->
+<!-- BEGIN: UserHeader -->
+<section class="flex items-center gap-3.5 mb-5" data-purpose="recipient-info">
+<div class="w-10 h-10 rounded-full bg-avatarOrange flex items-center justify-center font-bold text-white text-base shrink-0 select-none shadow-inner">
+          R
+        </div>
+<h1 class="text-2xl font-bold tracking-tight text-textPrimary">Transfer ke Raka</h1>
+</section>
+<!-- END: UserHeader -->
+<!-- BEGIN: AmountBadge -->
+<section class="flex items-center gap-4 mb-4" data-purpose="payment-amount">
+<!-- Orange Amount Tag -->
+<div class="bg-brandOrange rounded-xl px-4 py-1.5 flex items-center justify-center shadow-sm">
+<span class="text-[#131D17] text-[40px] font-black tracking-tight leading-none font-sans">
+            Rp47.400
+          </span>
+</div>
+<!-- Copy Amount Button -->
+<button aria-label="Salin Nominal" class="w-12 h-12 rounded-full border border-white/20 bg-transparent flex items-center justify-center text-textPrimary hover:bg-white/5 active:scale-95 transition focus:outline-none shrink-0" type="button">
+<svg class="w-5 h-5 text-textPrimary stroke-[1.75]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<rect height="12" rx="2" stroke-linecap="round" stroke-linejoin="round" width="12" x="8" y="8"></rect>
+<path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</section>
+<!-- END: AmountBadge -->
+<!-- BEGIN: OrderDescription -->
+<p class="text-[14px] leading-relaxed text-textSecondary font-normal max-w-sm mb-9">
+        Mie kuah seafood dan es teh, sudah termasuk service dan pajak
+      </p>
+<!-- END: OrderDescription -->
+<!-- BEGIN: AccountsSection -->
+<section data-purpose="accounts-list">
+<h2 class="text-base font-bold text-textPrimary mb-3.5 tracking-tight">
+          Rekening dan e-wallet Raka
+        </h2>
+<!-- Card Container -->
+<div class="bg-surfaceCard rounded-2xl px-5 py-4 flex flex-col shadow-sm">
+<!-- Item 1: BCA -->
+<div class="flex items-center justify-between pb-4 dashed-border-b">
+<div>
+<div class="text-[12px] font-semibold text-textSecondary tracking-wider uppercase mb-0.5">BCA</div>
+<div class="text-[17px] font-bold text-textPrimary tracking-wider font-mono">8830 1122 4567</div>
+<div class="text-[12px] text-textSecondary mt-0.5 font-normal">a.n. Raka Pratama</div>
+</div>
+<button class="bg-buttonLight hover:bg-white active:scale-95 text-[#131D17] font-semibold text-[13px] px-5 py-2 rounded-full transition focus:outline-none" type="button">
+              Salin
+            </button>
+</div>
+<!-- Item 2: GoPay -->
+<div class="flex items-center justify-between py-4 dashed-border-b">
+<div>
+<div class="text-[12px] font-semibold text-textSecondary mb-0.5">GoPay</div>
+<div class="text-[17px] font-bold text-textPrimary tracking-wider font-mono">0812 3456 7890</div>
+</div>
+<button class="bg-buttonLight/10 hover:bg-white/20 active:scale-95 text-buttonLight font-semibold text-[13px] px-5 py-2 rounded-full transition focus:outline-none" type="button">
+              Salin
+            </button>
+</div>
+<!-- Item 3: DANA -->
+<div class="flex items-center justify-between pt-4">
+<div>
+<div class="text-[12px] font-semibold text-textSecondary tracking-wider uppercase mb-0.5">DANA</div>
+<div class="text-[17px] font-bold text-textPrimary tracking-wider font-mono">0812 3456 7890</div>
+</div>
+<button class="bg-buttonLight/10 hover:bg-white/20 active:scale-95 text-buttonLight font-semibold text-[13px] px-5 py-2 rounded-full transition focus:outline-none" type="button">
+              Salin
+            </button>
+</div>
+</div>
+</section>
+<!-- END: AccountsSection -->
+</div>
+<!-- BEGIN: FooterAction -->
+<footer class="mt-8 flex flex-col items-center gap-3">
+<!-- Confirmation Button -->
+<button class="w-full bg-brandOrange active:bg-[#e86339] text-[#131D17] font-bold text-[16px] py-4 rounded-full flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.99] focus:outline-none" type="button">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Tandai sudah transfer</span>
+</button>
+<!-- Explanatory Caption -->
+<p class="text-[13px] text-textSecondary text-center font-normal">
+        Raka dapat notifikasi dan bisa cek mutasinya.
+      </p>
+</footer>
+<!-- END: FooterAction -->
+</div>
+</body></html>
