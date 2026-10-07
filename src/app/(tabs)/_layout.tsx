@@ -1,25 +1,12 @@
 import { Tabs } from 'expo-router';
 
+import { AnimatedTabBar } from '@/components/AnimatedTabBar';
 import { HistoryIcon, HomeIcon, ProfileIcon } from '@/components/icons';
-import { fonts, fontSizes, minTouchTarget, useTheme } from '@/theme';
 
-// Plain tab bar for now; the floating animated capsule (AnimatedTabBar) comes in phase 2.
+// Floating animated capsule tab bar (PRD section 6).
 export default function TabsLayout() {
-  const { colors } = useTheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.accent,
-        tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.line,
-          minHeight: minTouchTarget,
-        },
-        tabBarLabelStyle: { fontFamily: fonts.bodyStrong, fontSize: fontSizes.caption },
-      }}>
+    <Tabs tabBar={(props) => <AnimatedTabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="index"
         options={{

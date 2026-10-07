@@ -2,6 +2,7 @@ import Constants from 'expo-constants';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useTabBarInset } from '@/components/AnimatedTabBar';
 import { ChoiceChips } from '@/components/ChoiceChips';
 import { ExternalLinkIcon } from '@/components/icons';
 import { ReceiptCard } from '@/components/ReceiptCard';
@@ -19,6 +20,7 @@ const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
 // Name, Google account, and payment accounts arrive in phases 3, 4, and 6.
 export default function ProfileScreen() {
   const { colors } = useTheme();
+  const tabBarInset = useTabBarInset();
   const themePreference = useSettingsStore((state) => state.themePreference);
   const setThemePreference = useSettingsStore((state) => state.setThemePreference);
   const version = Constants.expoConfig?.version ?? '-';
@@ -27,7 +29,7 @@ export default function ProfileScreen() {
     <SafeAreaView
       edges={['top', 'left', 'right']}
       style={[styles.screen, { backgroundColor: colors.background }]}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset }]}>
         <Text accessibilityRole="header" style={[styles.title, { color: colors.text }]}>
           Profil
         </Text>

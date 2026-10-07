@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useTabBarInset } from '@/components/AnimatedTabBar';
 import { BillRow } from '@/components/BillRow';
 import { ChoiceChips } from '@/components/ChoiceChips';
 import { buildHistory, type HistoryFilter } from '@/lib/history';
@@ -18,6 +19,7 @@ const EMPTY_MESSAGES: Record<HistoryFilter, string> = {
 // History with filters, unpaid bills on top and settled bills per month (F-10).
 export default function HistoryScreen() {
   const { colors } = useTheme();
+  const tabBarInset = useTabBarInset();
   const bills = useBillsStore((state) => state.bills);
   const [filter, setFilter] = useState<HistoryFilter>('all');
   const { sections, counts } = useMemo(() => buildHistory(bills, filter), [bills, filter]);
@@ -31,7 +33,7 @@ export default function HistoryScreen() {
       <SectionList
         sections={sections}
         keyExtractor={(summary) => summary.bill.id}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: tabBarInset }]}
         stickySectionHeadersEnabled={false}
         ListHeaderComponent={
           <View style={styles.header}>

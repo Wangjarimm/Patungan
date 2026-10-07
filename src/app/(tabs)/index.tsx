@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useTabBarInset } from '@/components/AnimatedTabBar';
 import { Amount } from '@/components/Amount';
 import { BillRow } from '@/components/BillRow';
 import { GroupCard } from '@/components/GroupCard';
@@ -19,6 +20,7 @@ const RECENT_LIMIT = 5;
 
 export default function HomeScreen() {
   const { colors } = useTheme();
+  const tabBarInset = useTabBarInset();
   const bills = useBillsStore((state) => state.bills);
   const groupsById = useGroupsStore((state) => state.groups);
   const groups = useMemo(() => sortGroups(groupsById), [groupsById]);
@@ -31,7 +33,7 @@ export default function HomeScreen() {
     <SafeAreaView
       edges={['top', 'left', 'right']}
       style={[styles.screen, { backgroundColor: colors.background }]}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset }]}>
         <Text accessibilityRole="header" style={[styles.hero, { color: colors.text }]}>
           Patungan
         </Text>
