@@ -13,7 +13,7 @@
     "android": {
       "package": "com.wangjarimm.patungan",
       "adaptiveIcon": {
-        "backgroundColor": "#DCE6D5",
+        "backgroundColor": "#FF6A3D",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -29,9 +29,13 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#DCE6D5",
+          "backgroundColor": "#FF6A3D",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 76,
+          "dark": {
+            "backgroundColor": "#FF6A3D",
+            "image": "./assets/images/splash-icon.png"
+          }
         }
       ],
       "@react-native-community/datetimepicker"
