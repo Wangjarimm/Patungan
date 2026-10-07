@@ -40,5 +40,6 @@ Aplikasi Android split bill. Spesifikasi lengkap ada di `docs/PRD.md`; baca sebe
 
 - `npm start` menjalankan Expo
 - `npm test` menjalankan Jest
+- `npm run test:coverage` menjalankan Jest dengan coverage (ambang `src/lib`: baris dan cabang 90%, dipakai di CI)
 - `npm run lint` menjalankan ESLint
 - `npm run typecheck` menjalankan `tsc --noEmit`
