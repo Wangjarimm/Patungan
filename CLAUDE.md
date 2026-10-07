@@ -23,10 +23,12 @@ Aplikasi Android split bill. Spesifikasi lengkap ada di `docs/PRD.md`; baca sebe
 - Hormati pengaturan reduce motion untuk semua animasi.
 - Jangan pernah commit file `.env` atau kunci service role Supabase.
 - Commit kecil dengan pesan format: `feat|fix|test|chore(scope): ringkasan`.
+- Jangan menambahkan baris Co-Authored-By, "Generated with Claude Code", atau atribusi AI apa pun di pesan commit maupun deskripsi pull request.
+
 
 ## Struktur penting
 
-- `app/` layar dan layout Expo Router
+- `src/app/` layar dan layout Expo Router (hanya file rute; jangan taruh test di sini)
 - `src/lib/` logika murni: `calc.ts`, `format.ts`, `receipt-parser.ts`, `join-code.ts`
 - `src/theme/` token warna terang dan gelap, tipografi, spacing
 - `src/components/` komponen bersama: ReceiptCard, ZigzagEdge, Avatar, PersonToggle, PillButton, AnimatedTabBar

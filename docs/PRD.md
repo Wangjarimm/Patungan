@@ -218,13 +218,13 @@ Aplikasi dibangun dengan Expo (React Native) dan TypeScript, memakai Supabase pa
 
 ```
 patungan/
-  app/                 # Expo Router: layar dan layout
-    (tabs)/            # index (Beranda), riwayat, profil
-    tagihan/[id]/      # isi pesanan, hasil, pengaturan
-    gabung.tsx
-    bayar/[id].tsx
-    scan.tsx
   src/
+    app/               # Expo Router: layar dan layout
+      (tabs)/          # index (Beranda), riwayat, profil
+      tagihan/[id]/    # isi pesanan, hasil, pengaturan
+      gabung.tsx
+      bayar/[id].tsx
+      scan.tsx
     lib/calc.ts        # perhitungan murni (+ calc.test.ts)
     lib/format.ts      # format Rupiah, tanggal
     lib/receipt-parser.ts
