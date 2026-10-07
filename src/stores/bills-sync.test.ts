@@ -54,6 +54,37 @@ describe('createBill online', () => {
   });
 });
 
+describe('adoptLocalBills (local-to-server migration)', () => {
+  it('uploads an offline bill and links the matching name', () => {
+    const id = ok(store().createBill({ title: 'Kedai', payerName: 'Raka' }));
+    expect(queued()).toEqual([]);
+    useSyncStore.setState({ queue: [] });
+
+    store().adoptLocalBills(owner);
+
+    const bill = store().bills[id]!;
+    expect(bill).toMatchObject({ role: 'owner', ownerId: 'user-1', syncedAt: null });
+    expect(bill.myParticipantId).toBe(bill.participants[0]?.id);
+    expect(bill.participants[0]?.profileId).toBe('user-1');
+    expect(queued()).toEqual(['upsertBill', 'upsertParticipant', 'setPayer']);
+  });
+
+  it('adopts without linking when no name matches', () => {
+    const id = ok(store().createBill({ title: 'Kedai', payerName: 'Dinda' }));
+    store().adoptLocalBills(owner);
+    expect(store().bills[id]).toMatchObject({ ownerId: 'user-1', myParticipantId: null });
+    expect(store().bills[id]?.participants[0]?.profileId).toBeNull();
+  });
+
+  it('does not adopt or queue twice', () => {
+    ok(store().createBill({ title: 'Kedai', payerName: 'Raka' }));
+    store().adoptLocalBills(owner);
+    useSyncStore.setState({ queue: [] });
+    store().adoptLocalBills(owner);
+    expect(queued()).toEqual([]);
+  });
+});
+
 describe('edits queue sync operations', () => {
   function onlineBill() {
     const id = ok(store().createBill({ title: 'Kedai', payerName: 'Raka', owner }));

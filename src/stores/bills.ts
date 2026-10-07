@@ -104,6 +104,9 @@ type BillsState = {
   applyRemoteBill: (bill: Bill) => void;
   markSynced: (billId: string, joinCode?: string) => void;
   forgetBill: (billId: string) => void;
+  // Local-to-server migration: upload bills made before an account existed (ownerId null) and
+  // link the account's name to a participant. Idempotent; safe to call whenever online.
+  adoptLocalBills: (owner: { userId: string; displayName: string }) => void;
 };
 
 function clampInt(value: number, min: number, max: number): number {
@@ -437,6 +440,27 @@ export const useBillsStore = create<BillsState>()(
             return { bills: rest };
           });
           useSyncStore.getState().dropBill(billId);
+        },
+
+        adoptLocalBills: ({ userId, displayName }) => {
+          const offline = Object.values(get().bills).filter(
+            (bill) => bill.role === 'owner' && bill.ownerId === null,
+          );
+          for (const bill of offline) {
+            // Link "me" only when exactly one name matches, as createBill does.
+            const matches = bill.participants.filter((p) => sameName(p.name, displayName));
+            const me = matches.length === 1 ? matches[0]?.id : undefined;
+            const adopted: Bill = {
+              ...bill,
+              ownerId: userId,
+              myParticipantId: me ?? null,
+              participants: bill.participants.map((p) =>
+                p.id === me ? { ...p, profileId: userId } : p,
+              ),
+            };
+            set((state) => ({ bills: { ...state.bills, [adopted.id]: adopted } }));
+            queue(adopted, ...opsForNewBill(adopted));
+          }
         },
       };
     },

@@ -13,6 +13,8 @@ import { flushOutbox, refreshAllBills } from './sync-engine';
 // when the account comes online or the app returns to the foreground.
 export function useSyncEngine(): void {
   const status = useAccountStore((state) => state.status);
+  const userId = useAccountStore((state) => state.userId);
+  const displayName = useAccountStore((state) => state.displayName);
   const queueLength = useSyncStore((state) => state.queue.length);
 
   useEffect(() => {
@@ -22,12 +24,16 @@ export function useSyncEngine(): void {
   useEffect(() => {
     if (!supabase || status !== 'online') return;
     const client = supabase;
+    // Upload bills made before this account existed; the queue effect then sends them.
+    if (userId && displayName) {
+      useBillsStore.getState().adoptLocalBills({ userId, displayName });
+    }
     void refreshAllBills(client);
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') void refreshAllBills(client);
     });
     return () => subscription.remove();
-  }, [status]);
+  }, [status, userId, displayName]);
 }
 
 // Per open screen: hold the bill's shared realtime channel while the screen is mounted (F-15).
