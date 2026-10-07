@@ -1,6 +1,7 @@
 import {
   formatDateLong,
   formatDateShort,
+  formatDecimal,
   formatMonthYear,
   formatNumber,
   formatPercent,
@@ -38,6 +39,14 @@ describe('formatRupiah', () => {
     expect(formatRupiah(243900)).toBe('Rp243.900');
     expect(formatRupiah(0)).toBe('Rp0');
     expect(formatRupiah(-5000)).toBe('-Rp5.000');
+  });
+});
+
+describe('formatDecimal', () => {
+  it('uses a decimal comma and at most two decimals', () => {
+    expect(formatDecimal(11)).toBe('11');
+    expect(formatDecimal(5.5)).toBe('5,5');
+    expect(formatDecimal(12.345)).toBe('12,35');
   });
 });
 

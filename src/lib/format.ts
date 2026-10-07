@@ -47,10 +47,15 @@ export function formatRupiah(value: number): string {
   return formatted.startsWith('-') ? `-Rp${formatted.slice(1)}` : `Rp${formatted}`;
 }
 
+// Up to two decimals with a decimal comma: 5 -> "5", 7.5 -> "7,5"
+export function formatDecimal(value: number): string {
+  const rounded = Math.round(value * 100) / 100;
+  return rounded.toString().replace('.', ',');
+}
+
 // 5 -> "5%", 7.5 -> "7,5%"
 export function formatPercent(value: number): string {
-  const rounded = Math.round(value * 100) / 100;
-  return `${rounded.toString().replace('.', ',')}%`;
+  return `${formatDecimal(value)}%`;
 }
 
 function pad(value: number): string {
