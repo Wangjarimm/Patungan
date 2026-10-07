@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSyncExternalStore } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -316,11 +315,3 @@ export const useBillsStore = create<BillsState>()(
     },
   ),
 );
-
-// True once persisted bills have been loaded from AsyncStorage.
-export function useBillsHydrated(): boolean {
-  return useSyncExternalStore(
-    (onChange) => useBillsStore.persist.onFinishHydration(onChange),
-    () => useBillsStore.persist.hasHydrated(),
-  );
-}

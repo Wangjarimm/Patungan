@@ -1,5 +1,7 @@
 import { useColorScheme } from 'react-native';
 
+import { useSettingsStore, type ThemePreference } from '@/stores/settings';
+
 import { darkColors, lightColors, type ColorTokens } from './colors';
 
 export type ColorSchemeName = 'light' | 'dark';
@@ -13,8 +15,17 @@ export function getTheme(scheme: ColorSchemeName): Theme {
   return { scheme, colors: scheme === 'dark' ? darkColors : lightColors };
 }
 
-// Follows the system scheme for now; the user theme preference (F-11) plugs in here in phase 2.
+// The user's choice wins; "system" follows the phone, defaulting to light when unknown.
+export function resolveColorScheme(
+  preference: ThemePreference,
+  system: string | null | undefined,
+): ColorSchemeName {
+  if (preference !== 'system') return preference;
+  return system === 'dark' ? 'dark' : 'light';
+}
+
 export function useTheme(): Theme {
   const system = useColorScheme();
-  return getTheme(system === 'dark' ? 'dark' : 'light');
+  const preference = useSettingsStore((state) => state.themePreference);
+  return getTheme(resolveColorScheme(preference, system));
 }
