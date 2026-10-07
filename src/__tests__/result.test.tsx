@@ -117,3 +117,28 @@ describe('Kirim ke WhatsApp dan Salin (F-07)', () => {
     expect(screen.getByText('Rincian disalin. Tempel di grup WhatsApp.')).toBeOnTheScreen();
   });
 });
+
+describe('Status bayar manual', () => {
+  it('marks a person as paid, updates progress, and can undo it', async () => {
+    const billId = await renderKenari();
+    // Dinda is opened first because she is the first person still owing.
+    await fireEvent.press(screen.getByRole('button', { name: 'Tandai lunas' }));
+
+    const dinda = useBillsStore
+      .getState()
+      .bills[billId]!.participants.find((p) => p.name === 'Dinda');
+    expect(dinda?.paidAt).not.toBeNull();
+    expect(screen.getByText('Lunas')).toBeOnTheScreen();
+    expect(screen.getByLabelText('2 dari 5 sudah beres, sisa Rp146.800')).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Batalkan lunas' }));
+    expect(screen.getByLabelText('1 dari 5 sudah beres, sisa Rp200.000')).toBeOnTheScreen();
+  });
+
+  it('offers no paid toggle for the payer', async () => {
+    await renderKenari();
+    await fireEvent.press(screen.getByRole('button', { name: 'Dinda, Rp53.200' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Raka, Rp43.900' }));
+    expect(screen.queryByRole('button', { name: 'Tandai lunas' })).toBeNull();
+  });
+});

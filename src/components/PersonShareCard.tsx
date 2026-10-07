@@ -8,6 +8,8 @@ import type { BillSettings, Participant } from '@/types/bill';
 
 import { Amount } from './Amount';
 import { Avatar } from './Avatar';
+import { CheckIcon } from './icons';
+import { PillButton } from './PillButton';
 import { ReceiptCard } from './ReceiptCard';
 import { StatusBadge } from './StatusBadge';
 
@@ -18,6 +20,8 @@ type PersonShareCardProps = {
   settings: BillSettings;
   expanded: boolean;
   onToggle: () => void;
+  // Manual payment status; shown for people who owe something.
+  onTogglePaid: () => void;
 };
 
 function Line({ label, value, note }: { label: string; value: number; note?: string }) {
@@ -46,6 +50,7 @@ export function PersonShareCard({
   settings,
   expanded,
   onToggle,
+  onTogglePaid,
 }: PersonShareCardProps) {
   const { colors } = useTheme();
   const header = (
@@ -110,6 +115,23 @@ export function PersonShareCard({
         </Text>
         <Amount value={share.rounded} showCurrency={false} size="title" strong highlight />
       </View>
+
+      {status === 'pending' ? (
+        <PillButton
+          label="Tandai lunas"
+          accessibilityHint={`Tandai ${participant.name} sudah transfer`}
+          icon={(color) => <CheckIcon color={color} size={18} />}
+          onPress={onTogglePaid}
+          style={styles.paidButton}
+        />
+      ) : status === 'paid' ? (
+        <PillButton
+          label="Batalkan lunas"
+          accessibilityHint={`Kembalikan ${participant.name} ke belum transfer`}
+          onPress={onTogglePaid}
+          style={styles.paidButton}
+        />
+      ) : null}
     </ReceiptCard>
   );
 }
@@ -156,6 +178,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: spacing.md,
     paddingTop: spacing.lg,
+  },
+  paidButton: {
+    marginTop: spacing.lg,
   },
   exact: {
     flex: 1,

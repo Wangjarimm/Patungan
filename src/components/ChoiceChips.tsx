@@ -7,6 +7,8 @@ type Option<T> = {
   label: string;
   // Spoken label when the visible one is terse, e.g. "100" -> "Bulatkan ke 100 rupiah".
   accessibilityLabel?: string;
+  // Small count shown next to the label, e.g. unpaid bills; hidden when 0.
+  badge?: number;
 };
 
 type ChoiceChipsProps<T> = {
@@ -61,6 +63,21 @@ export function ChoiceChips<T extends string | number>({
               ]}>
               {option.label}
             </Text>
+            {option.badge ? (
+              <View
+                style={[
+                  styles.badge,
+                  { backgroundColor: selected && !compact ? colors.onAccent : colors.accent },
+                ]}>
+                <Text
+                  style={[
+                    styles.badgeText,
+                    { color: selected && !compact ? colors.accent : colors.onAccent },
+                  ]}>
+                  {option.badge}
+                </Text>
+              </View>
+            ) : null}
           </Pressable>
         );
       })}
@@ -80,6 +97,8 @@ const styles = StyleSheet.create({
   },
   chip: {
     flex: 1,
+    flexDirection: 'row',
+    gap: spacing.xs + 2,
     minHeight: minTouchTarget,
     borderWidth: 1,
     borderRadius: radius.pill,
@@ -98,5 +117,17 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: fontSizes.small,
+  },
+  badge: {
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    fontFamily: fonts.heading,
+    fontSize: fontSizes.caption - 1,
   },
 });

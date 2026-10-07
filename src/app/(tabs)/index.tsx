@@ -8,8 +8,9 @@ import { BillRow } from '@/components/BillRow';
 import { PlusIcon } from '@/components/icons';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
-import { billTotal, summarizeOutstanding } from '@/lib/summary';
-import { sortBillsByRecent, useBillsStore } from '@/stores/bills';
+import { sortBillsByRecent } from '@/lib/history';
+import { summarizeBill, summarizeOutstanding } from '@/lib/summary';
+import { useBillsStore } from '@/stores/bills';
 import { fonts, fontSizes, lineHeights, spacing, useTheme } from '@/theme';
 
 const RECENT_LIMIT = 5;
@@ -72,8 +73,7 @@ export default function HomeScreen() {
             recent.map((bill) => (
               <BillRow
                 key={bill.id}
-                bill={bill}
-                total={billTotal(bill)}
+                summary={summarizeBill(bill)}
                 onPress={() => router.push({ pathname: '/tagihan/[id]', params: { id: bill.id } })}
               />
             ))

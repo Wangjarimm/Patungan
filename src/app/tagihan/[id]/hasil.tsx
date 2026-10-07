@@ -25,6 +25,8 @@ export default function ResultScreen() {
   const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const bill = useBillsStore((state) => state.bills[id]);
+  const markPaid = useBillsStore((state) => state.markPaid);
+  const unmarkPaid = useBillsStore((state) => state.unmarkPaid);
   const result = useMemo(() => (bill ? calculateBill(bill) : null), [bill]);
   const progress = useMemo(
     () => (bill && result ? billProgress(bill, result) : null),
@@ -132,6 +134,11 @@ export default function ResultScreen() {
               settings={bill.settings}
               expanded={expanded.has(participant.id)}
               onToggle={() => toggle(participant.id)}
+              onTogglePaid={() =>
+                participant.paidAt === null
+                  ? markPaid(bill.id, participant.id)
+                  : unmarkPaid(bill.id, participant.id)
+              }
             />
           );
         })}
