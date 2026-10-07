@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSyncExternalStore } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -242,5 +243,13 @@ export const useBillsStore = create<BillsState>()(
 export function sortBillsByRecent(bills: Record<string, Bill>): Bill[] {
   return Object.values(bills).sort(
     (a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt,
+  );
+}
+
+// True once persisted bills have been loaded from AsyncStorage.
+export function useBillsHydrated(): boolean {
+  return useSyncExternalStore(
+    (onChange) => useBillsStore.persist.onFinishHydration(onChange),
+    () => useBillsStore.persist.hasHydrated(),
   );
 }

@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
+import { useBillsHydrated } from '@/stores/bills';
 import { fontAssets, useTheme } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -11,7 +12,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(fontAssets);
   const { scheme, colors } = useTheme();
-  const ready = fontsLoaded || fontError !== null;
+  const hydrated = useBillsHydrated();
+  const ready = (fontsLoaded || fontError !== null) && hydrated;
 
   useEffect(() => {
     if (ready) {

@@ -29,6 +29,7 @@ export const fontSizes = {
   body: 16,
   title: 22,
   display: 30,
+  hero: 40,
 } as const;
 
 export const lineHeights = {
@@ -37,4 +38,5 @@ export const lineHeights = {
   body: 24,
   title: 28,
   display: 36,
+  hero: 46,
 } as const;
