@@ -7,7 +7,15 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
-    ignores: ['dist/*', '.expo/*', 'android/*', 'ios/*', 'coverage/*', 'docs/*'],
+    ignores: [
+      'dist/*',
+      '.expo/*',
+      'android/*',
+      'ios/*',
+      'coverage/*',
+      'docs/*',
+      'src/services/supabase/database.types.ts',
+    ],
   },
   {
     rules: {
