@@ -36,6 +36,7 @@ describe('validateBillTitle', () => {
 describe('validateItemName', () => {
   it('requires a name', () => {
     expect(validateItemName('').ok).toBe(false);
+    expect(validateItemName('x'.repeat(61)).ok).toBe(false);
     expect(validateItemName('Es teh')).toEqual({ ok: true, value: 'Es teh' });
   });
 });
@@ -55,8 +56,9 @@ describe('validateParticipantName', () => {
     expect(validateParticipantName('raka', others, '1')).toEqual({ ok: true, value: 'raka' });
   });
 
-  it('rejects an empty name', () => {
+  it('rejects an empty or overly long name', () => {
     expect(validateParticipantName('  ', others).ok).toBe(false);
+    expect(validateParticipantName('x'.repeat(31), others).ok).toBe(false);
   });
 
   it('accepts a new name', () => {

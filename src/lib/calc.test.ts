@@ -237,6 +237,22 @@ describe('calculateBill: edge cases from the PRD', () => {
   });
 });
 
+describe('calculateBill: no participants', () => {
+  it('charges nothing, not even the delivery fee', () => {
+    const result = calculateBill(
+      input({
+        items: [item('x', 10000, 1, ['ghost'])],
+        settings: { extraFee: 15000, servicePct: 5, taxPct: 10 },
+      }),
+    );
+    expect(result.people).toEqual([]);
+    expect(result.totals.extraFee).toBe(0);
+    expect(result.totals.exact).toBe(0);
+    expect(result.totals.rounded).toBe(0);
+    expect(result.unassignedItemIds).toEqual(['x']);
+  });
+});
+
 describe('calculateBill: settings', () => {
   const twoPeople = {
     participants: people('a', 'b'),
@@ -288,6 +304,26 @@ describe('calculateBill: settings', () => {
       }),
     );
     expect(shareOf(result, 'a').rounded).toBe(expected);
+  });
+
+  it('counts a duplicated eater once', () => {
+    const result = calculateBill(
+      input({ participants: people('a', 'b'), items: [item('x', 10000, 1, ['a', 'a', 'b'])] }),
+    );
+    expect(shareOf(result, 'a').items[0]?.divisor).toBe(2);
+    expect(shareOf(result, 'a').exact).toBe(5000);
+  });
+
+  it('treats a negative delivery fee as zero', () => {
+    const result = calculateBill(
+      input({
+        participants: people('a'),
+        items: [item('x', 10000, 1, ['a'])],
+        settings: { extraFee: -5000 },
+      }),
+    );
+    expect(result.totals.extraFee).toBe(0);
+    expect(shareOf(result, 'a').exact).toBe(10000);
   });
 
   it('ignores eaters that are not participants', () => {

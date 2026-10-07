@@ -74,14 +74,17 @@ function computeDiscount(settings: BillSettings, subtotal: number): number {
 }
 
 export function calculateBill({ participants, items, settings }: CalcInput): BillResult {
-  const participantIds = new Set(participants.map((p) => p.id));
-  const itemShares = new Map<string, PersonItemShare[]>(participants.map((p) => [p.id, []]));
+  const lines = participants.map((p) => ({ participantId: p.id, items: [] as PersonItemShare[] }));
+  const linesById = new Map(lines.map((line) => [line.participantId, line]));
   const unassignedItemIds: string[] = [];
 
   // Steps 1-2: line value split evenly between the item's eaters.
   for (const item of items) {
     const lineValue = item.unitPrice * item.qty;
-    const eaters = [...new Set(item.eaterIds)].filter((id) => participantIds.has(id));
+    const eaters = [...new Set(item.eaterIds)].flatMap((id) => {
+      const line = linesById.get(id);
+      return line ? [line] : [];
+    });
     if (eaters.length === 0) {
       if (lineValue > 0) {
         unassignedItemIds.push(item.id);
@@ -89,18 +92,17 @@ export function calculateBill({ participants, items, settings }: CalcInput): Bil
       continue;
     }
     const amount = lineValue / eaters.length;
-    for (const id of eaters) {
-      itemShares
-        .get(id)
-        ?.push({ itemId: item.id, name: item.name, divisor: eaters.length, amount });
+    for (const line of eaters) {
+      line.items.push({ itemId: item.id, name: item.name, divisor: eaters.length, amount });
     }
   }
 
   // Step 3: per-person and overall subtotals.
-  const subtotals = participants.map((p) =>
-    (itemShares.get(p.id) ?? []).reduce((sum, share) => sum + share.amount, 0),
-  );
-  const subtotal = subtotals.reduce((sum, s) => sum + s, 0);
+  const withSubtotals = lines.map((line) => ({
+    ...line,
+    subtotal: line.items.reduce((sum, share) => sum + share.amount, 0),
+  }));
+  const subtotal = withSubtotals.reduce((sum, line) => sum + line.subtotal, 0);
 
   // Steps 4-7: discount, base, service, tax.
   const discount = computeDiscount(settings, subtotal);
@@ -108,19 +110,18 @@ export function calculateBill({ participants, items, settings }: CalcInput): Bil
   const service = base * (settings.servicePct / 100);
   const tax = (settings.taxAfterService ? base + service : base) * (settings.taxPct / 100);
 
-  // Step 8: delivery fee split evenly.
+  // Step 8: delivery fee split evenly; nobody to charge it to without participants.
   const extraFee = participants.length > 0 ? Math.max(settings.extraFee, 0) : 0;
   const feePerPerson = participants.length > 0 ? extraFee / participants.length : 0;
 
   // Step 9: proportional share plus fee, rounded up per person.
-  const people = participants.map((p, index): PersonShare => {
-    const personSubtotal = subtotals[index] ?? 0;
-    const ratio = subtotal > 0 ? personSubtotal / subtotal : 0;
+  const people = withSubtotals.map((line): PersonShare => {
+    const ratio = subtotal > 0 ? line.subtotal / subtotal : 0;
     const exact = ratio * (base + service + tax) + feePerPerson;
     return {
-      participantId: p.id,
-      items: itemShares.get(p.id) ?? [],
-      subtotal: personSubtotal,
+      participantId: line.participantId,
+      items: line.items,
+      subtotal: line.subtotal,
       discount: ratio * discount,
       service: ratio * service,
       tax: ratio * tax,

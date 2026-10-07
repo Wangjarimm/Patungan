@@ -54,6 +54,10 @@ describe('dates', () => {
     expect(toIsoDate(parseIsoDate('2026-10-03'))).toBe('2026-10-03');
   });
 
+  it('falls back to January 1st for missing date parts', () => {
+    expect(toIsoDate(parseIsoDate('2026'))).toBe('2026-01-01');
+  });
+
   it('returns today as a local date', () => {
     expect(todayIsoDate(new Date(2026, 0, 9, 23, 59))).toBe('2026-01-09');
   });

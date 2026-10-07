@@ -77,4 +77,25 @@ describe('buildShareText', () => {
     expect(noPayer).not.toContain('Dibayar dulu');
     expect(noPayer).not.toContain('Transfer ke');
   });
+
+  it('leaves out the extras line when there is no discount, service, or tax', () => {
+    const bill: Bill = {
+      ...kenari,
+      settings: { ...kenari.settings, servicePct: 0, taxPct: 0 },
+    };
+    const plain = buildShareText(bill, calculateBill(bill));
+    expect(plain).not.toContain('Sudah termasuk');
+    expect(plain).not.toContain('Ongkir');
+  });
+
+  it('skips shares of people no longer in the bill', () => {
+    const result = calculateBill(kenari);
+    const bill: Bill = {
+      ...kenari,
+      participants: kenari.participants.filter((p) => p.id !== 'fajar'),
+    };
+    const text = buildShareText(bill, result);
+    expect(text).not.toContain('Fajar');
+    expect(text).toContain('- Sekar: Rp55.500');
+  });
 });
