@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 
 import BillSettingsScreen from '@/app/tagihan/[id]/pengaturan';
 import { useBillsStore } from '@/stores/bills';
+import { seedKenari } from '@/test-utils/seed';
 
 jest.mock(
   'react-native-safe-area-context',
@@ -15,39 +16,6 @@ jest.mock('expo-router', () => ({
 }));
 
 const mockedParams = jest.mocked(useLocalSearchParams);
-
-function ok<T>(result: { ok: true; value: T } | { ok: false; error: string }): T {
-  if (!result.ok) throw new Error(result.error);
-  return result.value;
-}
-
-// Kedai Mie Kenari from the PRD, with default settings (0% service and tax, round to 100).
-function seedKenari() {
-  const billId = ok(
-    useBillsStore
-      .getState()
-      .createBill({ title: 'Kedai Mie Kenari', date: '2026-10-03', payerName: 'Raka' }),
-  );
-  const ids: Record<string, string> = { Raka: useBillsStore.getState().bills[billId]!.payerId! };
-  for (const name of ['Dinda', 'Bima', 'Sekar', 'Fajar']) {
-    ids[name] = ok(useBillsStore.getState().addParticipant(billId, name));
-  }
-  const menu: [string, number, number, string[]][] = [
-    ['Mie goreng spesial', 32000, 2, ['Raka', 'Bima']],
-    ['Nasi goreng kampung', 28000, 1, ['Dinda']],
-    ['Kwetiau siram', 30000, 1, ['Sekar']],
-    ['Mie kuah seafood', 35000, 1, ['Fajar']],
-    ['Pisang goreng keju', 24000, 1, ['Dinda', 'Sekar']],
-    ['Es teh manis', 6000, 5, ['Raka', 'Dinda', 'Bima', 'Sekar', 'Fajar']],
-  ];
-  for (const [name, unitPrice, qty, eaters] of menu) {
-    const itemId = ok(useBillsStore.getState().addItem(billId, { name, unitPrice, qty }));
-    for (const eater of eaters) {
-      useBillsStore.getState().toggleEater(billId, itemId, ids[eater]!);
-    }
-  }
-  return { billId, ids };
-}
 
 const settingsOf = (id: string) => useBillsStore.getState().bills[id]!.settings;
 

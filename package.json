@@ -62,7 +62,8 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!src/**/*.test.{ts,tsx}",
-      "!src/__tests__/**"
+      "!src/__tests__/**",
+      "!src/test-utils/**"
     ],
     "coverageThreshold": {
       "./src/lib/": {

@@ -175,6 +175,13 @@ export default function BillScreen() {
               </Text>
             </Pressable>
           </View>
+          <PillButton
+            variant="primary"
+            label="Lihat bagian"
+            onPress={() =>
+              router.push({ pathname: '/tagihan/[id]/hasil', params: { id: bill.id } })
+            }
+          />
         </View>
       </SafeAreaView>
     </SafeAreaView>
