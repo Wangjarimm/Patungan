@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 
-import { HistoryIcon, HomeIcon, ProfileIcon } from '@/components/tab-icons';
+import { HistoryIcon, HomeIcon, ProfileIcon } from '@/components/icons';
 import { fonts, fontSizes, minTouchTarget, useTheme } from '@/theme';
 
 // Plain tab bar for now; the floating animated capsule (AnimatedTabBar) comes in phase 2.
