@@ -13,9 +13,20 @@ function makeBill(date: string, kind: 'unpaid' | 'settled' | 'draft', createdAt 
     date,
     payerId: 'raka',
     createdAt,
+    role: 'owner',
+    ownerId: null,
+    joinCode: null,
+    myParticipantId: null,
+    syncedAt: null,
     participants: [
-      { id: 'raka', name: 'Raka', color: 'c', paidAt: null },
-      { id: 'dinda', name: 'Dinda', color: 'c', paidAt: kind === 'settled' ? 1 : null },
+      { id: 'raka', name: 'Raka', color: 'c', paidAt: null, profileId: null },
+      {
+        id: 'dinda',
+        name: 'Dinda',
+        color: 'c',
+        paidAt: kind === 'settled' ? 1 : null,
+        profileId: null,
+      },
     ],
     items:
       kind === 'draft'

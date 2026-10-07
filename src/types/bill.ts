@@ -8,6 +8,8 @@ export type Participant = {
   color: string;
   // When the payer marked this person as paid; null while still owing.
   paidAt: number | null;
+  // Account that claimed this name online (F-14); null for names nobody claimed yet.
+  profileId: string | null;
 };
 
 export type Item = {
@@ -31,6 +33,9 @@ export type BillSettings = {
   roundingStep: RoundingStep;
 };
 
+// 'owner': created on this account, fully editable. 'participant': joined with a code (F-13).
+export type BillRole = 'owner' | 'participant';
+
 export type Bill = {
   id: string;
   title: string;
@@ -41,6 +46,16 @@ export type Bill = {
   items: Item[];
   settings: BillSettings;
   createdAt: number;
+  role: BillRole;
+  // Server account that owns the bill. Null for bills that only live on this device so far
+  // (made before v0.3 or before the account existed); those move online in the migration.
+  ownerId: string | null;
+  // Assigned by the server once the bill is uploaded.
+  joinCode: string | null;
+  // The participant that is the current user, when known.
+  myParticipantId: string | null;
+  // When the server last confirmed this bill; null while it has never been uploaded.
+  syncedAt: number | null;
 };
 
 export type GroupMember = {

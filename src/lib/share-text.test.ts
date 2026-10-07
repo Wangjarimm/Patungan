@@ -11,11 +11,17 @@ const kenari: Bill = {
   date: '2026-10-03',
   payerId: 'raka',
   createdAt: 0,
+  role: 'owner',
+  ownerId: null,
+  joinCode: null,
+  myParticipantId: null,
+  syncedAt: null,
   participants: everyone.map((id) => ({
     id,
     name: id.charAt(0).toUpperCase() + id.slice(1),
     color: 'avatar',
     paidAt: null,
+    profileId: null,
   })),
   items: [
     { id: 'i1', name: 'Mie goreng spesial', unitPrice: 32000, qty: 2, eaterIds: ['raka', 'bima'] },

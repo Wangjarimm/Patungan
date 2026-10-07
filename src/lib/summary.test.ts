@@ -10,10 +10,15 @@ function makeBill(overrides: Partial<Bill> = {}): Bill {
     date: '2026-10-03',
     payerId: 'raka',
     createdAt: 0,
+    role: 'owner',
+    ownerId: null,
+    joinCode: null,
+    myParticipantId: null,
+    syncedAt: null,
     participants: [
-      { id: 'raka', name: 'Raka', color: 'c', paidAt: null },
-      { id: 'dinda', name: 'Dinda', color: 'c', paidAt: null },
-      { id: 'bima', name: 'Bima', color: 'c', paidAt: null },
+      { id: 'raka', name: 'Raka', color: 'c', paidAt: null, profileId: null },
+      { id: 'dinda', name: 'Dinda', color: 'c', paidAt: null, profileId: null },
+      { id: 'bima', name: 'Bima', color: 'c', paidAt: null, profileId: null },
     ],
     items: [
       { id: 'i1', name: 'Mie', unitPrice: 30000, qty: 1, eaterIds: ['raka'] },

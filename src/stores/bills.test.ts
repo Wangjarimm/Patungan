@@ -225,20 +225,36 @@ describe('migrateBillsState', () => {
     settings: {},
   };
 
-  it('adds paidAt: null to v1 participants', () => {
+  const onlineFields = {
+    role: 'owner',
+    ownerId: null,
+    joinCode: null,
+    myParticipantId: null,
+    syncedAt: null,
+  };
+
+  it('upgrades v1 bills: payment status and online fields', () => {
     const migrated = migrateBillsState({ bills: { b1: v1Bill } }, 1);
     expect(migrated.bills.b1?.participants[0]).toEqual({
       id: 'p1',
       name: 'Raka',
       color: 'c',
       paidAt: null,
+      profileId: null,
     });
-    expect(migrated.bills.b1?.title).toBe('Kedai');
+    expect(migrated.bills.b1).toMatchObject({ title: 'Kedai', ...onlineFields });
+  });
+
+  it('upgrades v2 bills as device-only bills, keeping payment status', () => {
+    const v2Bill = { ...v1Bill, participants: [{ id: 'p1', name: 'Raka', color: 'c', paidAt: 7 }] };
+    const migrated = migrateBillsState({ bills: { b1: v2Bill } }, 2);
+    expect(migrated.bills.b1).toMatchObject(onlineFields);
+    expect(migrated.bills.b1?.participants[0]).toMatchObject({ paidAt: 7, profileId: null });
   });
 
   it('leaves current data untouched and handles empty state', () => {
-    const current = { bills: { b1: { ...v1Bill, participants: [] } } };
-    expect(migrateBillsState(current, 2)).toEqual(current);
+    const current = { bills: { b1: { ...v1Bill, ...onlineFields, participants: [] } } };
+    expect(migrateBillsState(current, 3)).toEqual(current);
     expect(migrateBillsState(undefined, 1)).toEqual({ bills: {} });
   });
 

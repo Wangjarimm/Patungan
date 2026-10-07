@@ -5,11 +5,12 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { pickAvatarColor } from '@/lib/avatar';
 import { todayIsoDate } from '@/lib/format';
 import { createId } from '@/lib/id';
+import { opsForNewBill, type SyncOp } from '@/lib/sync-ops';
 import {
   clampPercent,
   MAX_PRICE,
-  normalizeName,
   MAX_QTY,
+  normalizeName,
   validateBillTitle,
   validateItemName,
   validateParticipantName,
@@ -17,23 +18,40 @@ import {
 } from '@/lib/validation';
 import type { Bill, BillSettings, Item, Participant } from '@/types/bill';
 
-export const BILLS_STORE_VERSION = 2;
+import { useSyncStore } from './sync';
 
-// v1 (app 0.1.0) participants had no payment status.
+export const BILLS_STORE_VERSION = 3;
+
+type StoredBill = Omit<
+  Bill,
+  'role' | 'ownerId' | 'joinCode' | 'myParticipantId' | 'syncedAt' | 'participants'
+> &
+  Partial<Pick<Bill, 'role' | 'ownerId' | 'joinCode' | 'myParticipantId' | 'syncedAt'>> & {
+    participants: (Omit<Participant, 'paidAt' | 'profileId'> & Partial<Participant>)[];
+  };
+
+// v1 (app 0.1.0) had no payment status; v2 (0.2.0) had no online fields. Older bills stay
+// on the device (ownerId null) until the local-to-server migration uploads them.
 export function migrateBillsState(
   persisted: unknown,
   version: number,
 ): { bills: Record<string, Bill> } {
-  const state = (persisted ?? {}) as { bills?: Record<string, Bill> };
+  const state = (persisted ?? {}) as { bills?: Record<string, StoredBill> };
   const bills = state.bills ?? {};
-  if (version >= 2) return { bills };
+  if (version >= BILLS_STORE_VERSION) return { bills: bills as Record<string, Bill> };
   const migrated: Record<string, Bill> = {};
   for (const [id, bill] of Object.entries(bills)) {
     migrated[id] = {
       ...bill,
+      role: bill.role ?? 'owner',
+      ownerId: bill.ownerId ?? null,
+      joinCode: bill.joinCode ?? null,
+      myParticipantId: bill.myParticipantId ?? null,
+      syncedAt: bill.syncedAt ?? null,
       participants: bill.participants.map((p): Participant => ({
         ...p,
-        paidAt: (p as Partial<Participant>).paidAt ?? null,
+        paidAt: p.paidAt ?? null,
+        profileId: p.profileId ?? null,
       })),
     };
   }
@@ -56,9 +74,14 @@ export type NewBillInput = {
   payerName: string;
   // From a saved group (F-09): everyone becomes a participant; the payer must be one of them.
   members?: { name: string; color: string }[];
+  // Signed-in account: the bill goes online and the participant with this name is "me".
+  owner?: { userId: string; displayName: string } | null;
 };
 
 export type ItemInput = Pick<Item, 'name' | 'unitPrice' | 'qty'>;
+
+const NOT_FOUND = 'Tagihan tidak ditemukan.';
+const OWNER_ONLY = 'Hanya pembuat tagihan yang bisa mengubah ini.';
 
 type BillsState = {
   bills: Record<string, Bill>;
@@ -77,6 +100,10 @@ type BillsState = {
   toggleEater: (billId: string, itemId: string, participantId: string) => void;
   toggleAllEaters: (billId: string, itemId: string) => void;
   updateSettings: (billId: string, patch: Partial<BillSettings>) => void;
+  // From the server: replace a bill with the latest snapshot, record its join code, or forget it.
+  applyRemoteBill: (bill: Bill) => void;
+  markSynced: (billId: string, joinCode?: string) => void;
+  forgetBill: (billId: string) => void;
 };
 
 function clampInt(value: number, min: number, max: number): number {
@@ -110,22 +137,49 @@ function validateItem(input: ItemInput): Parsed<ItemInput> {
   };
 }
 
+function sameName(a: string, b: string): boolean {
+  return normalizeName(a).toLocaleLowerCase('id') === normalizeName(b).toLocaleLowerCase('id');
+}
+
+// Joined bills always sync; own bills sync once they belong to an account.
+function isOnline(bill: Bill): boolean {
+  return bill.role === 'participant' || bill.ownerId !== null;
+}
+
+function queue(bill: Bill | undefined, ...ops: SyncOp[]) {
+  if (bill && isOnline(bill) && ops.length > 0) useSyncStore.getState().enqueue(...ops);
+}
+
+function shareOp(bill: Bill, itemId: string, participantId: string, eating: boolean): SyncOp {
+  return { kind: eating ? 'addShare' : 'removeShare', billId: bill.id, itemId, participantId };
+}
+
 export const useBillsStore = create<BillsState>()(
   persist(
     (set, get) => {
-      // Applies `update` to one bill; no-op if the bill does not exist.
-      const updateBill = (billId: string, update: (bill: Bill) => Bill) => {
+      // Applies `update` to one bill and returns the result; undefined if it does not exist.
+      const updateBill = (billId: string, update: (bill: Bill) => Bill): Bill | undefined => {
+        let next: Bill | undefined;
         set((state) => {
           const bill = state.bills[billId];
           if (!bill) return state;
-          return { bills: { ...state.bills, [billId]: update(bill) } };
+          next = update(bill);
+          return { bills: { ...state.bills, [billId]: next } };
         });
+        return next;
+      };
+
+      const ownBill = (billId: string): Parsed<Bill> => {
+        const bill = get().bills[billId];
+        if (!bill) return { ok: false, error: NOT_FOUND };
+        if (bill.role !== 'owner') return { ok: false, error: OWNER_ONLY };
+        return { ok: true, value: bill };
       };
 
       return {
         bills: {},
 
-        createBill: ({ title, date, payerName, members }) => {
+        createBill: ({ title, date, payerName, members, owner }) => {
           const validTitle = validateBillTitle(title);
           if (!validTitle.ok) return validTitle;
 
@@ -137,11 +191,9 @@ export const useBillsStore = create<BillsState>()(
               name: m.name,
               color: m.color,
               paidAt: null,
+              profileId: null,
             }));
-            const key = normalizeName(payerName).toLocaleLowerCase('id');
-            const payer = participants.find(
-              (p) => normalizeName(p.name).toLocaleLowerCase('id') === key,
-            );
+            const payer = participants.find((p) => sameName(p.name, payerName));
             if (!payer) {
               return { ok: false, error: 'Pilih yang bayar ke kasir dari anggota grup.' };
             }
@@ -149,14 +201,26 @@ export const useBillsStore = create<BillsState>()(
           } else {
             const validPayer = validateParticipantName(payerName, []);
             if (!validPayer.ok) return validPayer;
-            const payer = {
+            const payer: Participant = {
               id: createId(),
               name: validPayer.value,
               color: pickAvatarColor([]),
               paidAt: null,
+              profileId: null,
             };
             participants = [payer];
             payerId = payer.id;
+          }
+
+          // Link "me" only when exactly one name matches the account name.
+          const matches = owner
+            ? participants.filter((p) => sameName(p.name, owner.displayName))
+            : [];
+          const me = owner && matches.length === 1 ? matches[0] : undefined;
+          if (me && owner) {
+            participants = participants.map((p) =>
+              p.id === me.id ? { ...p, profileId: owner.userId } : p,
+            );
           }
 
           const bill: Bill = {
@@ -168,57 +232,79 @@ export const useBillsStore = create<BillsState>()(
             items: [],
             settings: { ...DEFAULT_SETTINGS },
             createdAt: Date.now(),
+            role: 'owner',
+            ownerId: owner?.userId ?? null,
+            joinCode: null,
+            myParticipantId: me?.id ?? null,
+            syncedAt: null,
           };
           set((state) => ({ bills: { ...state.bills, [bill.id]: bill } }));
+          queue(bill, ...opsForNewBill(bill));
           return { ok: true, value: bill.id };
         },
 
         addParticipant: (billId, name) => {
-          const bill = get().bills[billId];
-          if (!bill) return { ok: false, error: 'Tagihan tidak ditemukan.' };
+          const own = ownBill(billId);
+          if (!own.ok) return own;
+          const bill = own.value;
           const valid = validateParticipantName(name, bill.participants);
           if (!valid.ok) return valid;
-          const participant = {
+          const participant: Participant = {
             id: createId(),
             name: valid.value,
             color: pickAvatarColor(bill.participants.map((p) => p.color)),
             paidAt: null,
+            profileId: null,
           };
-          updateBill(billId, (b) => ({ ...b, participants: [...b.participants, participant] }));
+          const next = updateBill(billId, (b) => ({
+            ...b,
+            participants: [...b.participants, participant],
+          }));
+          queue(next, { kind: 'upsertParticipant', billId, participantId: participant.id });
           return { ok: true, value: participant.id };
         },
 
         renameParticipant: (billId, participantId, name) => {
-          const bill = get().bills[billId];
-          if (!bill) return { ok: false, error: 'Tagihan tidak ditemukan.' };
-          const valid = validateParticipantName(name, bill.participants, participantId);
+          const own = ownBill(billId);
+          if (!own.ok) return own;
+          const valid = validateParticipantName(name, own.value.participants, participantId);
           if (!valid.ok) return valid;
-          updateBill(billId, (b) => ({
+          const next = updateBill(billId, (b) => ({
             ...b,
             participants: b.participants.map((p) =>
               p.id === participantId ? { ...p, name: valid.value } : p,
             ),
           }));
+          queue(next, { kind: 'upsertParticipant', billId, participantId });
           return { ok: true, value: participantId };
         },
 
         removeParticipant: (billId, participantId) => {
-          updateBill(billId, (b) => {
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) => {
             const participants = b.participants.filter((p) => p.id !== participantId);
             return {
               ...b,
               participants,
               payerId: b.payerId === participantId ? (participants[0]?.id ?? null) : b.payerId,
+              myParticipantId: b.myParticipantId === participantId ? null : b.myParticipantId,
               items: b.items.map((item) => ({
                 ...item,
                 eaterIds: item.eaterIds.filter((id) => id !== participantId),
               })),
             };
           });
+          // The server clears the payer when that person is deleted; then set the new one.
+          queue(
+            next,
+            { kind: 'deleteParticipant', billId, participantId },
+            { kind: 'setPayer', billId },
+          );
         },
 
         markPaid: (billId, participantId) => {
-          updateBill(billId, (b) => ({
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) => ({
             ...b,
             participants: b.participants.map((p) =>
               p.id === participantId && p.id !== b.payerId && p.paidAt === null
@@ -226,83 +312,131 @@ export const useBillsStore = create<BillsState>()(
                 : p,
             ),
           }));
+          queue(next, { kind: 'setPaid', billId, participantId });
         },
 
         unmarkPaid: (billId, participantId) => {
-          updateBill(billId, (b) => ({
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) => ({
             ...b,
             participants: b.participants.map((p) =>
               p.id === participantId ? { ...p, paidAt: null } : p,
             ),
           }));
+          queue(next, { kind: 'setPaid', billId, participantId });
         },
 
         setPayer: (billId, participantId) => {
-          updateBill(billId, (b) =>
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) =>
             b.participants.some((p) => p.id === participantId)
               ? { ...b, payerId: participantId }
               : b,
           );
+          queue(next, { kind: 'setPayer', billId });
         },
 
         addItem: (billId, input) => {
-          if (!get().bills[billId]) return { ok: false, error: 'Tagihan tidak ditemukan.' };
+          const own = ownBill(billId);
+          if (!own.ok) return own;
           const valid = validateItem(input);
           if (!valid.ok) return valid;
           const item: Item = { id: createId(), ...valid.value, eaterIds: [] };
-          updateBill(billId, (b) => ({ ...b, items: [...b.items, item] }));
+          const next = updateBill(billId, (b) => ({ ...b, items: [...b.items, item] }));
+          queue(next, { kind: 'upsertItem', billId, itemId: item.id });
           return { ok: true, value: item.id };
         },
 
         updateItem: (billId, itemId, input) => {
+          const own = ownBill(billId);
+          if (!own.ok) return own;
           const valid = validateItem(input);
           if (!valid.ok) return valid;
-          updateBill(billId, (b) => ({
+          const next = updateBill(billId, (b) => ({
             ...b,
             items: b.items.map((item) => (item.id === itemId ? { ...item, ...valid.value } : item)),
           }));
+          queue(next, { kind: 'upsertItem', billId, itemId });
           return { ok: true, value: itemId };
         },
 
         removeItem: (billId, itemId) => {
-          updateBill(billId, (b) => ({
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) => ({
             ...b,
             items: b.items.filter((item) => item.id !== itemId),
           }));
+          queue(next, { kind: 'deleteItem', billId, itemId });
         },
 
         toggleEater: (billId, itemId, participantId) => {
-          updateBill(billId, (b) => ({
+          const bill = get().bills[billId];
+          if (!bill) return;
+          // People who joined can only change their own choices (RLS enforces this too).
+          if (bill.role === 'participant' && participantId !== bill.myParticipantId) return;
+          let eating = false;
+          const next = updateBill(billId, (b) => ({
             ...b,
             items: b.items.map((item) => {
               if (item.id !== itemId) return item;
-              const eaterIds = item.eaterIds.includes(participantId)
-                ? item.eaterIds.filter((id) => id !== participantId)
-                : [...item.eaterIds, participantId];
+              eating = !item.eaterIds.includes(participantId);
+              const eaterIds = eating
+                ? [...item.eaterIds, participantId]
+                : item.eaterIds.filter((id) => id !== participantId);
               return { ...item, eaterIds };
             }),
           }));
+          if (next) queue(next, shareOp(next, itemId, participantId, eating));
         },
 
         toggleAllEaters: (billId, itemId) => {
-          updateBill(billId, (b) => {
+          if (!ownBill(billId).ok) return;
+          let changes: SyncOp[] = [];
+          const next = updateBill(billId, (b) => {
             const allIds = b.participants.map((p) => p.id);
             return {
               ...b,
               items: b.items.map((item) => {
                 if (item.id !== itemId) return item;
                 const everyoneSelected = allIds.every((id) => item.eaterIds.includes(id));
-                return { ...item, eaterIds: everyoneSelected ? [] : allIds };
+                const eaterIds = everyoneSelected ? [] : allIds;
+                changes = allIds
+                  .filter((id) => item.eaterIds.includes(id) !== eaterIds.includes(id))
+                  .map((id) => shareOp(b, itemId, id, eaterIds.includes(id)));
+                return { ...item, eaterIds };
               }),
             };
           });
+          queue(next, ...changes);
         },
 
         updateSettings: (billId, patch) => {
-          updateBill(billId, (b) => ({
+          if (!ownBill(billId).ok) return;
+          const next = updateBill(billId, (b) => ({
             ...b,
             settings: sanitizeSettings({ ...b.settings, ...patch }),
           }));
+          queue(next, { kind: 'upsertBill', billId });
+        },
+
+        applyRemoteBill: (bill) => {
+          set((state) => ({ bills: { ...state.bills, [bill.id]: bill } }));
+        },
+
+        markSynced: (billId, joinCode) => {
+          updateBill(billId, (b) => ({
+            ...b,
+            syncedAt: Date.now(),
+            joinCode: joinCode ?? b.joinCode,
+          }));
+        },
+
+        forgetBill: (billId) => {
+          set((state) => {
+            const { [billId]: _removed, ...rest } = state.bills;
+            return { bills: rest };
+          });
+          useSyncStore.getState().dropBill(billId);
         },
       };
     },
