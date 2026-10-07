@@ -1,6 +1,7 @@
 import {
   clampPercent,
   normalizeName,
+  parsePercentInput,
   parseQtyInput,
   parseRupiahInput,
   validateBillTitle,
@@ -107,5 +108,28 @@ describe('clampPercent', () => {
     expect(clampPercent(150)).toBe(100);
     expect(clampPercent(7.5)).toBe(7.5);
     expect(clampPercent(Number.NaN)).toBe(0);
+  });
+});
+
+describe('parsePercentInput', () => {
+  it.each([
+    ['10', 10],
+    ['7,5', 7.5],
+    ['7.5', 7.5],
+    ['12,25 %', 12.25],
+    ['0', 0],
+    ['100', 100],
+  ])('%s -> %d', (text, value) => {
+    expect(parsePercentInput(text)).toEqual({ ok: true, value });
+  });
+
+  it.each(['', 'abc', '-5', '100,5', '1,234', '5,'])('rejects %p', (text) => {
+    expect(parsePercentInput(text).ok).toBe(false);
+  });
+
+  it('treats empty as zero when allowed and uses the label', () => {
+    expect(parsePercentInput(' ', { allowEmpty: true })).toEqual({ ok: true, value: 0 });
+    const result = parsePercentInput('x', { label: 'Diskon' });
+    expect(!result.ok && result.error).toMatch(/^Diskon/);
   });
 });

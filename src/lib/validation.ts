@@ -93,6 +93,28 @@ export function parseQtyInput(text: string): Parsed<number> {
   return { ok: true, value };
 }
 
+// Parses a percentage typed as "10", "7,5", or "7.5"; 0 to 100.
+export function parsePercentInput(
+  text: string,
+  options: { allowEmpty?: boolean; label?: string } = {},
+): Parsed<number> {
+  const label = options.label ?? 'Persen';
+  const cleaned = text.replace(/[%\s]/g, '').replace(',', '.');
+  if (cleaned.length === 0) {
+    return options.allowEmpty
+      ? { ok: true, value: 0 }
+      : { ok: false, error: `${label} wajib diisi.` };
+  }
+  if (!/^\d+(\.\d{1,2})?$/.test(cleaned)) {
+    return { ok: false, error: `${label} hanya boleh angka, misalnya 10 atau 7,5.` };
+  }
+  const value = Number(cleaned);
+  if (value > 100) {
+    return { ok: false, error: `${label} maksimal 100%.` };
+  }
+  return { ok: true, value };
+}
+
 export function clampPercent(value: number): number {
   if (!Number.isFinite(value)) {
     return 0;
