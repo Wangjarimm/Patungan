@@ -1,6 +1,14 @@
 import type { Tabs } from 'expo-router';
 import { useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type LayoutChangeEvent,
+  type ViewStyle,
+} from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -11,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { fonts, fontSizes, minTouchTarget, radius, spacing, useTheme } from '@/theme';
+import { fonts, fontSizes, minTouchTarget, radius, spacing, useTheme, withAlpha } from '@/theme';
 
 export type TabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
 
@@ -29,6 +37,21 @@ export const SLIDE_SPRING = { duration: 307, dampingRatio: 0.9 } as const;
 
 // Peak extra icon scale halfway through a switch: a small bounce, not a wobble.
 const ICON_BUMP = 0.12;
+
+// Floating shadow under the capsule. The web wants boxShadow (shadow* props are deprecated
+// there); Android and iOS keep the native shadow props and elevation, unchanged.
+export function barShadow(color: string): ViewStyle {
+  if (Platform.OS === 'web') {
+    return { boxShadow: `0px 8px 24px ${withAlpha(color, 0.12)}` };
+  }
+  return {
+    shadowColor: color,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 8,
+  };
+}
 
 // Space screens must leave at the bottom so content is not hidden behind the capsule.
 export function useTabBarInset(): number {
@@ -183,12 +206,12 @@ export function AnimatedTabBar({ state, descriptors, navigation }: TabBarProps) 
   };
 
   return (
-    <View pointerEvents="box-none" style={[styles.wrapper, { bottom: insets.bottom + BAR_MARGIN }]}>
+    <View style={[styles.wrapper, { bottom: insets.bottom + BAR_MARGIN }]}>
       <View
         testID="tab-bar"
         accessibilityRole="tablist"
         onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
-        style={[styles.bar, { backgroundColor: colors.surface, shadowColor: colors.text }]}>
+        style={[styles.bar, { backgroundColor: colors.surface }, barShadow(colors.text)]}>
         {slotWidth > 0 ? (
           <Animated.View
             testID="tab-pill"
@@ -231,16 +254,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: BAR_MARGIN,
     right: BAR_MARGIN,
+    // Taps outside the capsule reach the screen underneath.
+    pointerEvents: 'box-none',
   },
   bar: {
     height: BAR_HEIGHT,
     borderRadius: radius.pill,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-    elevation: 8,
   },
   pill: {
     position: 'absolute',

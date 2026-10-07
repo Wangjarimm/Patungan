@@ -1,7 +1,11 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { useReducedMotion, withSpring } from 'react-native-reanimated';
 
-import { AnimatedTabBar, SLIDE_SPRING, type TabBarProps } from './AnimatedTabBar';
+import { Platform } from 'react-native';
+
+import { lightColors } from '@/theme/colors';
+
+import { AnimatedTabBar, barShadow, SLIDE_SPRING, type TabBarProps } from './AnimatedTabBar';
 
 jest.mock(
   'react-native-safe-area-context',
@@ -164,5 +168,38 @@ describe('AnimatedTabBar', () => {
     const { props } = makeProps(1);
     await render(<AnimatedTabBar {...props} />);
     expect(screen.getAllByText('Riwayat', { includeHiddenElements: true })).toHaveLength(1);
+  });
+
+  it('lets taps outside the capsule through, via style instead of a prop', async () => {
+    const { props } = makeProps(0);
+    await render(<AnimatedTabBar {...props} />);
+    const wrapper = screen.getByTestId('tab-bar').parent;
+    expect(wrapper?.props.pointerEvents).toBeUndefined();
+    expect(wrapper).toHaveStyle({ pointerEvents: 'box-none' });
+  });
+});
+
+describe('barShadow', () => {
+  const originalOS = Platform.OS;
+  afterEach(() => {
+    Platform.OS = originalOS;
+  });
+
+  it('keeps the native shadow and elevation on Android and iOS', () => {
+    Platform.OS = 'android';
+    expect(barShadow(lightColors.text)).toEqual({
+      shadowColor: lightColors.text,
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.12,
+      shadowRadius: 24,
+      elevation: 8,
+    });
+  });
+
+  it('uses boxShadow on the web', () => {
+    Platform.OS = 'web';
+    expect(barShadow(lightColors.text)).toEqual({
+      boxShadow: '0px 8px 24px rgba(21, 36, 26, 0.12)',
+    });
   });
 });

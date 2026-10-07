@@ -1,4 +1,4 @@
-import { avatarColors, avatarTextColor, darkColors, lightColors } from './colors';
+import { avatarColors, avatarTextColor, darkColors, lightColors, withAlpha } from './colors';
 
 function relativeLuminance(hex: string): number {
   const channels = [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255);
@@ -66,5 +66,12 @@ describe('avatar colors', () => {
 
   it.each(avatarColors.slice(5))('%s has at least 4.5:1 contrast with white initials', (color) => {
     expect(contrastRatio(color, avatarTextColor)).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe('withAlpha', () => {
+  it('turns a hex token into rgba', () => {
+    expect(withAlpha(lightColors.text, 0.12)).toBe('rgba(21, 36, 26, 0.12)');
+    expect(withAlpha(darkColors.text, 1)).toBe('rgba(232, 239, 230, 1)');
   });
 });
