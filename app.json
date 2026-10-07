@@ -2,7 +2,7 @@
   "expo": {
     "name": "Patungan",
     "slug": "patungan",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "patungan",
@@ -11,6 +11,7 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.wangjarimm.patungan",
       "adaptiveIcon": {
         "backgroundColor": "#DCE6D5",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
