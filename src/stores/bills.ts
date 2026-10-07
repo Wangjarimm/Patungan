@@ -9,6 +9,7 @@ import { createId } from '@/lib/id';
 import {
   clampPercent,
   MAX_PRICE,
+  normalizeName,
   MAX_QTY,
   validateBillTitle,
   validateItemName,
@@ -54,6 +55,8 @@ export type NewBillInput = {
   title: string;
   date?: string;
   payerName: string;
+  // From a saved group (F-09): everyone becomes a participant; the payer must be one of them.
+  members?: { name: string; color: string }[];
 };
 
 export type ItemInput = Pick<Item, 'name' | 'unitPrice' | 'qty'>;
@@ -123,24 +126,46 @@ export const useBillsStore = create<BillsState>()(
       return {
         bills: {},
 
-        createBill: ({ title, date, payerName }) => {
+        createBill: ({ title, date, payerName, members }) => {
           const validTitle = validateBillTitle(title);
           if (!validTitle.ok) return validTitle;
-          const validPayer = validateParticipantName(payerName, []);
-          if (!validPayer.ok) return validPayer;
 
-          const payer = {
-            id: createId(),
-            name: validPayer.value,
-            color: pickAvatarColor([]),
-            paidAt: null,
-          };
+          let participants: Participant[];
+          let payerId: string;
+          if (members && members.length > 0) {
+            participants = members.map((m) => ({
+              id: createId(),
+              name: m.name,
+              color: m.color,
+              paidAt: null,
+            }));
+            const key = normalizeName(payerName).toLocaleLowerCase('id');
+            const payer = participants.find(
+              (p) => normalizeName(p.name).toLocaleLowerCase('id') === key,
+            );
+            if (!payer) {
+              return { ok: false, error: 'Pilih yang bayar ke kasir dari anggota grup.' };
+            }
+            payerId = payer.id;
+          } else {
+            const validPayer = validateParticipantName(payerName, []);
+            if (!validPayer.ok) return validPayer;
+            const payer = {
+              id: createId(),
+              name: validPayer.value,
+              color: pickAvatarColor([]),
+              paidAt: null,
+            };
+            participants = [payer];
+            payerId = payer.id;
+          }
+
           const bill: Bill = {
             id: createId(),
             title: validTitle.value,
             date: date ?? todayIsoDate(),
-            payerId: payer.id,
-            participants: [payer],
+            payerId,
+            participants,
             items: [],
             settings: { ...DEFAULT_SETTINGS },
             createdAt: Date.now(),
