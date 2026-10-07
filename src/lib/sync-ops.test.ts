@@ -1,13 +1,6 @@
 import type { Bill } from '@/types/bill';
 
-import {
-  enqueueOp,
-  enqueueOps,
-  opKey,
-  opsForNewBill,
-  pendingBillIds,
-  type SyncOp,
-} from './sync-ops';
+import { enqueueOps, opKey, opsForNewBill, pendingBillIds, type SyncOp } from './sync-ops';
 
 const B = 'bill-1';
 const upsertItem = (itemId: string): SyncOp => ({ kind: 'upsertItem', billId: B, itemId });
@@ -63,6 +56,14 @@ describe('enqueueOp', () => {
       addShare('a', 'q'),
       { kind: 'deleteParticipant', billId: B, participantId: 'p' },
     ]);
+  });
+
+  it('queues a new change even when the same row is being sent right now', () => {
+    const sending = upsertItem('a');
+    const queue = enqueueOps([sending], [upsertItem('a')], sending);
+    expect(queue).toHaveLength(2);
+    expect(queue[1]).toEqual(upsertItem('a'));
+    expect(queue[1]).not.toBe(sending);
   });
 
   it('does not duplicate a repeated delete', () => {

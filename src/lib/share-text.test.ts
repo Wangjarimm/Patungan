@@ -78,6 +78,12 @@ describe('buildShareText', () => {
     expect(withExtras).toContain('Ongkir Rp15.000 dibagi rata.');
   });
 
+  it('includes the join code of an online bill', () => {
+    const bill: Bill = { ...kenari, joinCode: 'MEK482' };
+    expect(buildShareText(bill, calculateBill(bill))).toContain('kode gabung MEK482');
+    expect(text).not.toContain('kode gabung');
+  });
+
   it('works without a payer', () => {
     const bill: Bill = { ...kenari, payerId: null };
     const noPayer = buildShareText(bill, calculateBill(bill));

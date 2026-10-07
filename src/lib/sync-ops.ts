@@ -55,7 +55,9 @@ function touchesParticipant(op: SyncOp, participantId: string): boolean {
   );
 }
 
-export function enqueueOp(queue: SyncOp[], op: SyncOp): SyncOp[] {
+// `inFlight` is the op currently being sent: it already read its state, so it must not absorb
+// a newer change of the same row.
+export function enqueueOp(queue: SyncOp[], op: SyncOp, inFlight: SyncOp | null = null): SyncOp[] {
   switch (op.kind) {
     case 'deleteItem':
       // Pending writes for a deleted item are pointless; the delete covers its shares too.
@@ -71,12 +73,16 @@ export function enqueueOp(queue: SyncOp[], op: SyncOp): SyncOp[] {
       return [...queue.filter((q) => opKey(q) !== opKey(op)), op];
     default:
       // Already queued: it will read the latest state when sent, so keep its earlier slot.
-      return queue.some((q) => opKey(q) === opKey(op)) ? queue : [...queue, op];
+      return queue.some((q) => q !== inFlight && opKey(q) === opKey(op)) ? queue : [...queue, op];
   }
 }
 
-export function enqueueOps(queue: SyncOp[], ops: SyncOp[]): SyncOp[] {
-  return ops.reduce(enqueueOp, queue);
+export function enqueueOps(
+  queue: SyncOp[],
+  ops: SyncOp[],
+  inFlight: SyncOp | null = null,
+): SyncOp[] {
+  return ops.reduce((acc, op) => enqueueOp(acc, op, inFlight), queue);
 }
 
 // Uploads a whole bill in dependency order: bill, people, menu, eaters, then the payer

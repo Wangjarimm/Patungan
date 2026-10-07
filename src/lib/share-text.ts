@@ -42,6 +42,12 @@ export function buildShareText(bill: Bill, result: BillResult): string {
     lines.push(`Ongkir ${formatRupiah(result.totals.extraFee)} dibagi rata.`);
   }
 
+  if (bill.joinCode) {
+    lines.push(
+      '',
+      `Lihat rincian dan tandai bagianmu di aplikasi Patungan, kode gabung ${bill.joinCode}.`,
+    );
+  }
   if (payer) {
     lines.push('', `Transfer ke ${payer.name} ya. Terima kasih!`);
   }
