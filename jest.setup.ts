@@ -6,3 +6,6 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 jest.mock('expo-crypto', () => ({
   randomUUID: () => globalThis.crypto.randomUUID(),
 }));
+
+// Reanimated 4 runs on react-native-worklets, which needs native code; use its Jest mock.
+jest.mock('react-native-worklets', () => jest.requireActual('react-native-worklets/src/mock'));
