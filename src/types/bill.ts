@@ -42,3 +42,18 @@ export type Bill = {
   settings: BillSettings;
   createdAt: number;
 };
+
+export type GroupMember = {
+  id: string;
+  name: string;
+  color: string;
+};
+
+// Saved set of people to reuse when creating a bill (F-09). Bills copy the members,
+// so editing or deleting a group never changes existing bills.
+export type Group = {
+  id: string;
+  name: string;
+  members: GroupMember[];
+  createdAt: number;
+};

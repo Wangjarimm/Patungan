@@ -22,6 +22,19 @@ export function validateBillTitle(title: string): Parsed<string> {
   return { ok: true, value };
 }
 
+export const MAX_GROUP_NAME_LENGTH = 40;
+
+export function validateGroupName(name: string): Parsed<string> {
+  const value = normalizeName(name);
+  if (value.length === 0) {
+    return { ok: false, error: 'Isi nama grup dulu, misalnya "Kantor lantai 3".' };
+  }
+  if (value.length > MAX_GROUP_NAME_LENGTH) {
+    return { ok: false, error: `Nama grup maksimal ${MAX_GROUP_NAME_LENGTH} karakter.` };
+  }
+  return { ok: true, value };
+}
+
 export function validateItemName(name: string): Parsed<string> {
   const value = normalizeName(name);
   if (value.length === 0) {

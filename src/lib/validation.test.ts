@@ -5,6 +5,7 @@ import {
   parseQtyInput,
   parseRupiahInput,
   validateBillTitle,
+  validateGroupName,
   validateItemName,
   validateParticipantName,
 } from './validation';
@@ -131,5 +132,13 @@ describe('parsePercentInput', () => {
     expect(parsePercentInput(' ', { allowEmpty: true })).toEqual({ ok: true, value: 0 });
     const result = parsePercentInput('x', { label: 'Diskon' });
     expect(!result.ok && result.error).toMatch(/^Diskon/);
+  });
+});
+
+describe('validateGroupName', () => {
+  it('requires a name up to 40 characters', () => {
+    expect(validateGroupName('  Kos   Melati ')).toEqual({ ok: true, value: 'Kos Melati' });
+    expect(validateGroupName('').ok).toBe(false);
+    expect(validateGroupName('x'.repeat(41)).ok).toBe(false);
   });
 });
