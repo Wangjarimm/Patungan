@@ -62,6 +62,11 @@ export function roundUpToStep(value: number, step: RoundingStep): number {
   return Math.ceil(adjusted / step) * step;
 }
 
+// Step 1: line value = unit price x quantity.
+export function lineTotal(item: Pick<Item, 'unitPrice' | 'qty'>): number {
+  return item.unitPrice * item.qty;
+}
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
@@ -80,7 +85,7 @@ export function calculateBill({ participants, items, settings }: CalcInput): Bil
 
   // Steps 1-2: line value split evenly between the item's eaters.
   for (const item of items) {
-    const lineValue = item.unitPrice * item.qty;
+    const lineValue = lineTotal(item);
     const eaters = [...new Set(item.eaterIds)].flatMap((id) => {
       const line = linesById.get(id);
       return line ? [line] : [];

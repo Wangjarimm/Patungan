@@ -1,9 +1,17 @@
 // Plain-text bill summary for sharing to WhatsApp or the clipboard (F-07).
 
-import type { Bill } from '@/types/bill';
+import type { Bill, BillSettings } from '@/types/bill';
 
 import type { BillResult } from './calc';
 import { formatDateLong, formatPercent, formatRupiah } from './format';
+
+// "service 5% dan pajak 10%", or null when neither applies.
+export function describeCharges(settings: BillSettings): string | null {
+  const parts: string[] = [];
+  if (settings.servicePct > 0) parts.push(`service ${formatPercent(settings.servicePct)}`);
+  if (settings.taxPct > 0) parts.push(`pajak ${formatPercent(settings.taxPct)}`);
+  return parts.length > 0 ? parts.join(' dan ') : null;
+}
 
 export function buildShareText(bill: Bill, result: BillResult): string {
   const payer = bill.participants.find((p) => p.id === bill.payerId);
@@ -25,8 +33,8 @@ export function buildShareText(bill: Bill, result: BillResult): string {
 
   const extras: string[] = [];
   if (result.totals.discount > 0) extras.push(`diskon ${formatRupiah(result.totals.discount)}`);
-  if (settings.servicePct > 0) extras.push(`service ${formatPercent(settings.servicePct)}`);
-  if (settings.taxPct > 0) extras.push(`pajak ${formatPercent(settings.taxPct)}`);
+  const charges = describeCharges(settings);
+  if (charges) extras.push(charges);
   if (extras.length > 0) {
     lines.push('', `Sudah termasuk ${extras.join(', ')}, dibagi sesuai porsi pesanan.`);
   }

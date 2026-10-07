@@ -1,6 +1,6 @@
 import type { BillSettings, Item } from '@/types/bill';
 
-import { calculateBill, roundUpToStep, type CalcInput } from './calc';
+import { calculateBill, lineTotal, roundUpToStep, type CalcInput } from './calc';
 
 const baseSettings: BillSettings = {
   servicePct: 0,
@@ -407,5 +407,12 @@ describe('rounding tolerance', () => {
     expect(roundUpToStep(3333.3333333, 1)).toBe(3334);
     expect(roundUpToStep(0, 1000)).toBe(0);
     expect(roundUpToStep(1e-9, 1000)).toBe(0);
+  });
+});
+
+describe('lineTotal', () => {
+  it('multiplies unit price by quantity', () => {
+    expect(lineTotal({ unitPrice: 32000, qty: 2 })).toBe(64000);
+    expect(lineTotal({ unitPrice: 0, qty: 3 })).toBe(0);
   });
 });

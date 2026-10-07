@@ -1,7 +1,7 @@
 import type { Bill } from '@/types/bill';
 
 import { calculateBill } from './calc';
-import { buildShareText } from './share-text';
+import { buildShareText, describeCharges } from './share-text';
 
 const everyone = ['raka', 'dinda', 'bima', 'sekar', 'fajar'];
 
@@ -58,7 +58,7 @@ describe('buildShareText', () => {
   });
 
   it('mentions service and tax', () => {
-    expect(text).toContain('Sudah termasuk service 5%, pajak 10%');
+    expect(text).toContain('Sudah termasuk service 5% dan pajak 10%');
   });
 
   it('mentions discount and delivery fee when present', () => {
@@ -97,5 +97,16 @@ describe('buildShareText', () => {
     const text = buildShareText(bill, result);
     expect(text).not.toContain('Fajar');
     expect(text).toContain('- Sekar: Rp55.500');
+  });
+});
+
+describe('describeCharges', () => {
+  it('names service and tax that apply', () => {
+    expect(describeCharges(kenari.settings)).toBe('service 5% dan pajak 10%');
+    expect(describeCharges({ ...kenari.settings, servicePct: 0 })).toBe('pajak 10%');
+    expect(describeCharges({ ...kenari.settings, taxPct: 0, servicePct: 7.5 })).toBe(
+      'service 7,5%',
+    );
+    expect(describeCharges({ ...kenari.settings, taxPct: 0, servicePct: 0 })).toBeNull();
   });
 });
