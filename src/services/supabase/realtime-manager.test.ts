@@ -130,6 +130,33 @@ describe('useBillRealtime with the shared channel manager', () => {
     expect(activeBillChannels()).toEqual([]);
   });
 
+  it('keeps one channel while Lihat bagian is opened and closed quickly over the order screen', async () => {
+    // Isi pesanan stays mounted underneath while Bagian tiap orang comes and goes.
+    const orderScreen = await renderHook(() => useBillRealtime('a'));
+    for (let i = 0; i < 10; i++) {
+      const resultScreen = await renderHook(() => useBillRealtime('a'));
+      await resultScreen.unmount();
+    }
+    expect(mockRealtime.created).toHaveLength(1);
+    expect(mockRealtime.removeChannel).not.toHaveBeenCalled();
+    expect(activeBillChannels()).toEqual([
+      { billId: 'a', users: 1, topic: mockRealtime.created[0]?.topic },
+    ]);
+    await orderScreen.unmount();
+    expect(mockRealtime.removeChannel).toHaveBeenCalledTimes(1);
+  });
+
+  it('survives rapid back-and-forth when no screen stays open in between', async () => {
+    for (let i = 0; i < 10; i++) {
+      const screen = await renderHook(() => useBillRealtime('a'));
+      await screen.unmount();
+    }
+    // Each round made a fresh topic, so a channel still leaving was never reused.
+    expect(new Set(mockRealtime.created.map((c) => c.topic)).size).toBe(10);
+    expect(mockRealtime.removeChannel).toHaveBeenCalledTimes(10);
+    expect(activeBillChannels()).toEqual([]);
+  });
+
   it('shares one channel between two screens on the same bill', async () => {
     const orderScreen = await renderHook(() => useBillRealtime('a'));
     const resultScreen = await renderHook(() => useBillRealtime('a'));
