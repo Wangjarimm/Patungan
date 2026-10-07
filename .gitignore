@@ -46,3 +46,7 @@ example
 
 # test coverage
 coverage/
+
+# Supabase CLI local state (project link, connection info)
+supabase/.temp/
+supabase/.branches/
