@@ -4,6 +4,7 @@ import { getInitial } from '@/lib/avatar';
 import { avatarTextColor, fonts } from '@/theme';
 
 const SIZES = {
+  xs: { box: 28, font: 12 },
   sm: { box: 32, font: 13 },
   md: { box: 36, font: 15 },
   lg: { box: 44, font: 17 },

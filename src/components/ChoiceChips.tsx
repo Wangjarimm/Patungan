@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { fonts, fontSizes, minTouchTarget, radius, spacing, useTheme } from '@/theme';
 
@@ -18,6 +18,8 @@ type ChoiceChipsProps<T> = {
   onChange: (value: T) => void;
   // Compact: small segmented toggle (Rp | %). Default: row of equal pills.
   compact?: boolean;
+  // Pills sized to their label in a horizontal scroll, for an open-ended list.
+  scrollable?: boolean;
 };
 
 // Single-choice pill group, announced as radio buttons.
@@ -27,10 +29,11 @@ export function ChoiceChips<T extends string | number>({
   value,
   onChange,
   compact = false,
+  scrollable = false,
 }: ChoiceChipsProps<T>) {
   const { colors } = useTheme();
 
-  return (
+  const group = (
     <View
       accessibilityRole="radiogroup"
       accessibilityLabel={accessibilityLabel}
@@ -46,6 +49,7 @@ export function ChoiceChips<T extends string | number>({
             accessibilityLabel={option.accessibilityLabel ?? option.label}
             style={[
               compact ? styles.compactChip : styles.chip,
+              scrollable && styles.scrollChip,
               selected
                 ? {
                     backgroundColor: compact ? colors.text : colors.accent,
@@ -83,6 +87,16 @@ export function ChoiceChips<T extends string | number>({
       })}
     </View>
   );
+
+  if (!scrollable) return group;
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled">
+      {group}
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -105,6 +119,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.sm,
+  },
+  scrollChip: {
+    flex: 0,
+    paddingHorizontal: spacing.lg,
   },
   compactChip: {
     minWidth: minTouchTarget,

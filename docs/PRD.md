@@ -86,7 +86,7 @@ Setiap kebutuhan punya kode (F-xx) agar mudah dirujuk di commit, issue, dan prom
 | F-06 | Hasil per orang | Rincian menu, porsi diskon, service, pajak, ongkir, total; status bayar | Jumlah semua bagian sebelum pembulatan sama dengan total tagihan, selisih maksimal Rp1 | 1 |
 | F-07 | Kirim ke WhatsApp | Teks rincian lewat share sheet atau tautan WhatsApp; tombol salin | Teks memuat total, nama pembayar, bagian tiap orang, dan kode gabung bila online | 1 |
 | F-08 | Penyimpanan lokal | Semua data tersimpan di perangkat | Data utuh setelah aplikasi ditutup paksa dan dibuka ulang | 1 |
-| F-09 | Grup tersimpan | Simpan peserta sebagai grup; pakai grup saat membuat tagihan | Memilih grup mengisi semua peserta sekaligus | 2 |
+| F-09 | Grup tersimpan | Simpan peserta sebagai grup; pakai grup saat membuat tagihan; kelola grup: ganti nama, tambah atau hapus anggota, hapus grup dengan konfirmasi | Memilih grup mengisi semua peserta sekaligus; mengubah atau menghapus grup tidak mengubah tagihan yang sudah dibuat | 2 |
 | F-10 | Riwayat | Daftar tagihan dikelompokkan per bulan; filter Semua, Belum lunas, Lunas | Filter Belum lunas menampilkan jumlah yang benar di badge | 2 |
 | F-11 | Tema | Ikuti sistem, Terang, Gelap | Default mengikuti sistem; pilihan tersimpan | 2 |
 | F-12 | Akun anonim | Isi nama saat pertama buka, akun anonim dibuat otomatis | Tidak ada layar password; nama bisa diubah di Profil | 3 |

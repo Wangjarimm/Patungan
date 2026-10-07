@@ -1,6 +1,6 @@
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -13,6 +13,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Avatar } from '@/components/Avatar';
+import { ChoiceChips } from '@/components/ChoiceChips';
+import { CheckIcon } from '@/components/icons';
 import { PillButton } from '@/components/PillButton';
 import { ReceiptCard } from '@/components/ReceiptCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -20,11 +23,20 @@ import { TextField } from '@/components/TextField';
 import { formatDateLong, parseIsoDate, todayIsoDate, toIsoDate } from '@/lib/format';
 import { validateBillTitle, validateParticipantName } from '@/lib/validation';
 import { useBillsStore } from '@/stores/bills';
+import { sortGroups, useGroupsStore } from '@/stores/groups';
 import { fonts, fontSizes, minTouchTarget, spacing, useTheme } from '@/theme';
+
+const NO_GROUP = 'none';
 
 export default function NewBillScreen() {
   const { colors, scheme } = useTheme();
   const createBill = useBillsStore((state) => state.createBill);
+  const groupsById = useGroupsStore((state) => state.groups);
+  const groups = useMemo(
+    () => sortGroups(groupsById).filter((g) => g.members.length > 0),
+    [groupsById],
+  );
+  const params = useLocalSearchParams<{ groupId?: string }>();
   const payerRef = useRef<TextInput>(null);
 
   const [title, setTitle] = useState('');
@@ -33,6 +45,9 @@ export default function NewBillScreen() {
   const [titleError, setTitleError] = useState<string | null>(null);
   const [payerError, setPayerError] = useState<string | null>(null);
   const [showIosPicker, setShowIosPicker] = useState(false);
+  const [groupId, setGroupId] = useState<string>(params.groupId ?? NO_GROUP);
+  const [payerMemberId, setPayerMemberId] = useState<string | null>(null);
+  const group = groups.find((g) => g.id === groupId);
 
   const pickDate = () => {
     if (Platform.OS === 'android') {
@@ -51,12 +66,21 @@ export default function NewBillScreen() {
 
   const submit = () => {
     const validTitle = validateBillTitle(title);
-    const validPayer = validateParticipantName(payerName, []);
     setTitleError(validTitle.ok ? null : validTitle.error);
-    setPayerError(validPayer.ok ? null : validPayer.error);
-    if (!validTitle.ok || !validPayer.ok) return;
 
-    const created = createBill({ title, date, payerName });
+    const payerMember = group?.members.find((m) => m.id === payerMemberId);
+    if (group) {
+      setPayerError(payerMember ? null : 'Pilih siapa yang bayar ke kasir.');
+      if (!validTitle.ok || !payerMember) return;
+    } else {
+      const validPayer = validateParticipantName(payerName, []);
+      setPayerError(validPayer.ok ? null : validPayer.error);
+      if (!validTitle.ok || !validPayer.ok) return;
+    }
+
+    const created = group
+      ? createBill({ title, date, payerName: payerMember?.name ?? '', members: group.members })
+      : createBill({ title, date, payerName });
     if (created.ok) {
       router.replace({ pathname: '/tagihan/[id]', params: { id: created.value } });
     }
@@ -111,21 +135,85 @@ export default function NewBillScreen() {
               ) : null}
             </View>
 
-            <TextField
-              ref={payerRef}
-              label="Yang bayar ke kasir"
-              placeholder="Nama kamu"
-              hint="Orang ini otomatis jadi peserta pertama."
-              value={payerName}
-              onChangeText={(text) => {
-                setPayerName(text);
-                if (payerError) setPayerError(null);
-              }}
-              error={payerError}
-              autoCapitalize="words"
-              returnKeyType="done"
-              onSubmitEditing={submit}
-            />
+            {groups.length > 0 ? (
+              <View style={styles.dateBlock}>
+                <Text style={[styles.label, { color: colors.text }]}>Pakai grup</Text>
+                <ChoiceChips
+                  scrollable
+                  accessibilityLabel="Pakai grup"
+                  value={groupId}
+                  onChange={(id) => {
+                    setGroupId(id);
+                    setPayerMemberId(null);
+                    setPayerError(null);
+                  }}
+                  options={[
+                    { value: NO_GROUP, label: 'Tanpa grup' },
+                    ...groups.map((g) => ({
+                      value: g.id,
+                      label: g.name,
+                      accessibilityLabel: `Grup ${g.name}, ${g.members.length} orang`,
+                    })),
+                  ]}
+                />
+              </View>
+            ) : null}
+
+            {group ? (
+              <View
+                accessibilityRole="radiogroup"
+                accessibilityLabel="Yang bayar ke kasir"
+                style={styles.dateBlock}>
+                <Text style={[styles.label, { color: colors.text }]}>Yang bayar ke kasir</Text>
+                <Text style={[styles.hint, { color: colors.textMutedPaper }]}>
+                  Semua {group.members.length} anggota {group.name} otomatis jadi peserta.
+                </Text>
+                {group.members.map((m) => {
+                  const selected = m.id === payerMemberId;
+                  return (
+                    <Pressable
+                      key={m.id}
+                      onPress={() => {
+                        setPayerMemberId(m.id);
+                        setPayerError(null);
+                      }}
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: selected }}
+                      accessibilityLabel={m.name}
+                      style={styles.memberOption}>
+                      <Avatar name={m.name} color={m.color} size="sm" />
+                      <Text style={[styles.dateText, styles.flex, { color: colors.text }]}>
+                        {m.name}
+                      </Text>
+                      {selected ? <CheckIcon color={colors.text} size={20} /> : null}
+                    </Pressable>
+                  );
+                })}
+                {payerError ? (
+                  <Text
+                    accessibilityLiveRegion="polite"
+                    style={[styles.hint, { color: colors.warning }]}>
+                    {payerError}
+                  </Text>
+                ) : null}
+              </View>
+            ) : (
+              <TextField
+                ref={payerRef}
+                label="Yang bayar ke kasir"
+                placeholder="Nama kamu"
+                hint="Orang ini otomatis jadi peserta pertama."
+                value={payerName}
+                onChangeText={(text) => {
+                  setPayerName(text);
+                  if (payerError) setPayerError(null);
+                }}
+                error={payerError}
+                autoCapitalize="words"
+                returnKeyType="done"
+                onSubmitEditing={submit}
+              />
+            )}
           </ReceiptCard>
         </ScrollView>
 
@@ -151,6 +239,19 @@ const styles = StyleSheet.create({
   },
   dateBlock: {
     gap: spacing.xs,
+  },
+  flex: {
+    flex: 1,
+  },
+  hint: {
+    fontFamily: fonts.body,
+    fontSize: fontSizes.small,
+  },
+  memberOption: {
+    minHeight: minTouchTarget,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
   },
   label: {
     fontFamily: fonts.bodyStrong,

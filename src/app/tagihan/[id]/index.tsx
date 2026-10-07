@@ -110,6 +110,18 @@ export default function BillScreen() {
           </Pressable>
         </ScrollView>
 
+        {bill.participants.length > 1 ? (
+          <Pressable
+            onPress={() => router.push({ pathname: '/grup/baru', params: { billId: bill.id } })}
+            accessibilityRole="button"
+            accessibilityHint="Simpan peserta tagihan ini supaya bisa dipakai lagi"
+            style={styles.saveGroup}>
+            <Text style={[styles.saveGroupText, { color: colors.text }]}>
+              Simpan peserta sebagai grup
+            </Text>
+          </Pressable>
+        ) : null}
+
         <ReceiptCard>
           <View style={[styles.cardHeader, { borderBottomColor: colors.text }]}>
             <Text accessibilityRole="header" style={[styles.cardTitle, { color: colors.text }]}>
@@ -240,6 +252,17 @@ const styles = StyleSheet.create({
     fontFamily: fonts.body,
     fontSize: fontSizes.caption - 1,
     marginTop: -spacing.xs,
+  },
+  saveGroup: {
+    minHeight: minTouchTarget,
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+    marginTop: -spacing.sm,
+  },
+  saveGroupText: {
+    fontFamily: fonts.bodyStrong,
+    fontSize: fontSizes.small,
+    textDecorationLine: 'underline',
   },
   cardHeader: {
     flexDirection: 'row',

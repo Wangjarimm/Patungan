@@ -52,6 +52,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="tagihan/[id]/peserta" options={{ presentation: 'modal' }} />
         <Stack.Screen name="tagihan/[id]/menu" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="grup/baru" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );
